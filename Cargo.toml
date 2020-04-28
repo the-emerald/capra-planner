@@ -9,3 +9,6 @@ edition = "2018"
 [dependencies]
 actix-web = "2"
 actix-rt = "1"
+serde = "1.0.106"
+capra = {path="../capra"}
+time = "0.2.9"
