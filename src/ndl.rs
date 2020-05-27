@@ -16,7 +16,6 @@ pub(crate) struct NoDecoParameters {
 
 #[post("ndl")]
 pub(crate) async fn ndl(info: web::Json<NoDecoParameters>) -> HttpResponse {
-    println!("Got an NDL Request");
     let air = gas!(21, 0);
 
     let mut zhl16 = ZHL16::new(

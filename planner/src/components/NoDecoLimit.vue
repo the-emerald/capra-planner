@@ -1,7 +1,7 @@
 <template>
     <div>
         <label>
-            <input placeholder="Depth" v-model="depth" @blur="calculateNDL">
+            <input type="number" placeholder="Depth" v-model="depth" @blur="calculateNDL">
         </label>
         <p>No Deco Time: {{ndl}}</p>
     </div>
