@@ -1,27 +1,19 @@
 import {AxiosResponse} from "axios";
 
-export class NDLInput {
+export interface NDLInput {
     depth: number;
-
-    constructor(depth: number) {
-        this.depth = depth;
-    }
-
-    send() {
-        return {
-            depth: Number(this.depth)
-        }
-    }
 }
 
-export class NDLOutput {
-    public decoReached: boolean;
-    public infinite: boolean;
-    public timeRemaining: number;
+export interface NDLOutput {
+    decoReached: boolean;
+    infinite: boolean;
+    timeRemaining: number;
+}
 
-    constructor(response: AxiosResponse) {
-        this.decoReached = response.data.deco_reached;
-        this.infinite = response.data.infinite;
-        this.timeRemaining = response.data.time_remaining
+export function ndlFromResponse(response: AxiosResponse): NDLOutput {
+    return {
+        decoReached: response.data.deco_reached,
+        infinite: response.data.infinite,
+        timeRemaining: response.data.time_remaining
     }
 }

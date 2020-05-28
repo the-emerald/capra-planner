@@ -1,7 +1,7 @@
 <template>
     <div>
         <label>
-            <input type="number" placeholder="Depth" v-model="depth" @blur="calculateNDL">
+            <input type="number" placeholder="Depth" v-model.number="depth" @blur="calculateNDL">
         </label>
         <p>Result:</p>
         <p>{{ndl.timeRemaining}}</p>
@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
-import {NDLInput, NDLOutput} from "@/serde/ndl";
+import {ndlFromResponse, NDLInput, NDLOutput} from "@/serde/ndl";
 
 @Component
 export default class NoDecoLimit extends Vue {
@@ -27,15 +27,17 @@ export default class NoDecoLimit extends Vue {
             return;
         }
 
-        const data = new NDLInput(this.depth);
+        const data: NDLInput = {
+            depth: this.depth
+        };
 
         axios.post('http://localhost:8000/ndl',
-            data.send(),
+            data,
             {
                 headers: {'content-type' : 'application/json'}
             })
         .then(
-            response => {this.ndl = new NDLOutput(response)}
+            response => {this.ndl = ndlFromResponse(response)}
         )
         .catch(
             error => console.log(error)
