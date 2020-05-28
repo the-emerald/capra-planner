@@ -2,6 +2,7 @@ use actix_web::{App, HttpServer};
 use actix_cors::Cors;
 
 pub mod routes;
+pub mod json_repr;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
