@@ -3,43 +3,39 @@
         <label>
             <input type="number" placeholder="Depth" v-model="depth" @blur="calculateNDL">
         </label>
-        <p>No Deco Time: {{ndl}}</p>
+        <p>Result:</p>
+        <p>{{ndl.timeRemaining}}</p>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
+import {NDLInput, NDLOutput} from "@/serde/ndl";
 
 @Component
 export default class NoDecoLimit extends Vue {
     depth = 0;
-    ndl = "";
+    ndl: NDLOutput = {
+        decoReached: false,
+        infinite: false,
+        timeRemaining: 0,
+    };
 
     calculateNDL() {
         if (this.depth == 0) {
             return;
         }
 
+        const data = new NDLInput(this.depth);
+
         axios.post('http://localhost:8000/ndl',
-            {
-                depth: Number(this.depth)
-            },
+            data.send(),
             {
                 headers: {'content-type' : 'application/json'}
             })
         .then(
-            response => {
-                if (response.data == 18446744073709551615) {
-                    this.ndl = "Unlimited"
-                }
-                else if (response.data == "deco") {
-                    this.ndl = "Deco Reached"
-                }
-                else {
-                    this.ndl = response.data
-                }
-            }
+            response => {this.ndl = new NDLOutput(response)}
         )
         .catch(
             error => console.log(error)

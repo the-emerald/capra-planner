@@ -1,7 +1,7 @@
 use actix_web::{App, HttpServer};
 use actix_cors::Cors;
 
-pub mod ndl;
+pub mod routes;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -13,7 +13,7 @@ async fn main() -> std::io::Result<()> {
                     .allowed_methods(vec!["GET", "POST"])
                     .finish()
             )
-            .service(ndl::ndl)
+            .service(routes::ndl::ndl)
     })
         .bind("127.0.0.1:8000")?
         .run()
