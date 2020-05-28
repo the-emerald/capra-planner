@@ -14,7 +14,8 @@ async fn main() -> std::io::Result<()> {
                     .allowed_methods(vec!["GET", "POST"])
                     .finish()
             )
-            .service(routes::ndl::ndl)
+            .service(routes::ndl::route)
+            .service(routes::get_plan::route)
     })
         .bind("127.0.0.1:8000")?
         .run()

@@ -3,6 +3,10 @@ use capra::common::gas;
 use std::convert::TryFrom;
 use capra::common::gas::GasError;
 
+// Represents a Gas sent by JSON.
+// Difference(s):
+// - no `n2` field
+// - `max_op_depth` field is included for MOD
 #[derive(Serialize, Deserialize)]
 pub(crate) struct Gas {
     o2: usize,

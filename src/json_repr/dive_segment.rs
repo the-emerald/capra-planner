@@ -4,6 +4,9 @@ use capra::common::dive_segment;
 use std::convert::TryFrom;
 use time::Duration;
 
+// Represents a DiveSegment sent by JSON.
+// Difference(s):
+// - `time` is represented in milliseconds instead of Duration
 #[derive(Serialize, Deserialize)]
 pub(crate) struct DiveSegment {
     segment_type: SegmentType,

@@ -22,7 +22,7 @@ pub(crate) struct NDLOutput {
 }
 
 #[post("ndl")]
-pub(crate) async fn ndl(info: web::Json<NDLInput>) -> HttpResponse {
+pub(crate) async fn route(input: web::Json<NDLInput>) -> HttpResponse {
     let air = gas!(21, 0);
 
     let mut zhl16 = ZHL16::new(
@@ -32,8 +32,8 @@ pub(crate) async fn ndl(info: web::Json<NDLInput>) -> HttpResponse {
     let one = DiveSegment::new(
         SegmentType::AscDesc,
         0,
-        info.depth,
-        time_taken(-10, 0, info.depth),
+        input.depth,
+        time_taken(-10, 0, input.depth),
         -10,
         20
     ).unwrap();
