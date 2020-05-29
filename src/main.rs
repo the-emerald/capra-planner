@@ -15,7 +15,7 @@ async fn main() -> std::io::Result<()> {
                     .finish()
             )
             .service(routes::ndl::route)
-            .service(routes::get_plan::route)
+            .service(routes::get_zhl_plan::route)
     })
         .bind("127.0.0.1:8000")?
         .run()

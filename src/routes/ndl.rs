@@ -7,7 +7,6 @@ use capra::deco::zhl16::ZHL16;
 use capra::common::dive_segment::{DiveSegment, SegmentType};
 use capra::common::time_taken;
 use capra::deco::deco_algorithm::DecoAlgorithm;
-use time::Duration;
 
 #[derive(Serialize, Deserialize)]
 pub(crate) struct NDLInput {
