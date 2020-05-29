@@ -2,7 +2,7 @@
     <div class="test">
         <Navbar></Navbar>
         <br>
-        <p>Testing!!!!</p>
+        <p>Testing.</p>
     </div>
 </template>
 

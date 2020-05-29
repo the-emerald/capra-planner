@@ -2,7 +2,7 @@
     <div class="plan">
         <Navbar></Navbar>
         <br>
-        <p>Plan!</p>
+        <Parameters></Parameters>
     </div>
 </template>
 
