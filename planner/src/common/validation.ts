@@ -12,8 +12,6 @@ extend('gas', {
     // Just shut up!
     // eslint-disable-next-line
     validate(value, x: any) {
-        console.log(value, value <= 100);
-        console.log(value, x.other, value + x.other <= 100);
         return (value <= 100) && (value + x.other <= 100)
     }
 });
