@@ -31,13 +31,19 @@ import {segmentType} from "@/common/segment_type";
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    // import {diveSegment} from "@/common/dive_segment";
+    import {diveSegment} from "@/common/dive_segment";
     import {gas} from "@/common/gas";
-    // import {segmentType} from "@/common/segment_type";
+
+    import {namespace} from 'vuex-class';
+    const plan = namespace('plan');
 
     @Component
-    export default class Parameters extends Vue {
-        deco_gases: Array<[gas, number?]> = [];
+    export default class DecoGases extends Vue {
+        @plan.State
+        public decoGases!: Array<[diveSegment, gas]>;
+
+        @plan.Action
+        public updateDecoGases!: (updated: Array<[gas, number?]>) => void
     }
 </script>
 

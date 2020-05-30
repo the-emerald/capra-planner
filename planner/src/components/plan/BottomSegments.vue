@@ -24,30 +24,17 @@ import {segmentType} from "@/common/segment_type";
     import {Component, Vue} from "vue-property-decorator";
     import {diveSegment} from "@/common/dive_segment";
     import {gas} from "@/common/gas";
-    import {segmentType} from "@/common/segment_type";
+
+    import {namespace} from 'vuex-class';
+    const plan = namespace('plan');
 
     @Component
-    export default class Parameters extends Vue {
-        bottom_segments: Array<[diveSegment, gas]> = [];
-        depth = NaN; // Default value should be hidden! Can't find a better way.
+    export default class BottomSegments extends Vue {
+        @plan.State
+        public bottomSegments!: Array<[diveSegment, gas]>;
 
-        exampleBottomSegment() {
-            const exSeg: diveSegment = {
-                segmentType: segmentType.DiveSegment,
-                startDepth: 35,
-                endDepth: 35,
-                time: 600_000,
-                ascentRate: -10,
-                descentRate: 20
-            };
-
-            const exGas: gas =  {
-                he: 0,
-                o2: 21
-
-            };
-            this.bottom_segments.push([exSeg, exGas]);
-        }
+        @plan.Action
+        public updateBottomSegments!: (updated: Array<[diveSegment, gas]>) => void
     }
 </script>
 
