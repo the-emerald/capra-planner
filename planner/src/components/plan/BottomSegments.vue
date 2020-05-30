@@ -23,7 +23,7 @@ import {segmentType} from "@/common/segment_type";
                 </b-card-header>
                 <b-list-group flush class="overflow-auto dive_param">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
-                        <b-form-checkbox>{{segment[0].startDepth}} - ({{segment[1].o2}}/{{segment[1].he}})</b-form-checkbox>
+                        <b-form-checkbox>{{formatBottomSegment(segment)}}</b-form-checkbox>
                     </b-list-group-item>
                     <!--Placeholder group items-->
                     <b-list-group-item>
@@ -55,6 +55,17 @@ import {segmentType} from "@/common/segment_type";
 
         onBSSubmitted(value: [diveSegment, gas]) {
             this.setBottomSegments([value]);
+        }
+
+        // Ugly hack
+        prettyMilliseconds(millis: number): string {
+            const minutes = Math.floor(millis / 60000);
+            const seconds = ((millis % 60000) / 1000).toFixed(0);
+            return (Number(seconds) == 60 ? (minutes+1) + ":00" : minutes + ":" + (Number(seconds) < 10 ? "0" : "") + seconds);
+        }
+
+        formatBottomSegment(segment: [diveSegment, gas]): string {
+            return `${segment[0].startDepth}m | ${this.prettyMilliseconds(segment[0].time)} | ${segment[1].o2}/${segment[1].he}`
         }
     }
 
