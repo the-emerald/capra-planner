@@ -6,7 +6,7 @@ import {segmentType} from "@/common/segment_type";
                 <b-card-header>
                     <b-container class="p-0">
                         <b-row no-gutters>
-                            <b-col sm="8">
+                            <b-col sm="8" style="margin-top: 0.2rem">
                                 Bottom segments
                             </b-col>
                             <b-col>
