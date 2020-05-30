@@ -1,3 +1,4 @@
+import {segmentType} from "@/common/segment_type";
 <template>
     <div>
         <b-modal id="bottom-segment-modal" title="Add bottom segment" hide-footer>
@@ -92,8 +93,11 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {ValidationProvider, ValidationObserver} from "vee-validate"
+    import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
+    import {diveSegment} from "@/common/dive_segment";
+    import {segmentType} from "@/common/segment_type";
+    import {gas} from "@/common/gas";
 
     @Component({
         components: {
@@ -106,22 +110,48 @@
             observer: InstanceType<typeof ValidationObserver>;
         };
 
-        depth = null;
-        timeMin = null;
-        timeSec = null;
-        o2 = null;
-        he = null;
+        depth = '';
+        timeMin = '';
+        timeSec = '';
+        o2 = '';
+        he = '';
 
-        onSubmit() { // TODO: Add behaviour for emitting
+        timeMinSecToMin(min: number, sec: number): number {
+            return ((min*60) + sec) * 1000;
+
+        }
+
+        onSubmit() {
             console.log("Submitted");
+            // TODO: Fix hardcoded values
+            const newDiveSegment: diveSegment = {
+                ascentRate: -10,
+                descentRate: 20,
+                startDepth: Number(this.depth),
+                endDepth: Number(this.depth),
+                segmentType: segmentType.DiveSegment,
+                time: this.timeMinSecToMin(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
+            };
+
+            const newGas: gas = {
+                he: Number(this.he),
+                o2: Number(this.o2)
+            };
+
+            this.$emit(
+                'submitted',
+                [newDiveSegment, newGas]
+            );
+
+            this.$bvModal.hide('bottom-segment-modal')
         }
 
         resetForm() {
-            this.depth = null;
-            this.timeMin = null;
-            this.timeSec = null;
-            this.o2 = null;
-            this.he = null;
+            this.depth = '';
+            this.timeMin = '';
+            this.timeSec = '';
+            this.o2 = '';
+            this.he = '';
             requestAnimationFrame(() => {
                 this.$refs.observer.reset();
             });

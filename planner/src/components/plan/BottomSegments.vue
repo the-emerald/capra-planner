@@ -19,7 +19,7 @@ import {segmentType} from "@/common/segment_type";
                             </b-col>
                         </b-row>
                     </b-container>
-                    <BSModal></BSModal>
+                    <BSModal @submitted="onBSSubmitted"></BSModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto dive_param">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
@@ -50,9 +50,15 @@ import {segmentType} from "@/common/segment_type";
         @plan.State
         public bottomSegments!: Array<[diveSegment, gas]>;
 
-        @plan.Action
-        public updateBottomSegments!: (updated: Array<[diveSegment, gas]>) => void
+        @plan.Mutation
+        public setBottomSegments!: (to: Array<[diveSegment, gas]>) => void;
+
+        onBSSubmitted(value: [diveSegment, gas]) {
+            this.setBottomSegments([value]);
+        }
     }
+
+
 </script>
 
 <style scoped>

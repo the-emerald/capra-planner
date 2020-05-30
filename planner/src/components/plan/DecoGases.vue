@@ -30,8 +30,8 @@ import {segmentType} from "@/common/segment_type";
         @plan.State
         public decoGases!: Array<[diveSegment, gas]>;
 
-        @plan.Action
-        public updateDecoGases!: (updated: Array<[gas, number?]>) => void
+        @plan.Mutation
+        public setDecoGases!: (to: Array<[gas, number?]>) => void
     }
 </script>
 
