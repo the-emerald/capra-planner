@@ -2,17 +2,32 @@ import {segmentType} from "@/common/segment_type";
 <template>
     <div>
         <b-card-group>
-            <b-card no-body header="Bottom segments">
+            <b-card no-body>
+                <b-card-header>
+                    <b-container class="p-0">
+                        <b-row no-gutters>
+                            <b-col sm="8">
+                                Bottom segments
+                            </b-col>
+                            <b-col>
+                                <b-button block
+                                class="float-right" id="show-bottom-segment-modal-btn"
+                                @click="$bvModal.show('bottom-segment-modal')"
+                                size="sm">
+                                    <b-icon-plus></b-icon-plus>
+                                </b-button>
+                            </b-col>
+                        </b-row>
+                    </b-container>
+                    <BSModal></BSModal>
+                </b-card-header>
                 <b-list-group flush class="overflow-auto dive_param">
-                    <!--Placeholder group items-->
-                    <b-list-group-item v-for="(segment, index) in bottom_segments" :key="`segment-${index}`">
+                    <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
                         <b-form-checkbox>{{segment[0].startDepth}} - ({{segment[1].o2}}/{{segment[1].he}})</b-form-checkbox>
                     </b-list-group-item>
+                    <!--Placeholder group items-->
                     <b-list-group-item>
-                        <b-form-checkbox>123m - 45:67 - 89/10</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>123m - 45:67 - 89/10</b-form-checkbox>
+                        <b-form-checkbox>Placeholder</b-form-checkbox>
                     </b-list-group-item>
                 </b-list-group>
             </b-card>
@@ -26,9 +41,11 @@ import {segmentType} from "@/common/segment_type";
     import {gas} from "@/common/gas";
 
     import {namespace} from 'vuex-class';
-    const plan = namespace('plan');
-
-    @Component
+    import BSModal from "@/components/plan/BSModal.vue";
+    const plan = namespace('Plan');
+    @Component({
+        components: {BSModal}
+    })
     export default class BottomSegments extends Vue {
         @plan.State
         public bottomSegments!: Array<[diveSegment, gas]>;

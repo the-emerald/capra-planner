@@ -4,24 +4,12 @@ import {segmentType} from "@/common/segment_type";
         <b-card-group>
             <b-card no-body header="Deco gases">
                 <b-list-group flush class="overflow-auto dive_param">
+                    <b-list-group-item v-for="(gas, index) in decoGases" :key="`decogas-${index}`">
+                        <b-form-checkbox>({{gas.o2}}/{{gas.he}})</b-form-checkbox>
+                    </b-list-group-item>
                     <!--Placeholder group items-->
                     <b-list-group-item>
-                        <b-form-checkbox>12/56</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>87/11</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>55/24</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>27/84</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>75/0</b-form-checkbox>
-                    </b-list-group-item>
-                    <b-list-group-item>
-                        <b-form-checkbox>100/0</b-form-checkbox>
+                        <b-form-checkbox>Placeholder</b-form-checkbox>
                     </b-list-group-item>
                 </b-list-group>
             </b-card>
@@ -35,7 +23,7 @@ import {segmentType} from "@/common/segment_type";
     import {gas} from "@/common/gas";
 
     import {namespace} from 'vuex-class';
-    const plan = namespace('plan');
+    const plan = namespace('Plan');
 
     @Component
     export default class DecoGases extends Vue {
