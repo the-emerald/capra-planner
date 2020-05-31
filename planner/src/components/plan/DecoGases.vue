@@ -3,7 +3,7 @@ import {segmentType} from "@/common/segment_type";
     <div>
         <b-card-group>
             <b-card no-body header="Deco gases">
-                <b-list-group flush class="overflow-auto dive_param">
+                <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(gas, index) in decoGases" :key="`decogas-${index}`">
                         <b-form-checkbox>({{gas.o2}}/{{gas.he}})</b-form-checkbox>
                     </b-list-group-item>
@@ -31,14 +31,14 @@ import {segmentType} from "@/common/segment_type";
         public decoGases!: Array<[diveSegment, gas]>;
 
         @plan.Mutation
-        public setDecoGases!: (to: Array<[gas, number?]>) => void
+        public pushDecoGas!: (to: [gas, number?]) => void;
+
     }
 </script>
 
 <style scoped>
-    .dive_param {
+    .list_group {
         height: 75vh;
         overflow-y: auto;
     }
-
 </style>

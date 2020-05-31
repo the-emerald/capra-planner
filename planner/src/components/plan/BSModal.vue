@@ -143,6 +143,7 @@ import {segmentType} from "@/common/segment_type";
                 [newDiveSegment, newGas]
             );
 
+            this.resetForm();
             this.$bvModal.hide('bottom-segment-modal')
         }
 

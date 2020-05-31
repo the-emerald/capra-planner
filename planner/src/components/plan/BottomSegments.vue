@@ -9,11 +9,12 @@ import {segmentType} from "@/common/segment_type";
                             <b-col sm="6" style="margin-top: 0.2rem">
                                 Bottom segments
                             </b-col>
-                            <!--UI Buttons-->
+                            <!--UI buttons-->
                             <b-col>
                                 <b-button block
                                           class="float-right" id="rearrange"
-                                          size="sm">
+                                          size="sm"
+                                          title="Reorder">
                                     <b-icon-list-ol></b-icon-list-ol>
                                 </b-button>
                             </b-col>
@@ -21,8 +22,9 @@ import {segmentType} from "@/common/segment_type";
                                 <b-button block
                                           class="float-right" id="clear"
                                           size="sm"
-                                          variant="danger">
-                                    <b-icon-backspace></b-icon-backspace>
+                                          variant="danger"
+                                          title="Clear all">
+                                <b-icon-backspace></b-icon-backspace>
                                 </b-button>
                             </b-col>
                             <b-col>
@@ -30,15 +32,17 @@ import {segmentType} from "@/common/segment_type";
                                         class="float-right" id="show-bottom-segment-modal-btn"
                                         @click="$bvModal.show('bottom-segment-modal')"
                                         variant="info"
-                                        size="sm">
-                                    <b-icon-plus-circle></b-icon-plus-circle>
+                                        size="sm"
+                                        title="Add">
+                                <b-icon-plus-circle></b-icon-plus-circle>
                                 </b-button>
                             </b-col>
                         </b-form-row>
                     </b-container>
+                    <!--Relevant modals-->
                     <BSModal @submitted="onBSSubmitted"></BSModal>
                 </b-card-header>
-                <b-list-group flush class="overflow-auto dive_param">
+                <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
                         <b-form-checkbox>{{formatBottomSegment(segment)}}</b-form-checkbox>
                     </b-list-group-item>
@@ -86,9 +90,8 @@ import {segmentType} from "@/common/segment_type";
 </script>
 
 <style scoped>
-    .dive_param {
+    .list_group {
         height: 75vh;
         overflow-y: auto;
     }
-
 </style>
