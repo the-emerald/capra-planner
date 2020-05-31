@@ -10,6 +10,8 @@ import {segmentType} from "@/common/segment_type";
                                 Bottom segments
                             </b-col>
                             <!--UI buttons-->
+
+                            <!--Reorder-->
                             <b-col>
                                 <b-button block
                                           class="float-right" id="rearrange"
@@ -18,15 +20,39 @@ import {segmentType} from "@/common/segment_type";
                                     <b-icon-list-ol></b-icon-list-ol>
                                 </b-button>
                             </b-col>
+
+                            <!--Clear all-->
                             <b-col>
-                                <b-button block
+                                <b-dropdown block
                                           class="float-right" id="clear"
                                           size="sm"
                                           variant="danger"
-                                          title="Clear all">
-                                <b-icon-backspace></b-icon-backspace>
-                                </b-button>
+                                          title="Clear all" no-caret style="width: 45px; padding-right: 1px">
+                                    <template v-slot:button-content>
+                                        <b-icon-backspace></b-icon-backspace>
+                                    </template>
+                                    <b-dropdown-text style="min-width: 15rem">
+                                        <b-container>
+                                            <b-form-row>
+                                                <b-col style="margin-top: 0.2rem">
+                                                    Clear all?
+                                                </b-col>
+                                                <b-col>
+                                                    <b-button block
+                                                              size="sm"
+                                                              variant="danger"
+                                                              @click="resetBottomSegments">
+                                                        Confirm
+                                                    </b-button>
+                                                </b-col>
+                                            </b-form-row>
+                                        </b-container>
+
+                                    </b-dropdown-text>
+                                </b-dropdown>
                             </b-col>
+
+                            <!--Add segment modal-->
                             <b-col>
                                 <b-button block
                                         class="float-right" id="show-bottom-segment-modal-btn"
@@ -69,6 +95,9 @@ import {segmentType} from "@/common/segment_type";
 
         @plan.Mutation
         public pushBottomSegment!: (elem: [diveSegment, gas]) => void;
+
+        @plan.Mutation
+        public resetBottomSegments!: () => void;
 
         onBSSubmitted(value: [diveSegment, gas]) {
             this.pushBottomSegment(value);

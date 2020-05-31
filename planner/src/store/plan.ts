@@ -19,6 +19,11 @@ class Plan extends VuexModule {
     public pushDecoGas(elem: [gas, number?]): void {
         this.decoGases.push(elem);
     }
+
+    @Mutation
+    public resetBottomSegments(): void {
+        this.bottomSegments = [];
+    }
 }
 
 export default Plan
