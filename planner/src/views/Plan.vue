@@ -4,11 +4,11 @@
         <br>
         <b-container class="float-left">
             <b-row>
-                <b-col class="col-3">
+                <b-col class="col-4">
                     <!--b-list group for dive segments-->
                     <BottomSegments></BottomSegments>
                 </b-col>
-                <b-col class="col-3">
+                <b-col class="col-4">
                     <!--b-list group for deco gases-->
                     <DecoGases></DecoGases>
                 </b-col>
