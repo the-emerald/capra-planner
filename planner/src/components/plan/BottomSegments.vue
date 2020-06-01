@@ -69,7 +69,7 @@ import {segmentType} from "@/common/segment_type";
 
                     <!--Relevant modals-->
                     <BSModal @submitted="onBSSubmitted"></BSModal>
-                    <BSReorderModal></BSReorderModal>
+                    <BSReorderModal :original-ordering="this.bottomSegments"></BSReorderModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
