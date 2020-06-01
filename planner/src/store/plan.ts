@@ -1,6 +1,7 @@
 import {VuexModule, Module, Mutation} from 'vuex-module-decorators'
 import {diveSegment} from "@/common/dive_segment";
 import {gas} from "@/common/gas";
+import {Vue} from "vue-property-decorator";
 
 @Module({
     namespaced: true,
@@ -16,8 +17,13 @@ class Plan extends VuexModule {
     }
 
     @Mutation
-    public updateBottomSegmentAtIndex(elem: [diveSegment, gas], idx: number): void {
-        this.bottomSegments[idx] = elem;
+    public updateBottomSegmentAtIndex(elem: [[diveSegment, gas], number]): void {
+        Vue.set(this.bottomSegments, elem[1], elem[0]);
+    }
+
+    @Mutation
+    public removeBottomSegmentAtIndex(idx: number): void {
+        this.bottomSegments.splice(idx, 1);
     }
 
     @Mutation
@@ -31,8 +37,13 @@ class Plan extends VuexModule {
     }
 
     @Mutation
-    public updateDecoGasAtIndex(elem: [gas, number?], idx: number): void {
-        this.decoGases[idx] = elem;
+    public updateDecoGasAtIndex(elem: [[gas, number?], number]): void {
+        Vue.set(this.decoGases, elem[1], elem[0]);
+    }
+
+    @Mutation
+    public removeDecoGasAtIndex(idx: number): void {
+        this.decoGases.splice(idx, 1);
     }
 
     @Mutation

@@ -12,7 +12,8 @@ extend('gas', {
     // Just shut up!
     // eslint-disable-next-line
     validate(value, x: any) {
-        return (value <= 100) && (value + x.other <= 100)
+        // This is done so that edits (which are strings) are checked correctly
+        return (Number(value) <= 100) && (Number(value) + Number(x.other) <= 100)
     }
 });
 

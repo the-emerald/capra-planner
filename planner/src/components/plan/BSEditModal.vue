@@ -1,7 +1,7 @@
 import {segmentType} from "@/common/segment_type";
 <template>
     <div>
-        <b-modal id="bottom-segment-modal" title="Add bottom segment" hide-footer>
+        <b-modal id="bottom-segment-edit-modal" title="Edit bottom segment" @shown="syncFields" hide-footer>
             <ValidationObserver ref="observer" v-slot="{passes}">
                 <b-form @submit.prevent="passes(onSubmit)" @reset="resetForm">
                     <b-container>
@@ -82,8 +82,8 @@ import {segmentType} from "@/common/segment_type";
                     </b-container>
                     <br>
                     <div class="modal-footer">
-                        <b-button type="reset" variant="danger">Reset</b-button>
-                        <b-button type="submit" variant="primary">Add</b-button>
+                        <b-button @click="$bvModal.hide('bottom-segment-edit-modal')">Cancel</b-button>
+                        <b-button type="submit" variant="primary">Update</b-button>
                     </div>
                 </b-form>
             </ValidationObserver>
@@ -92,13 +92,13 @@ import {segmentType} from "@/common/segment_type";
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue} from "vue-property-decorator";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
     import {diveSegment} from "@/common/dive_segment";
     import {segmentType} from "@/common/segment_type";
     import {gas} from "@/common/gas";
-    import {minutesSecondToMinutes} from "@/common/time";
+    import {millisecondsToMinutesSeconds} from "@/common/time";
 
     @Component({
         components: {
@@ -106,7 +106,20 @@ import {segmentType} from "@/common/segment_type";
             ValidationObserver
         }
     })
-    export default class BSModal extends Vue {
+    export default class BSEditModal extends Vue {
+        @Prop() private editSegment!: [diveSegment, gas];
+
+        syncFields() {
+            console.log("Sync field called");
+            console.log(this.editSegment);
+            this.depth = this.editSegment[0].startDepth.toString();
+            const msTime = millisecondsToMinutesSeconds(this.editSegment[0].time);
+            this.timeMin = msTime[0].toString();
+            this.timeSec = msTime[1].toString();
+            this.o2 = this.editSegment[1].o2.toString();
+            this.he = this.editSegment[1].he.toString();
+        }
+
         $refs!: {
             observer: InstanceType<typeof ValidationObserver>;
         };
@@ -117,15 +130,19 @@ import {segmentType} from "@/common/segment_type";
         o2 = '';
         he = '';
 
+        timeMinSecToMin(min: number, sec: number): number {
+            return ((min*60) + sec) * 1000;
+
+        }
+
         onSubmit() {
-            // TODO: Fix hardcoded values
             const newDiveSegment: diveSegment = {
                 ascentRate: -10,
                 descentRate: 20,
                 startDepth: Number(this.depth),
                 endDepth: Number(this.depth),
                 segmentType: segmentType.DiveSegment,
-                time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
+                time: this.timeMinSecToMin(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
             const newGas: gas = {
@@ -139,7 +156,7 @@ import {segmentType} from "@/common/segment_type";
             );
 
             this.resetForm();
-            this.$bvModal.hide('bottom-segment-modal')
+            this.$bvModal.hide('bottom-segment-edit-modal')
         }
 
         resetForm() {
