@@ -16,13 +16,28 @@ class Plan extends VuexModule {
     }
 
     @Mutation
-    public pushDecoGas(elem: [gas, number?]): void {
-        this.decoGases.push(elem);
+    public updateBottomSegmentAtIndex(elem: [diveSegment, gas], idx: number): void {
+        this.bottomSegments[idx] = elem;
     }
 
     @Mutation
     public resetBottomSegments(): void {
         this.bottomSegments = [];
+    }
+
+    @Mutation
+    public pushDecoGas(elem: [gas, number?]): void {
+        this.decoGases.push(elem);
+    }
+
+    @Mutation
+    public updateDecoGasAtIndex(elem: [gas, number?], idx: number): void {
+        this.decoGases[idx] = elem;
+    }
+
+    @Mutation
+    public resetDecoGases(): void {
+        this.decoGases = [];
     }
 }
 
