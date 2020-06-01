@@ -17,6 +17,7 @@ import {segmentType} from "@/common/segment_type";
                                 <b-button block
                                           class="float-right" id="rearrange"
                                           size="sm"
+                                          @click="$bvModal.show('bottom-segment-reorder-modal')"
                                           title="Reorder">
                                     <b-icon-list-ol></b-icon-list-ol>
                                 </b-button>
@@ -68,6 +69,7 @@ import {segmentType} from "@/common/segment_type";
 
                     <!--Relevant modals-->
                     <BSModal @submitted="onBSSubmitted"></BSModal>
+                    <BSReorderModal></BSReorderModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
@@ -129,10 +131,11 @@ import {segmentType} from "@/common/segment_type";
     import {prettyFromMilliseconds} from "@/common/time";
     import BSEditModal from "@/components/plan/BSEditModal.vue";
     import {segmentType} from "@/common/segment_type";
+    import BSReorderModal from "@/components/plan/BSReorderModal.vue";
 
     const plan = namespace('Plan');
     @Component({
-        components: {BSEditModal, BSModal}
+        components: {BSReorderModal, BSEditModal, BSModal}
     })
     export default class BottomSegments extends Vue {
         editSegment: [diveSegment, gas] = [
