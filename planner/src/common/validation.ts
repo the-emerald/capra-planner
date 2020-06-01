@@ -17,10 +17,26 @@ extend('gas', {
     }
 });
 
-extend('max', {
-    params: ['rhs'],
+extend('lt', {
+    params: ['val'],
     // eslint-disable-next-line
     validate(value, x: any) {
-        return value < x.rhs
+        return value < x.val
+    }
+});
+
+extend('eq', {
+    params: ['val'],
+    // eslint-disable-next-line
+    validate(value, x: any) {
+        return value == x.val
+    }
+});
+
+extend('gt', {
+    params: ['val'],
+    // eslint-disable-next-line
+    validate(value, x: any) {
+        return value > x.val
     }
 });

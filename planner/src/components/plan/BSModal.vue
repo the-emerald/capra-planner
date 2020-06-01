@@ -29,7 +29,7 @@ import {segmentType} from "@/common/segment_type";
                                 Time
                             </b-col>
                             <b-col>
-                                <ValidationProvider name="minutes" rules="required|positive" v-slot="{valid, errors}">
+                                <ValidationProvider name="minutes" rules="required|positive|gt:0" v-slot="{valid, errors}">
                                     <b-form-input
                                         placeholder="mm"
                                         type="number"
@@ -40,7 +40,7 @@ import {segmentType} from "@/common/segment_type";
                             </b-col>
                             <div style="margin-top: 0.4rem">:</div>
                             <b-col>
-                                <ValidationProvider name="seconds" rules="required|positive|max:60" v-slot="{valid, errors}">
+                                <ValidationProvider name="seconds" rules="required|positive|lt:60" v-slot="{valid, errors}">
                                     <b-form-input
                                         placeholder="ss"
                                         type="number"
