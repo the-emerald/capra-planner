@@ -98,7 +98,7 @@ import {segmentType} from "@/common/segment_type";
     import {diveSegment} from "@/common/dive_segment";
     import {segmentType} from "@/common/segment_type";
     import {gas} from "@/common/gas";
-    import {millisecondsToMinutesSeconds} from "@/common/time";
+    import {millisecondsToMinutesSeconds, minutesSecondToMinutes} from "@/common/time";
 
     @Component({
         components: {
@@ -130,11 +130,6 @@ import {segmentType} from "@/common/segment_type";
         o2 = '';
         he = '';
 
-        timeMinSecToMin(min: number, sec: number): number {
-            return ((min*60) + sec) * 1000;
-
-        }
-
         onSubmit() {
             const newDiveSegment: diveSegment = {
                 ascentRate: -10,
@@ -142,7 +137,7 @@ import {segmentType} from "@/common/segment_type";
                 startDepth: Number(this.depth),
                 endDepth: Number(this.depth),
                 segmentType: segmentType.DiveSegment,
-                time: this.timeMinSecToMin(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
+                time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
             const newGas: gas = {
