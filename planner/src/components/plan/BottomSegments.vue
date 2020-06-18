@@ -1,5 +1,3 @@
-import {segmentType} from "@/common/segment_type";
-import {segmentType} from "@/common/segment_type";
 <template>
     <div>
         <b-card-group>
@@ -80,7 +78,7 @@ import {segmentType} from "@/common/segment_type";
                                     </b-form-checkbox>
                                 </b-col>
                                 <b-col sm="15">
-                                    {{formatBottomSegment(segment)}}
+                                    {{displayDiveSegmentGas(segment)}}
                                 </b-col>
                                 <b-col>
                                     <b-dropdown class="float-right" variant="danger" title="Delete segment" size="sm" no-caret>
@@ -125,13 +123,12 @@ import {segmentType} from "@/common/segment_type";
     import {Component, Vue} from "vue-property-decorator";
     import {diveSegment} from "@/common/dive_segment";
     import {gas} from "@/common/gas";
-
     import {namespace} from 'vuex-class';
     import BSModal from "@/components/plan/BSModal.vue";
-    import {prettyFromMilliseconds} from "@/common/time";
     import BSEditModal from "@/components/plan/BSEditModal.vue";
     import {segmentType} from "@/common/segment_type";
     import BSReorderModal from "@/components/plan/BSReorderModal.vue";
+    import {displayDiveSegmentGas} from "@/common/display";
 
     const plan = namespace('Plan');
     @Component({
@@ -186,8 +183,9 @@ import {segmentType} from "@/common/segment_type";
             this.editingIdx = 0; // Maybe zero-initialise the editSegment as well?
         }
 
-        formatBottomSegment(segment: [diveSegment, gas]): string {
-            return `${segment[0].startDepth}m | ${prettyFromMilliseconds(segment[0].time)} | ${segment[1].o2}/${segment[1].he}`
+        // Re-export
+        displayDiveSegmentGas(input: [diveSegment, gas]): string {
+            return displayDiveSegmentGas(input);
         }
     }
 
