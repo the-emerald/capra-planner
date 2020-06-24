@@ -1,6 +1,6 @@
 import {VuexModule, Module, Mutation} from 'vuex-module-decorators'
-import {diveSegment} from "@/common/dive_segment";
-import {gas} from "@/common/gas";
+import {diveSegment} from "@/common/serde/dive_segment";
+import {gas} from "@/common/serde/gas";
 import {Vue} from "vue-property-decorator";
 
 @Module({

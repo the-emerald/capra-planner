@@ -1,4 +1,4 @@
-import {segmentType} from "@/common/segment_type"
+import {segmentType} from "@/common/serde/segment_type"
 // Represents a DiveSegment that can be sent and received from the server.
 export interface diveSegment {
     segmentType: segmentType,

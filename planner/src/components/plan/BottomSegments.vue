@@ -121,12 +121,12 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/dive_segment";
-    import {gas} from "@/common/gas";
+    import {diveSegment} from "@/common/serde/dive_segment";
+    import {gas} from "@/common/serde/gas";
     import {namespace} from 'vuex-class';
     import BSModal from "@/components/plan/BSModal.vue";
     import BSEditModal from "@/components/plan/BSEditModal.vue";
-    import {segmentType} from "@/common/segment_type";
+    import {segmentType} from "@/common/serde/segment_type";
     import BSReorderModal from "@/components/plan/BSReorderModal.vue";
     import {displayDiveSegmentGas} from "@/common/display";
 

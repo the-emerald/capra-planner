@@ -19,8 +19,8 @@ import {segmentType} from "@/common/segment_type";
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/dive_segment";
-    import {gas} from "@/common/gas";
+    import {diveSegment} from "@/common/serde/dive_segment";
+    import {gas} from "@/common/serde/gas";
 
     import {namespace} from 'vuex-class';
     const plan = namespace('Plan');

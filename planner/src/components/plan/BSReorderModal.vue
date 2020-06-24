@@ -44,8 +44,8 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/dive_segment";
-    import {gas} from "@/common/gas";
+    import {diveSegment} from "@/common/serde/dive_segment";
+    import {gas} from "@/common/serde/gas";
     import {displayDiveSegmentGas} from "@/common/display";
 
     @Component

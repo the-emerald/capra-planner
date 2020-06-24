@@ -95,9 +95,9 @@ import {segmentType} from "@/common/segment_type";
     import {Component, Prop, Vue} from "vue-property-decorator";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
-    import {diveSegment} from "@/common/dive_segment";
-    import {segmentType} from "@/common/segment_type";
-    import {gas} from "@/common/gas";
+    import {diveSegment} from "@/common/serde/dive_segment";
+    import {segmentType} from "@/common/serde/segment_type";
+    import {gas} from "@/common/serde/gas";
     import {millisecondsToMinutesSeconds, minutesSecondToMinutes} from "@/common/time";
 
     @Component({
