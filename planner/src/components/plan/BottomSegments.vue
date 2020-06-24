@@ -66,7 +66,7 @@
                     </b-container>
 
                     <!--Relevant modals-->
-                    <BSModal @submitted="onBSSubmitted"></BSModal>
+                    <BSNewModal @submitted="onBSSubmitted"></BSNewModal>
                     <BSReorderModal :original-ordering="this.bottomSegments" @submitted="onBSReorderSubmitted"></BSReorderModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
@@ -124,15 +124,15 @@
     import {diveSegment} from "@/common/serde/dive_segment";
     import {gas} from "@/common/serde/gas";
     import {namespace} from 'vuex-class';
-    import BSModal from "@/components/plan/BSModal.vue";
     import BSEditModal from "@/components/plan/BSEditModal.vue";
     import {segmentType} from "@/common/serde/segment_type";
     import BSReorderModal from "@/components/plan/BSReorderModal.vue";
     import {displayDiveSegmentGas} from "@/common/display";
+    import BSNewModal from "@/components/plan/BSNewModal.vue";
 
     const plan = namespace('Plan');
     @Component({
-        components: {BSReorderModal, BSEditModal, BSModal}
+        components: {BSReorderModal, BSEditModal, BSNewModal}
     })
     export default class BottomSegments extends Vue {
         editSegment: [diveSegment, gas] = [

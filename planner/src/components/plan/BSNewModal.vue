@@ -106,7 +106,7 @@ import {segmentType} from "@/common/segment_type";
             ValidationObserver
         }
     })
-    export default class BSModal extends Vue {
+    export default class BSNewModal extends Vue {
         $refs!: {
             observer: InstanceType<typeof ValidationObserver>;
         };
