@@ -74,7 +74,7 @@
                         <b-container class="p-0">
                             <b-form-row>
                                 <b-col sm="1">
-                                    <b-form-checkbox>
+                                    <b-form-checkbox :checked="segment[0]" @change="invertSegmentCheckbox(index)">
                                     </b-form-checkbox>
                                 </b-col>
                                 <b-col sm="15">
@@ -159,6 +159,12 @@
             this.$bvModal.show('bottom-segment-edit-modal')
         }
 
+        invertSegmentCheckbox(idx: number) {
+            const selected = this.bottomSegments[idx][0];
+            const value = this.bottomSegments[idx][1];
+            this.updateBottomSegmentAtIndex([[!selected, value], idx]);
+        }
+
         @plan.State
         public bottomSegments!: Array<[boolean, BottomSegmentElement]>;
 
@@ -178,13 +184,13 @@
         public replaceBottomSegments!: (to: Array<[boolean, BottomSegmentElement]>) => void;
 
         // Emits from children components
-
         onBSNewSubmitted(value: BottomSegmentElement) {
             this.pushBottomSegment([true, value]);
         }
 
         onBSEditSubmitted(value: BottomSegmentElement) {
-            this.updateBottomSegmentAtIndex([[this.bottomSegments[this.editingIdx][0], value], this.editingIdx]);
+            const selected = this.bottomSegments[this.editingIdx][0];
+            this.updateBottomSegmentAtIndex([[selected, value], this.editingIdx]);
             this.editingIdx = 0; // Maybe zero-initialise the editSegment as well?
         }
 
