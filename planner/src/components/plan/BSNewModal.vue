@@ -95,9 +95,9 @@ import {segmentType} from "@/common/segment_type";
     import {Component, Vue} from "vue-property-decorator";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
-    import {diveSegment} from "@/common/serde/dive_segment";
+    import {DiveSegment} from "@/common/serde/dive_segment";
     import {segmentType} from "@/common/serde/segment_type";
-    import {gas} from "@/common/serde/gas";
+    import {Gas} from "@/common/serde/gas";
     import {minutesSecondToMinutes} from "@/common/time";
     import {BottomSegmentElement} from "@/store/plan";
 
@@ -120,7 +120,7 @@ import {segmentType} from "@/common/segment_type";
 
         onSubmit() {
             // TODO: Fix hardcoded values
-            const newDiveSegment: diveSegment = {
+            const newDiveSegment: DiveSegment = {
                 ascentRate: -10,
                 descentRate: 20,
                 startDepth: Number(this.depth),
@@ -129,7 +129,7 @@ import {segmentType} from "@/common/segment_type";
                 time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
-            const newGas: gas = {
+            const newGas: Gas = {
                 he: Number(this.he),
                 o2: Number(this.o2)
             };

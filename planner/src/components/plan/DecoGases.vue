@@ -19,8 +19,8 @@ import {segmentType} from "@/common/segment_type";
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/serde/dive_segment";
-    import {gas} from "@/common/serde/gas";
+    import {DiveSegment} from "@/common/serde/dive_segment";
+    import {Gas} from "@/common/serde/gas";
 
     import {namespace} from 'vuex-class';
     const plan = namespace('Plan');
@@ -28,10 +28,10 @@ import {segmentType} from "@/common/segment_type";
     @Component
     export default class DecoGases extends Vue {
         @plan.State
-        public decoGases!: Array<[diveSegment, gas]>;
+        public decoGases!: Array<[DiveSegment, Gas]>;
 
         @plan.Mutation
-        public pushDecoGas!: (to: [gas, number?]) => void;
+        public pushDecoGas!: (to: [Gas, number?]) => void;
 
     }
 </script>

@@ -1,16 +1,16 @@
 import {VuexModule, Module, Mutation} from 'vuex-module-decorators'
-import {diveSegment} from "@/common/serde/dive_segment";
-import {gas} from "@/common/serde/gas";
+import {DiveSegment} from "@/common/serde/dive_segment";
+import {Gas} from "@/common/serde/gas";
 import {Vue} from "vue-property-decorator";
 
 // Interfaces for element data
 export interface BottomSegmentElement {
-    diveSegment: diveSegment;
-    gas: gas;
+    diveSegment: DiveSegment;
+    gas: Gas;
 }
 
 export interface DecoGasElement {
-    gas: gas;
+    gas: Gas;
     number?: number;
 }
 
