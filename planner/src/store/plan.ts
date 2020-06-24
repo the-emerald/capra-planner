@@ -32,6 +32,11 @@ class Plan extends VuexModule {
     }
 
     @Mutation
+    public replaceBottomSegments(to: Array<[diveSegment, gas]>): void {
+        this.bottomSegments = to;
+    }
+
+    @Mutation
     public pushDecoGas(elem: [gas, number?]): void {
         this.decoGases.push(elem);
     }
@@ -49,6 +54,11 @@ class Plan extends VuexModule {
     @Mutation
     public resetDecoGases(): void {
         this.decoGases = [];
+    }
+
+    @Mutation
+    public replaceDecoGases(to: Array<[gas, number?]>): void {
+        this.decoGases = to;
     }
 }
 

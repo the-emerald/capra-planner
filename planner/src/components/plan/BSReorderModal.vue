@@ -4,8 +4,7 @@
                 <b-form @submit.prevent="onSubmit" @reset="resetForm">
                     <br>
                     <b-container>
-                        <b-form-row>
-                            <!--TODO: List goes here-->
+                        <b-row>
                             <b-col>
                                 <b-list-group>
                                     <b-list-group-item
@@ -18,11 +17,20 @@
                                     </b-list-group-item>
                                 </b-list-group>
                             </b-col>
-                            <!--TODO: Buttons go here-->
                             <b-col sm="3">
-                                <p>Buttons!</p>
+                                <b-form-row>
+                                    <b-button @click="moveSelectedUp">
+                                        <b-icon-arrow-up></b-icon-arrow-up>
+                                    </b-button>
+                                </b-form-row>
+                                <br>
+                                <b-form-row>
+                                    <b-button @click="moveSelectedDown">
+                                        <b-icon-arrow-down></b-icon-arrow-down>
+                                    </b-button>
+                                </b-form-row>
                             </b-col>
-                        </b-form-row>
+                        </b-row>
                     </b-container>
                     <br>
                     <div class="modal-footer">
@@ -56,18 +64,39 @@
         }
 
         onSubmit() {
-            // TODO: Add submission logic
-            this.resetForm();
+            this.$emit(
+                'submitted',
+                this.modalOrdering
+            );
+            this.setToOriginal();
             this.$bvModal.hide('bottom-segment-reorder-modal')
         }
 
         resetForm() {
-            // TODO: Add reset logic
+            this.setToOriginal();
         }
 
         setToOriginal() {
-            this.modalOrdering = [...this.originalOrdering];
-            this.selected = -1;
+            this.modalOrdering = [...this.originalOrdering]; // Copy prop
+            this.selected = -1; // Set default
+        }
+
+        // Move selected element up once
+        moveSelectedUp() {
+            if (this.selected != 0) {
+                const swap = [this.modalOrdering[this.selected - 1], this.modalOrdering[this.selected]];
+                this.selected -= 1;
+                this.modalOrdering.splice(this.selected, 2, swap[1], swap[0]);
+            }
+        }
+
+        // Move selected element down once
+        moveSelectedDown() {
+            if (this.selected != this.modalOrdering.length - 1) {
+                const swap = [this.modalOrdering[this.selected], this.modalOrdering[this.selected + 1]];
+                this.modalOrdering.splice(this.selected, 2, swap[1], swap[0]);
+                this.selected += 1;
+            }
         }
 
         // Re-export

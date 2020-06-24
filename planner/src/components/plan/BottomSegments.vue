@@ -67,7 +67,7 @@
 
                     <!--Relevant modals-->
                     <BSModal @submitted="onBSSubmitted"></BSModal>
-                    <BSReorderModal :original-ordering="this.bottomSegments"></BSReorderModal>
+                    <BSReorderModal :original-ordering="this.bottomSegments" @submitted="onBSReorderSubmitted"></BSReorderModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(segment, index) in bottomSegments" :key="`segment-${index}`">
@@ -174,6 +174,11 @@
         @plan.Mutation
         public removeBottomSegmentAtIndex!: (idx: number) => void;
 
+        @plan.Mutation
+        public replaceBottomSegments!: (to: Array<[diveSegment, gas]>) => void;
+
+        // Emits from children components
+
         onBSSubmitted(value: [diveSegment, gas]) {
             this.pushBottomSegment(value);
         }
@@ -181,6 +186,10 @@
         onBSEditSubmitted(value: [diveSegment, gas]) {
             this.updateBottomSegmentAtIndex([value, this.editingIdx]);
             this.editingIdx = 0; // Maybe zero-initialise the editSegment as well?
+        }
+
+        onBSReorderSubmitted(value: Array<[diveSegment, gas]>) {
+            this.replaceBottomSegments(value);
         }
 
         // Re-export
