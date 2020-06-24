@@ -99,6 +99,7 @@ import {segmentType} from "@/common/segment_type";
     import {segmentType} from "@/common/serde/segment_type";
     import {gas} from "@/common/serde/gas";
     import {minutesSecondToMinutes} from "@/common/time";
+    import {BottomSegmentElement} from "@/store/plan";
 
     @Component({
         components: {
@@ -133,9 +134,15 @@ import {segmentType} from "@/common/segment_type";
                 o2: Number(this.o2)
             };
 
+            const elem: BottomSegmentElement = {
+                diveSegment: newDiveSegment,
+                gas: newGas
+
+            };
+
             this.$emit(
                 'submitted',
-                [newDiveSegment, newGas]
+                elem
             );
 
             this.resetForm();

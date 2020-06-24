@@ -13,7 +13,7 @@
                                             href="#"
                                             v-bind:class="{active: isSelected(index)}"
                                             v-on:click="selected = index">
-                                        {{displayDiveSegmentGas(segments)}}
+                                        {{displayBottomSegmentElement(segments[1])}}
                                     </b-list-group-item>
                                 </b-list-group>
                             </b-col>
@@ -44,17 +44,16 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/serde/dive_segment";
-    import {gas} from "@/common/serde/gas";
-    import {displayDiveSegmentGas} from "@/common/display";
+    import {displayBottomSegmentElement} from "@/common/display";
+    import {BottomSegmentElement} from "@/store/plan";
 
     @Component
     export default class BSReorderModal extends Vue {
         // Original ordering. Do not touch!
-        @Prop() private originalOrdering!: Array<[diveSegment, gas]>;
+        @Prop() private originalOrdering!: Array<[boolean, BottomSegmentElement]>;
 
         // Ordering to modify using the modal
-        modalOrdering: Array<[diveSegment, gas]> = [];
+        modalOrdering: Array<[boolean, BottomSegmentElement]> = [];
 
         // The current selected value. -1 is none
         selected = -1;
@@ -100,8 +99,8 @@
         }
 
         // Re-export
-        displayDiveSegmentGas(input: [diveSegment, gas]): string {
-            return displayDiveSegmentGas(input);
+        displayBottomSegmentElement(input: BottomSegmentElement): string {
+            return displayBottomSegmentElement(input);
         }
     }
 </script>

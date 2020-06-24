@@ -1,7 +1,6 @@
-import {diveSegment} from "@/common/serde/dive_segment";
-import {gas} from "@/common/serde/gas";
 import {prettyFromMilliseconds} from "@/common/time";
+import {BottomSegmentElement} from "@/store/plan";
 
-export function displayDiveSegmentGas(input: [diveSegment, gas]): string {
-    return `${input[0].startDepth}m | ${prettyFromMilliseconds(input[0].time)} | ${input[1].o2}/${input[1].he}`
+export function displayBottomSegmentElement(input: BottomSegmentElement): string {
+    return `${input.diveSegment.startDepth}m | ${prettyFromMilliseconds(input.diveSegment.time)} | ${input.gas.o2}/${input.gas.he}`
 }

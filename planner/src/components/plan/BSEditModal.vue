@@ -99,6 +99,7 @@ import {segmentType} from "@/common/segment_type";
     import {segmentType} from "@/common/serde/segment_type";
     import {gas} from "@/common/serde/gas";
     import {millisecondsToMinutesSeconds, minutesSecondToMinutes} from "@/common/time";
+    import {BottomSegmentElement} from "@/store/plan";
 
     @Component({
         components: {
@@ -107,17 +108,15 @@ import {segmentType} from "@/common/segment_type";
         }
     })
     export default class BSEditModal extends Vue {
-        @Prop() private editSegment!: [diveSegment, gas];
+        @Prop() private editSegment!: BottomSegmentElement;
 
         syncFields() {
-            console.log("Sync field called");
-            console.log(this.editSegment);
-            this.depth = this.editSegment[0].startDepth.toString();
-            const msTime = millisecondsToMinutesSeconds(this.editSegment[0].time);
+            this.depth = this.editSegment.diveSegment.startDepth.toString();
+            const msTime = millisecondsToMinutesSeconds(this.editSegment.diveSegment.time);
             this.timeMin = msTime[0].toString();
             this.timeSec = msTime[1].toString();
-            this.o2 = this.editSegment[1].o2.toString();
-            this.he = this.editSegment[1].he.toString();
+            this.o2 = this.editSegment.gas.o2.toString();
+            this.he = this.editSegment.gas.he.toString();
         }
 
         $refs!: {
@@ -145,9 +144,14 @@ import {segmentType} from "@/common/segment_type";
                 o2: Number(this.o2)
             };
 
+            const element: BottomSegmentElement = {
+                diveSegment: newDiveSegment,
+                gas: newGas
+            };
+
             this.$emit(
                 'submitted',
-                [newDiveSegment, newGas]
+                element
             );
 
             this.resetForm();

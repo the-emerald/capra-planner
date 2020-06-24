@@ -3,21 +3,32 @@ import {diveSegment} from "@/common/serde/dive_segment";
 import {gas} from "@/common/serde/gas";
 import {Vue} from "vue-property-decorator";
 
+// Interfaces for element data
+export interface BottomSegmentElement {
+    diveSegment: diveSegment;
+    gas: gas;
+}
+
+export interface DecoGasElement {
+    gas: gas;
+    number?: number;
+}
+
 @Module({
     namespaced: true,
     name: 'plan'
 })
 class Plan extends VuexModule {
-    public bottomSegments: Array<[diveSegment, gas]> = [];
-    public decoGases: Array<[gas, number?]> = [];
+    public bottomSegments: Array<[boolean, BottomSegmentElement]> = [];
+    public decoGases: Array<[boolean, DecoGasElement]> = [];
 
     @Mutation
-    public pushBottomSegment(elem: [diveSegment, gas]): void {
+    public pushBottomSegment(elem: [boolean, BottomSegmentElement]): void {
         this.bottomSegments.push(elem);
     }
 
     @Mutation
-    public updateBottomSegmentAtIndex(elem: [[diveSegment, gas], number]): void {
+    public updateBottomSegmentAtIndex(elem: [[boolean, BottomSegmentElement], number]): void {
         Vue.set(this.bottomSegments, elem[1], elem[0]);
     }
 
@@ -32,17 +43,17 @@ class Plan extends VuexModule {
     }
 
     @Mutation
-    public replaceBottomSegments(to: Array<[diveSegment, gas]>): void {
+    public replaceBottomSegments(to: Array<[boolean, BottomSegmentElement]>): void {
         this.bottomSegments = to;
     }
 
     @Mutation
-    public pushDecoGas(elem: [gas, number?]): void {
+    public pushDecoGas(elem: [boolean, DecoGasElement]): void {
         this.decoGases.push(elem);
     }
 
     @Mutation
-    public updateDecoGasAtIndex(elem: [[gas, number?], number]): void {
+    public updateDecoGasAtIndex(elem: [[boolean, DecoGasElement], number]): void {
         Vue.set(this.decoGases, elem[1], elem[0]);
     }
 
@@ -57,7 +68,7 @@ class Plan extends VuexModule {
     }
 
     @Mutation
-    public replaceDecoGases(to: Array<[gas, number?]>): void {
+    public replaceDecoGases(to: Array<[boolean, DecoGasElement]>): void {
         this.decoGases = to;
     }
 }

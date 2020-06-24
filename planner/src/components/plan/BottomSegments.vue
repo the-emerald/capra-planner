@@ -66,7 +66,7 @@
                     </b-container>
 
                     <!--Relevant modals-->
-                    <BSNewModal @submitted="onBSSubmitted"></BSNewModal>
+                    <BSNewModal @submitted="onBSNewSubmitted"></BSNewModal>
                     <BSReorderModal :original-ordering="this.bottomSegments" @submitted="onBSReorderSubmitted"></BSReorderModal>
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
@@ -78,7 +78,7 @@
                                     </b-form-checkbox>
                                 </b-col>
                                 <b-col sm="15">
-                                    {{displayDiveSegmentGas(segment)}}
+                                    {{displayDiveSegmentGas(segment[1])}}
                                 </b-col>
                                 <b-col>
                                     <b-dropdown class="float-right" variant="danger" title="Delete segment" size="sm" no-caret>
@@ -105,7 +105,7 @@
                                     </b-dropdown>
                                 </b-col>
                                 <b-col sm="2">
-                                    <b-button size="sm" class="float-right" @click="setEditSegment(segment, index)">
+                                    <b-button size="sm" class="float-right" @click="setEditSegment(segment[1], index)">
                                         <b-icon-pencil></b-icon-pencil>
                                     </b-button>
                                 </b-col>
@@ -121,22 +121,21 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {diveSegment} from "@/common/serde/dive_segment";
-    import {gas} from "@/common/serde/gas";
     import {namespace} from 'vuex-class';
     import BSEditModal from "@/components/plan/BSEditModal.vue";
     import {segmentType} from "@/common/serde/segment_type";
     import BSReorderModal from "@/components/plan/BSReorderModal.vue";
-    import {displayDiveSegmentGas} from "@/common/display";
+    import {displayBottomSegmentElement} from "@/common/display";
     import BSNewModal from "@/components/plan/BSNewModal.vue";
+    import {BottomSegmentElement} from "@/store/plan";
 
     const plan = namespace('Plan');
     @Component({
         components: {BSReorderModal, BSEditModal, BSNewModal}
     })
     export default class BottomSegments extends Vue {
-        editSegment: [diveSegment, gas] = [
-            {
+        editSegment: BottomSegmentElement = {
+            diveSegment: {
                 segmentType: segmentType.DiveSegment,
                 startDepth: 0,
                 endDepth: 0,
@@ -144,15 +143,16 @@
                 ascentRate: 0,
                 descentRate: 0
             },
-            {
+            gas: {
                 o2: 0,
                 he: 0
             }
-        ];
+
+        };
 
         editingIdx = 0;
 
-        setEditSegment(to: [diveSegment, gas], idx: number): void {
+        setEditSegment(to: BottomSegmentElement, idx: number): void {
             this.editSegment = to;
             this.editingIdx = idx;
 
@@ -160,41 +160,41 @@
         }
 
         @plan.State
-        public bottomSegments!: Array<[diveSegment, gas]>;
+        public bottomSegments!: Array<[boolean, BottomSegmentElement]>;
 
         @plan.Mutation
-        public pushBottomSegment!: (elem: [diveSegment, gas]) => void;
+        public pushBottomSegment!: (elem: [boolean, BottomSegmentElement]) => void;
 
         @plan.Mutation
         public resetBottomSegments!: () => void;
 
         @plan.Mutation
-        public updateBottomSegmentAtIndex!: (elem: [[diveSegment, gas], number]) => void;
+        public updateBottomSegmentAtIndex!: (elem: [[boolean, BottomSegmentElement], number]) => void;
 
         @plan.Mutation
         public removeBottomSegmentAtIndex!: (idx: number) => void;
 
         @plan.Mutation
-        public replaceBottomSegments!: (to: Array<[diveSegment, gas]>) => void;
+        public replaceBottomSegments!: (to: Array<[boolean, BottomSegmentElement]>) => void;
 
         // Emits from children components
 
-        onBSSubmitted(value: [diveSegment, gas]) {
-            this.pushBottomSegment(value);
+        onBSNewSubmitted(value: BottomSegmentElement) {
+            this.pushBottomSegment([true, value]);
         }
 
-        onBSEditSubmitted(value: [diveSegment, gas]) {
-            this.updateBottomSegmentAtIndex([value, this.editingIdx]);
+        onBSEditSubmitted(value: BottomSegmentElement) {
+            this.updateBottomSegmentAtIndex([[this.bottomSegments[this.editingIdx][0], value], this.editingIdx]);
             this.editingIdx = 0; // Maybe zero-initialise the editSegment as well?
         }
 
-        onBSReorderSubmitted(value: Array<[diveSegment, gas]>) {
+        onBSReorderSubmitted(value: Array<[boolean, BottomSegmentElement]>) {
             this.replaceBottomSegments(value);
         }
 
         // Re-export
-        displayDiveSegmentGas(input: [diveSegment, gas]): string {
-            return displayDiveSegmentGas(input);
+        displayDiveSegmentGas(input: BottomSegmentElement): string {
+            return displayBottomSegmentElement(input);
         }
     }
 
