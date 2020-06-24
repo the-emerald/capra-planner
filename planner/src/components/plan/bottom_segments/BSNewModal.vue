@@ -1,7 +1,7 @@
 import {segmentType} from "@/common/segment_type";
 <template>
     <div>
-        <b-modal id="bottom-segment-modal" title="Add bottom segment" hide-footer>
+        <b-modal id="bottom-segment-new-modal" title="Add bottom segment" hide-footer>
             <ValidationObserver ref="observer" v-slot="{passes}">
                 <b-form @submit.prevent="passes(onSubmit)" @reset="resetForm">
                     <b-container>

@@ -24,7 +24,7 @@
                             <!--Clear all-->
                             <b-col>
                                 <b-dropdown block
-                                          class="float-right" id="clear"
+                                          class="float-right" id="clear-bs"
                                           size="sm"
                                           variant="danger"
                                           title="Clear all" no-caret style="width: 45px; padding-right: 1px">
@@ -51,11 +51,11 @@
                                 </b-dropdown>
                             </b-col>
 
-                            <!--Add segment modal-->
+                            <!--Add segment-->
                             <b-col>
                                 <b-button block
                                         class="float-right" id="show-bottom-segment-modal-btn"
-                                        @click="$bvModal.show('bottom-segment-modal')"
+                                        @click="$bvModal.show('bottom-segment-new-modal')"
                                         variant="info"
                                         size="sm"
                                         title="Add">
