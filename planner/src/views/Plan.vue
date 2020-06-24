@@ -24,8 +24,8 @@
 <script lang="ts">
     import Navbar from "@/components/Navbar.vue";
     import {Component, Vue} from "vue-property-decorator";
-    import BottomSegments from "@/components/plan/BottomSegments.vue";
-    import DecoGases from "@/components/plan/DecoGases.vue";
+    import BottomSegments from "@/components/plan/bottom_segments/BottomSegments.vue";
+    import DecoGases from "@/components/plan/deco_gases/DecoGases.vue";
 
     @Component({
         name: "Plan",
