@@ -3,6 +3,7 @@ use actix_cors::Cors;
 
 pub mod routes;
 pub mod json_repr;
+pub mod db;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
