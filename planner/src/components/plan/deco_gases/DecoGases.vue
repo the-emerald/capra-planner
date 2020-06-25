@@ -131,8 +131,6 @@ import {segmentType} from "@/common/segment_type";
 
         // eslint-disable-next-line
         setEditGas(to: DecoGasElement, idx: number) {
-            // TODO: Populate edit gas
-            // Refer to BottomSegments.vue
             this.editGas = to;
             this.editingIdx = idx;
             this.$bvModal.show('deco-gas-edit-modal')
