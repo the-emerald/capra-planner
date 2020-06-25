@@ -1,4 +1,3 @@
-import {segmentType} from "@/common/segment_type";
 <template>
     <div>
         <b-modal id="bottom-segment-edit-modal" title="Edit bottom segment" @shown="syncFields" hide-footer>

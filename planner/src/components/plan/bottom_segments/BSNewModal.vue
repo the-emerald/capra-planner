@@ -146,7 +146,7 @@ import {segmentType} from "@/common/segment_type";
             );
 
             this.resetForm();
-            this.$bvModal.hide('bottom-segment-modal')
+            this.$bvModal.hide('bottom-segment-new-modal')
         }
 
         resetForm() {

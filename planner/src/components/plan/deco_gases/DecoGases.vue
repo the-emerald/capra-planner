@@ -55,9 +55,7 @@ import {segmentType} from "@/common/segment_type";
                     </b-container>
 
                     <!-- Relevant modals -->
-                    <!-- TODO: Add a new deco gas modal -->
                     <DecoGasNewModal @submitted="onDecoGasNewSubmitted"></DecoGasNewModal>
-                    <!-- TODO: Add an edit deco gas modal -->
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
                     <b-list-group-item v-for="(gas, index) in decoGases" :key="`gas-${index}`">
@@ -103,7 +101,7 @@ import {segmentType} from "@/common/segment_type";
                         </b-container>
                     </b-list-group-item>
                 </b-list-group>
-                <!-- TODO: Add an edit modal -->
+                <DecoGasEditModal :edit-gas="editGas" @submitted="onDecoGasEditSubmitted"></DecoGasEditModal>
             </b-card>
         </b-card-group>
     </div>
@@ -115,16 +113,29 @@ import {segmentType} from "@/common/segment_type";
     import {DecoGasElement} from "@/store/plan";
     import {displayDecoGasElement} from "@/common/display";
     import DecoGasNewModal from "@/components/plan/deco_gases/DecoGasNewModal.vue";
+    import DecoGasEditModal from "@/components/plan/deco_gases/DecoGasEditModal.vue";
 
     const plan = namespace('Plan');
     @Component({
-        components: {DecoGasNewModal}
+        components: {DecoGasEditModal, DecoGasNewModal}
     })
     export default class DecoGases extends Vue {
+        editGas: DecoGasElement = {
+            gas: {
+                o2: 0,
+                he: 0
+            }
+        };
+
+        editingIdx = 0;
+
         // eslint-disable-next-line
-        setEditGas(gas: DecoGasElement, idx: number) {
+        setEditGas(to: DecoGasElement, idx: number) {
             // TODO: Populate edit gas
             // Refer to BottomSegments.vue
+            this.editGas = to;
+            this.editingIdx = idx;
+            this.$bvModal.show('deco-gas-edit-modal')
         }
 
         invertGasCheckbox(idx: number) {
@@ -153,8 +164,13 @@ import {segmentType} from "@/common/segment_type";
 
         // Emits
         onDecoGasNewSubmitted(value: DecoGasElement) {
-            console.log("ok");
             this.pushDecoGas([true, value]);
+        }
+
+        onDecoGasEditSubmitted(value: DecoGasElement) {
+            const selected = this.decoGases[this.editingIdx][0];
+            this.updateDecoGasAtIndex([[selected, value], this.editingIdx]);
+            this.editingIdx = 0;
         }
 
         // Re-export
