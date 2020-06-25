@@ -11,7 +11,6 @@ export interface BottomSegmentElement {
 
 export interface DecoGasElement {
     gas: Gas;
-    number?: number;
 }
 
 @Module({

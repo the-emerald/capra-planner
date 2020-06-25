@@ -56,6 +56,7 @@ import {segmentType} from "@/common/segment_type";
 
                     <!-- Relevant modals -->
                     <!-- TODO: Add a new deco gas modal -->
+                    <DecoGasNewModal @submitted="onDecoGasNewSubmitted"></DecoGasNewModal>
                     <!-- TODO: Add an edit deco gas modal -->
                 </b-card-header>
                 <b-list-group flush class="overflow-auto list_group">
@@ -67,8 +68,7 @@ import {segmentType} from "@/common/segment_type";
                                     </b-form-checkbox>
                                 </b-col>
                                 <b-col sm="15">
-                                    <!-- TODO: Write formatting for gas -->
-                                    Placeholder yo!
+                                    {{displayDecoGas(gas[1])}}
                                 </b-col>
                                 <b-col>
                                     <b-dropdown class="float-right" variant="danger" title="Delete segment" size="sm" no-caret>
@@ -111,12 +111,15 @@ import {segmentType} from "@/common/segment_type";
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-
     import {namespace} from 'vuex-class';
     import {DecoGasElement} from "@/store/plan";
-    const plan = namespace('Plan');
+    import {displayDecoGasElement} from "@/common/display";
+    import DecoGasNewModal from "@/components/plan/deco_gases/DecoGasNewModal.vue";
 
-    @Component
+    const plan = namespace('Plan');
+    @Component({
+        components: {DecoGasNewModal}
+    })
     export default class DecoGases extends Vue {
         // eslint-disable-next-line
         setEditGas(gas: DecoGasElement, idx: number) {
@@ -148,6 +151,16 @@ import {segmentType} from "@/common/segment_type";
         @plan.Mutation
         public replaceDecoGases!: (to: Array<[boolean, DecoGasElement]>) => void;
 
+        // Emits
+        onDecoGasNewSubmitted(value: DecoGasElement) {
+            console.log("ok");
+            this.pushDecoGas([true, value]);
+        }
+
+        // Re-export
+        displayDecoGas(input: DecoGasElement): string {
+            return displayDecoGasElement(input);
+        }
     }
 </script>
 
