@@ -33,14 +33,15 @@ CREATE TABLE Dives (
 );
 
 CREATE TABLE VPMSettings (
-    id integer PRIMARY KEY AUTOINCREMENT,
-    magic text
+    id integer PRIMARY KEY AUTOINCREMENT
 );
 
 CREATE TABLE Segments (
     id integer PRIMARY KEY AUTOINCREMENT,
     dive_id integer,
-    T text,
+    start_depth integer,
+    end_depth integer,
+    time integer,
     gas_id integer
 );
 
