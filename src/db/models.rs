@@ -1,8 +1,9 @@
-use crate::db::schema::{users, zhl_settings};
+use crate::db::schema::{users, zhl_settings, vpm_settings};
 
 #[derive(Queryable, Identifiable, Associations)]
 #[table_name = "users"]
 #[belongs_to(parent = "ZHLSettings", foreign_key = "current_zhl_setting_id")]
+#[belongs_to(parent = "VPMSettings", foreign_key = "current_vpm_setting_id")]
 pub struct User {
     pub id: i32,
     pub name: String,
@@ -20,4 +21,10 @@ pub struct ZHLSettings {
     pub gfh: i32,
     pub ascent_rate: i32,
     pub descent_rate: i32
+}
+
+#[derive(Queryable, Identifiable)]
+#[table_name = "vpm_settings"]
+pub struct VPMSettings {
+    pub id: i32,
 }
