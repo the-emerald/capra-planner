@@ -6,7 +6,7 @@ table! {
         timestamp -> Timestamp,
         zhl_settings_id -> Integer,
         vpm_settings_id -> Integer,
-        gas_plan_setting_id -> Integer,
+        gas_plan_settings_id -> Integer,
     }
 }
 
@@ -81,9 +81,9 @@ table! {
         id -> Integer,
         name -> Text,
         current_tissue_id -> Integer,
-        current_zhl_setting_id -> Integer,
-        current_vpm_setting_id -> Integer,
-        current_gas_plan_setting_id -> Integer,
+        current_zhl_settings_id -> Integer,
+        current_vpm_settings_id -> Integer,
+        current_gas_plan_settings_id -> Integer,
     }
 }
 
@@ -103,7 +103,7 @@ table! {
     }
 }
 
-joinable!(dives -> gas_plan_settings (gas_plan_setting_id));
+joinable!(dives -> gas_plan_settings (gas_plan_settings_id));
 joinable!(dives -> tissues (tissue_before_id));
 joinable!(dives -> users (user_id));
 joinable!(dives -> vpm_settings (vpm_settings_id));
@@ -111,10 +111,10 @@ joinable!(dives -> zhl_settings (zhl_settings_id));
 joinable!(gases -> dives (dive_id));
 joinable!(segments -> dives (dive_id));
 joinable!(segments -> gases (gas_id));
-joinable!(users -> gas_plan_settings (current_gas_plan_setting_id));
+joinable!(users -> gas_plan_settings (current_gas_plan_settings_id));
 joinable!(users -> tissues (current_tissue_id));
-joinable!(users -> vpm_settings (current_vpm_setting_id));
-joinable!(users -> zhl_settings (current_zhl_setting_id));
+joinable!(users -> vpm_settings (current_vpm_settings_id));
+joinable!(users -> zhl_settings (current_zhl_settings_id));
 
 allow_tables_to_appear_in_same_query!(
     dives,

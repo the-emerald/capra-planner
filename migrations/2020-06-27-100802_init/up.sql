@@ -3,14 +3,14 @@ CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     current_tissue_id INTEGER NOT NULL,
-    current_zhl_setting_id INTEGER NOT NULL DEFAULT 1,
-    current_vpm_setting_id INTEGER NOT NULL DEFAULT 1,
-    current_gas_plan_setting_id INTEGER NOT NULL DEFAULT 1,
+    current_zhl_settings_id INTEGER NOT NULL DEFAULT 1,
+    current_vpm_settings_id INTEGER NOT NULL DEFAULT 1,
+    current_gas_plan_settings_id INTEGER NOT NULL DEFAULT 1,
 
     FOREIGN KEY (current_tissue_id) REFERENCES tissues(id),
-    FOREIGN KEY (current_zhl_setting_id) REFERENCES zhl_settings(id),
-    FOREIGN KEY (current_vpm_setting_id) REFERENCES vpm_settings(id),
-    FOREIGN KEY (current_gas_plan_setting_id) REFERENCES gas_plan_settings(id)
+    FOREIGN KEY (current_zhl_settings_id) REFERENCES zhl_settings(id),
+    FOREIGN KEY (current_vpm_settings_id) REFERENCES vpm_settings(id),
+    FOREIGN KEY (current_gas_plan_settings_id) REFERENCES gas_plan_settings(id)
 );
 
 CREATE TABLE zhl_settings (
@@ -38,13 +38,13 @@ CREATE TABLE dives (
     timestamp DATETIME NOT NULL,
     zhl_settings_id INTEGER NOT NULL,
     vpm_settings_id INTEGER NOT NULL,
-    gas_plan_setting_id INTEGER NOT NULL,
+    gas_plan_settings_id INTEGER NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (tissue_before_id) REFERENCES tissues(id),
     FOREIGN KEY (zhl_settings_id) REFERENCES zhl_settings(id),
     FOREIGN KEY (vpm_settings_id) REFERENCES vpm_settings(id),
-    FOREIGN KEY (gas_plan_setting_id) REFERENCES gas_plan_settings(id)
+    FOREIGN KEY (gas_plan_settings_id) REFERENCES gas_plan_settings(id)
 );
 
 
