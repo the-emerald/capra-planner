@@ -1,5 +1,5 @@
 table! {
-    Dives (id) {
+    dives (id) {
         id -> Integer,
         user_id -> Integer,
         deco_gases -> Text,
@@ -12,7 +12,7 @@ table! {
 }
 
 table! {
-    GasPlanSettings (id) {
+    gas_plan_settings (id) {
         id -> Integer,
         sac_bottom -> Integer,
         sac_deco -> Integer,
@@ -20,7 +20,7 @@ table! {
 }
 
 table! {
-    Gases (id) {
+    gases (id) {
         id -> Integer,
         dive_id -> Integer,
         o2 -> Integer,
@@ -29,7 +29,7 @@ table! {
 }
 
 table! {
-    Segments (id) {
+    segments (id) {
         id -> Integer,
         dive_id -> Integer,
         start_depth -> Integer,
@@ -40,7 +40,7 @@ table! {
 }
 
 table! {
-    Tissues (id) {
+    tissues (id) {
         id -> Integer,
         n2_1 -> Float,
         n2_2 -> Float,
@@ -78,7 +78,7 @@ table! {
 }
 
 table! {
-    Users (id) {
+    users (id) {
         id -> Integer,
         name -> Text,
         current_tissue_id -> Integer,
@@ -89,13 +89,13 @@ table! {
 }
 
 table! {
-    VPMSettings (id) {
+    vpm_settings (id) {
         id -> Integer,
     }
 }
 
 table! {
-    ZHLSettings (id) {
+    zhl_settings (id) {
         id -> Integer,
         gfl -> Integer,
         gfh -> Integer,
@@ -104,26 +104,26 @@ table! {
     }
 }
 
-joinable!(Dives -> GasPlanSettings (gas_plan_setting_id));
-joinable!(Dives -> Tissues (tissue_before_id));
-joinable!(Dives -> Users (user_id));
-joinable!(Dives -> VPMSettings (vpm_settings_id));
-joinable!(Dives -> ZHLSettings (zhl_settings_id));
-joinable!(Gases -> Dives (dive_id));
-joinable!(Segments -> Dives (dive_id));
-joinable!(Segments -> Gases (gas_id));
-joinable!(Users -> GasPlanSettings (current_gas_plan_setting_id));
-joinable!(Users -> Tissues (current_tissue_id));
-joinable!(Users -> VPMSettings (current_vpm_setting_id));
-joinable!(Users -> ZHLSettings (current_zhl_setting_id));
+joinable!(dives -> gas_plan_settings (gas_plan_setting_id));
+joinable!(dives -> tissues (tissue_before_id));
+joinable!(dives -> users (user_id));
+joinable!(dives -> vpm_settings (vpm_settings_id));
+joinable!(dives -> zhl_settings (zhl_settings_id));
+joinable!(gases -> dives (dive_id));
+joinable!(segments -> dives (dive_id));
+joinable!(segments -> gases (gas_id));
+joinable!(users -> gas_plan_settings (current_gas_plan_setting_id));
+joinable!(users -> tissues (current_tissue_id));
+joinable!(users -> vpm_settings (current_vpm_setting_id));
+joinable!(users -> zhl_settings (current_zhl_setting_id));
 
 allow_tables_to_appear_in_same_query!(
-    Dives,
-    GasPlanSettings,
-    Gases,
-    Segments,
-    Tissues,
-    Users,
-    VPMSettings,
-    ZHLSettings,
+    dives,
+    gas_plan_settings,
+    gases,
+    segments,
+    tissues,
+    users,
+    vpm_settings,
+    zhl_settings,
 );
