@@ -2,10 +2,15 @@
 CREATE TABLE Users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    current_tissue INTEGER NOT NULL, -- fk
-    current_zhl_setting_id INTEGER NOT NULL, -- fk
-    current_vpm_setting_id INTEGER NOT NULL, -- fk
-    current_gas_plan_setting_id INTEGER NOT NULL -- fk
+    current_tissue_id INTEGER NOT NULL,
+    current_zhl_setting_id INTEGER NOT NULL DEFAULT 1,
+    current_vpm_setting_id INTEGER NOT NULL DEFAULT 1,
+    current_gas_plan_setting_id INTEGER NOT NULL DEFAULT 1,
+
+    FOREIGN KEY (current_tissue_id) REFERENCES Tissues(id),
+    FOREIGN KEY (current_zhl_setting_id) REFERENCES ZHLSettings(id),
+    FOREIGN KEY (current_vpm_setting_id) REFERENCES VPMSettings(id),
+    FOREIGN KEY (current_gas_plan_setting_id) REFERENCES GasPlanSettings(id)
 );
 
 CREATE TABLE ZHLSettings (
@@ -28,30 +33,41 @@ CREATE TABLE GasPlanSettings (
 
 CREATE TABLE Dives (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,    -- fk
+    user_id INTEGER NOT NULL,
     deco_gases TEXT NOT NULL,
-    tissue_before_id INTEGER NOT NULL,   -- fk
+    tissue_before_id INTEGER NOT NULL,
     timestamp DATETIME NOT NULL,
-    zhl_settings_id INTEGER NOT NULL,    -- fk
-    vpm_settings_id INTEGER NOT NULL,    -- fk
-    gas_plan_setting_id INTEGER NOT NULL -- fk
+    zhl_settings_id INTEGER NOT NULL,
+    vpm_settings_id INTEGER NOT NULL,
+    gas_plan_setting_id INTEGER NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (tissue_before_id) REFERENCES Tissues(id),
+    FOREIGN KEY (zhl_settings_id) REFERENCES ZHLSettings(id),
+    FOREIGN KEY (vpm_settings_id) REFERENCES VPMSettings(id),
+    FOREIGN KEY (gas_plan_setting_id) REFERENCES GasPlanSettings(id)
 );
 
 
 CREATE TABLE Segments (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    dive_id INTEGER NOT NULL,   -- fk
+    dive_id INTEGER NOT NULL,
     start_depth INTEGER NOT NULL,
     end_depth INTEGER NOT NULL,
     time INTEGER NOT NULL,
-    gas_id INTEGER NOT NULL -- fk
+    gas_id INTEGER NOT NULL,
+
+    FOREIGN KEY (dive_id) REFERENCES Dives(id),
+    FOREIGN KEY (gas_id) REFERENCES Gases(id)
 );
 
 CREATE TABLE Gases (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    dive_id INTEGER NOT NULL -- fk
+    dive_id INTEGER NOT NULL,
     o2 INTEGER NOT NULL,
     he INTEGER NOT NULL,
+
+    FOREIGN KEY (dive_id) REFERENCES Dives(id)
 );
 
 CREATE TABLE Tissues (
@@ -90,12 +106,12 @@ CREATE TABLE Tissues (
     he_16 REAL NOT NULL
 );
 
-
 -- Default values for settings
 -- ZHL-16
-INSERT INTO ZHLSettings VALUES (1, 50, 70, 20, -10)
+INSERT INTO ZHLSettings VALUES (1, 50, 70, 20, -10);
 
 -- VPM
+INSERT INTO VPMSettings VALUES (1);
 
 -- Gas Planning
-INSERT INTO GasPlanSettings VALUES (1, 20, 15)
+INSERT INTO GasPlanSettings VALUES (1, 20, 15);
