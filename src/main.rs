@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate diesel;
+
 use actix_web::{App, HttpServer};
 use actix_cors::Cors;
 
