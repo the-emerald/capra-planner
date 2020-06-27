@@ -34,7 +34,6 @@ CREATE TABLE gas_plan_settings (
 CREATE TABLE dives (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    deco_gases TEXT NOT NULL,
     tissue_before_id INTEGER NOT NULL,
     timestamp DATETIME NOT NULL,
     zhl_settings_id INTEGER NOT NULL,

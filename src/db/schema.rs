@@ -2,7 +2,6 @@ table! {
     dives (id) {
         id -> Integer,
         user_id -> Integer,
-        deco_gases -> Text,
         tissue_before_id -> Integer,
         timestamp -> Timestamp,
         zhl_settings_id -> Integer,
