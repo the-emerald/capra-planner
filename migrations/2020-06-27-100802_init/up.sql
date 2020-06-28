@@ -107,7 +107,7 @@ CREATE TABLE tissues (
 
 -- Default values
 -- ZHL-16
-INSERT INTO zhl_settings VALUES (1, 50, 70, 20, -10);
+INSERT INTO zhl_settings VALUES (1, 50, 70, -10, 20);
 
 -- VPM
 INSERT INTO vpm_settings VALUES (1);
