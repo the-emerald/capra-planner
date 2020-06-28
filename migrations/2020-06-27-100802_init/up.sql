@@ -1,7 +1,7 @@
 -- Your SQL goes here
 CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     current_tissue_id INTEGER NOT NULL DEFAULT 1,
     current_zhl_settings_id INTEGER NOT NULL DEFAULT 1,
     current_vpm_settings_id INTEGER NOT NULL DEFAULT 1,
