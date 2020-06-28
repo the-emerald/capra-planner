@@ -22,3 +22,16 @@ pub fn insert_new_user(new_user: &NewUser,
 
     Ok(user)
 }
+
+pub fn get_user_by_id(id_: i32,
+                      conn: &SqliteConnection
+) -> Result<Option<models::user::User>, diesel::result::Error> {
+    use crate::db::schema::users::dsl::*;
+
+    let user = users
+        .filter(id.eq(id_))
+        .first::<models::user::User>(conn)
+        .optional()?;
+
+    Ok(user)
+}

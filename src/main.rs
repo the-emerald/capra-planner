@@ -43,6 +43,7 @@ async fn main() -> std::io::Result<()> {
                     .finish()
             )
             .service(routes::user::add_user)
+            .service(routes::user::get_user)
     })
         .bind(&bind)?
         .run()
