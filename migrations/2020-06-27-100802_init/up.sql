@@ -2,7 +2,7 @@
 CREATE TABLE users (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    current_tissue_id INTEGER NOT NULL,
+    current_tissue_id INTEGER NOT NULL DEFAULT 1,
     current_zhl_settings_id INTEGER NOT NULL DEFAULT 1,
     current_vpm_settings_id INTEGER NOT NULL DEFAULT 1,
     current_gas_plan_settings_id INTEGER NOT NULL DEFAULT 1,
@@ -105,7 +105,7 @@ CREATE TABLE tissues (
     he_16 REAL NOT NULL
 );
 
--- Default values for settings
+-- Default values
 -- ZHL-16
 INSERT INTO zhl_settings VALUES (1, 50, 70, 20, -10);
 
@@ -114,3 +114,7 @@ INSERT INTO vpm_settings VALUES (1);
 
 -- Gas Planning
 INSERT INTO gas_plan_settings VALUES (1, 20, 15);
+
+-- Tissues
+INSERT INTO tissues VALUES (1, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79,
+                            0.79, 0.79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
