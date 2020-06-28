@@ -1,6 +1,7 @@
 use crate::db::schema::{users};
 use crate::db::models::settings::*;
 use crate::db::models::tissue::Tissue;
+use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Identifiable, Associations)]
 #[table_name = "users"]
@@ -15,4 +16,9 @@ pub struct User {
     pub current_zhl_settings_id: i32,
     pub current_vpm_settings_id: i32,
     pub current_gas_plan_settings_id: i32
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewUser {
+    pub name: String,
 }

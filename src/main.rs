@@ -42,8 +42,7 @@ async fn main() -> std::io::Result<()> {
                     .allowed_methods(vec!["GET", "POST"])
                     .finish()
             )
-            .service(routes::ndl::route)
-            .service(routes::get_zhl_plan::route)
+            .service(routes::user::add_user)
     })
         .bind(&bind)?
         .run()
