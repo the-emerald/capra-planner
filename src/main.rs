@@ -44,6 +44,7 @@ async fn main() -> std::io::Result<()> {
             )
             .service(routes::user::add_user)
             .service(routes::user::get_user)
+            .service(routes::user::get_all_users)
     })
         .bind(&bind)?
         .run()
