@@ -1,6 +1,7 @@
 use crate::db::schema::{tissues};
+use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Identifiable)]
+#[derive(Queryable, Identifiable, Serialize, Deserialize)]
 #[table_name = "tissues"]
 pub struct Tissue {
     pub id: i32,
