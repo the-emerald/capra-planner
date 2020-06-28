@@ -3,10 +3,28 @@ use actix_web::{post, web, HttpResponse};
 use crate::db::models;
 use serde::{Serialize, Deserialize};
 use crate::db::actions::user::get_user_by_id;
+use crate::db::models::user::User;
 
+// A simplified user that only contains the id and name field.
+#[derive(Serialize, Deserialize)]
+struct SimplifiedUser {
+    id: i32,
+    name: String,
+}
+
+impl From<models::user::User> for SimplifiedUser {
+    fn from(value: User) -> Self {
+        SimplifiedUser {
+            id: value.id,
+            name: value.name.clone()
+        }
+    }
+}
+
+// A combined struct that contains a user and all their settings.
 #[derive(Serialize, Deserialize)]
 struct CombinedUser {
-    user: models::user::User,
+    user: SimplifiedUser,
     tissue: models::tissue::Tissue,
     zhl_settings: models::settings::ZHLSetting,
     vpm_settings: models::settings::VPMSetting,
@@ -28,7 +46,7 @@ pub(crate) async fn add_user(
         let tissue = db::actions::tissue::get_tissue_of_user(&user, &conn)?;
 
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
-            user,
+            user: user.into(),
             tissue,
             zhl_settings: settings.0,
             vpm_settings: settings.1,
@@ -65,7 +83,7 @@ pub(crate) async fn get_user(
         let tissue = db::actions::tissue::get_tissue_of_user(&user, &conn)?;
 
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
-            user,
+            user: user.into(),
             tissue,
             zhl_settings: settings.0,
             vpm_settings: settings.1,
