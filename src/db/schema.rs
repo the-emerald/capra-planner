@@ -21,7 +21,7 @@ table! {
 table! {
     gases (id) {
         id -> Integer,
-        dive_id -> Integer,
+        dive_id -> Nullable<Integer>,
         o2 -> Integer,
         he -> Integer,
     }
