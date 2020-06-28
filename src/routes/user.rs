@@ -98,3 +98,26 @@ pub(crate) async fn get_user(
 
     Ok(HttpResponse::Ok().json(res))
 }
+
+#[post("/user/all")]
+pub(crate) async fn get_all_users(
+    pool: web::Data<DBPool>
+) -> actix_web::Result<HttpResponse> {
+    let conn = pool
+        .get()
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    let res = web::block(move || {
+        db::actions::user::get_list_all_users(&conn)
+    })
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })?
+        .into_iter()
+        .map(|x| x.into())
+        .collect::<Vec<SimplifiedUser>>();
+
+    Ok(HttpResponse::Ok().json(res))
+}

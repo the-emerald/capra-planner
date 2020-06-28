@@ -35,3 +35,8 @@ pub fn get_user_by_id(id_: i32,
 
     Ok(user)
 }
+
+pub fn get_list_all_users(conn: &SqliteConnection) -> Result<Vec<models::user::User>, diesel::result::Error> {
+    use crate::db::schema::users::dsl::*;
+    users.load::<models::user::User>(conn)
+}
