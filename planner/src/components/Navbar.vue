@@ -16,7 +16,7 @@
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
-                            Diver Name
+                            {{user.name}}
                         </template>
                         <b-dropdown-item href="#">Settings</b-dropdown-item>
                         <b-dropdown-item href="#">Sign Out</b-dropdown-item>
@@ -29,10 +29,18 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
+    import {namespace} from "vuex-class";
+    import {User} from "@/common/serde/user";
+
+    const userInfo = namespace('UserInfo');
 
     @Component
     export default class Navbar extends Vue {
+        @userInfo.State
+        public user!: User | null;
 
+        @userInfo.Mutation
+        public resetSelectedUser!: () => void;
     }
 
 </script>

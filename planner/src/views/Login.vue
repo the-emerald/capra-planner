@@ -20,8 +20,8 @@
                             v-for="(user, index) in usersList"
                             :key="`users-${index}`"
                             href="#"
-                            v-bind:class="{active: isSelected(index)}"
-                            v-on:click="selected = index">
+                            v-bind:class="{active: isSelectedIdx(index)}"
+                            v-on:click="onSelect(index, user.id)">
                         {{user.name}}
                     </b-list-group-item>
                 </b-col>
@@ -33,7 +33,7 @@
 
                 <b-col sm="1">
                     <b-button block variant="primary"
-                              v-bind:disabled="isSelected(-1)"
+                              v-bind:disabled="isSelectedIdx(-1)"
                               @click="loginButtonPressed">
                         <b-icon-arrow-right></b-icon-arrow-right>
                     </b-button>
@@ -60,12 +60,14 @@
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
     import {User} from "@/common/serde/user"
-    import {listAllUsers, newUser} from "@/common/routes";
+    import {getUser, listAllUsers, newUser} from "@/common/routes";
     import {namespace} from "vuex-class";
     import router from "@/router";
     import LoginNewModal from "@/components/login/LoginNewModal.vue";
     import {makeErrorToast} from "@/common/toast";
     import {handleAxiosError} from "@/common/axios_error";
+    import {Tissue} from "@/common/serde/tissue";
+    import {GasPlanSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
 
     const userInfo = namespace('UserInfo');
 
@@ -77,17 +79,33 @@
         usersList: Array<User> = [];
 
         selected = -1;
+        selectedId = -1;
 
-        isSelected(idx: number): boolean {
+        isSelectedIdx(idx: number): boolean {
             return this.selected == idx;
+        }
+
+        onSelect(idx: number, id: number) {
+            this.selected = idx;
+            this.selectedId = id;
         }
 
         loginButtonPressed() {
             // Update store
-            this.updateSelectedUser(this.selected);
-            router.push({
-                name: "plan"
+            getUser(this.selectedId)
+            .then(r => {
+                this.updateSelectedUser(r.data.user);
+                this.updateZHLSettings(r.data.zhl_settings);
+                this.updateVPMSettings(r.data.vpm_settings);
+                this.updateGasPlanSettings(r.data.gas_plan_settings);
+                this.updateTissue(r.data.tissue);
+                router.push({
+                    name: "plan"
+                })
             })
+            .catch((error) => {
+                makeErrorToast(this, handleAxiosError(error))
+            });
         }
 
         onLoginNewSubmitted(name: string) {
@@ -101,21 +119,39 @@
         public selectedUser!: number;
 
         @userInfo.Mutation
-        public updateSelectedUser!: (elem: number) => void;
+        public updateSelectedUser!: (elem: User) => void;
+
+        @userInfo.Mutation
+        public updateZHLSettings!: (elem: ZHLSettings) => void;
+
+        @userInfo.Mutation
+        public updateVPMSettings!: (elem: VPMSettings) => void;
+
+        @userInfo.Mutation
+        public updateGasPlanSettings!: (elem: GasPlanSettings) => void;
+
+        @userInfo.Mutation
+        public updateTissue!: (elem: Tissue) => void;
 
         mounted() {
             this.refreshUsersList();
         }
 
+        resetSelected() {
+            this.selected = -1; // Invalidate previous selected
+            this.selectedId = -1;
+        }
+
         refreshUsersList() {
             this.usersList = [];
+            this.resetSelected();
             listAllUsers()
                 .then(r => {
                     this.usersList = r.data;
                 })
                 .catch((error) => {
                     makeErrorToast(this, handleAxiosError(error));
-                })
+                });
         }
     }
 </script>

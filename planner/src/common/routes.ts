@@ -11,7 +11,7 @@ export function newUser(name: string): Promise<AxiosResponse> {
 }
 
 // TODO: Figure out how to type response body
-export function aboutUser(id: number): Promise<AxiosResponse> {
+export function getUser(id: number): Promise<AxiosResponse> {
     return axios.post(
         '/user',
         {

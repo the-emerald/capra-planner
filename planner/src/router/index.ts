@@ -9,6 +9,7 @@ Vue.use(VueRouter);
 // eslint-disable-next-line
 function requireLogin(to: Route, from: Route, next: any) {
     const selected: boolean = store.getters['UserInfo/hasUserSelected'];
+    console.log(selected);
     if (!selected) {
         next({
             name: "login"
