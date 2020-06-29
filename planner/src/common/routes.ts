@@ -10,7 +10,6 @@ export function newUser(name: string): Promise<AxiosResponse> {
     )
 }
 
-// TODO: Figure out how to type response body
 export function getUser(id: number): Promise<AxiosResponse> {
     return axios.post(
         '/user',

@@ -98,7 +98,7 @@ import {segmentType} from "@/common/segment_type";
     import {DiveSegment} from "@/common/serde/dive_segment";
     import {SegmentType} from "@/common/serde/segment_type";
     import {Gas} from "@/common/serde/gas";
-    import {minutesSecondToMinutes} from "@/common/time";
+    import {minutesSecondToMilliseconds} from "@/common/time";
     import {BottomSegmentElement} from "@/store/plan";
 
     @Component({
@@ -119,14 +119,11 @@ import {segmentType} from "@/common/segment_type";
         he = '';
 
         onSubmit() {
-            // TODO: Fix hardcoded values
             const newDiveSegment: DiveSegment = {
-                ascentRate: -10,
-                descentRate: 20,
-                startDepth: Number(this.depth),
-                endDepth: Number(this.depth),
-                segmentType: SegmentType.DiveSegment,
-                time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
+                start_depth: Number(this.depth),
+                end_depth: Number(this.depth),
+                segment_type: SegmentType.DiveSegment,
+                time: minutesSecondToMilliseconds(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
             const newGas: Gas = {

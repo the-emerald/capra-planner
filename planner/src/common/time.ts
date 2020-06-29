@@ -1,4 +1,4 @@
-export function minutesSecondToMinutes(min: number, sec: number): number {
+export function minutesSecondToMilliseconds(min: number, sec: number): number {
     return ((min*60) + sec) * 1000;
 }
 

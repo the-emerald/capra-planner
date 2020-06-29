@@ -97,7 +97,7 @@
     import {DiveSegment} from "@/common/serde/dive_segment";
     import {SegmentType} from "@/common/serde/segment_type";
     import {Gas} from "@/common/serde/gas";
-    import {millisecondsToMinutesSeconds, minutesSecondToMinutes} from "@/common/time";
+    import {millisecondsToMinutesSeconds, minutesSecondToMilliseconds} from "@/common/time";
     import {BottomSegmentElement} from "@/store/plan";
 
     @Component({
@@ -110,7 +110,7 @@
         @Prop() private editSegment!: BottomSegmentElement;
 
         syncFields() {
-            this.depth = this.editSegment.diveSegment.startDepth.toString();
+            this.depth = this.editSegment.diveSegment.start_depth.toString();
             const msTime = millisecondsToMinutesSeconds(this.editSegment.diveSegment.time);
             this.timeMin = msTime[0].toString();
             this.timeSec = msTime[1].toString();
@@ -135,7 +135,7 @@
                 startDepth: Number(this.depth),
                 endDepth: Number(this.depth),
                 segmentType: SegmentType.DiveSegment,
-                time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
+                time: minutesSecondToMilliseconds(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
             const newGas: Gas = {
