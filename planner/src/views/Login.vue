@@ -27,7 +27,7 @@
                 <b-col></b-col>
 
                 <b-col sm="1">
-                    <b-button block variant="primary"><b-icon-arrow-right></b-icon-arrow-right></b-button>
+                    <b-button block variant="primary" v-bind:disabled="isSelected(-1)"><b-icon-arrow-right></b-icon-arrow-right></b-button>
                 </b-col>
 
                 <b-col></b-col>
