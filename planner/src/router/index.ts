@@ -1,35 +1,15 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter, {RawLocation, Route, RouteConfig} from 'vue-router'
 import Plan from '../views/Plan.vue'
 import Login from '../views/Login.vue'
 import store from "@/store";
 
-
 Vue.use(VueRouter);
 
-const routes: Array<RouteConfig> = [
-    {
-        path: '/',
-        redirect: 'login'
-    },
-    {
-        path: '/login',
-        name: 'login',
-        component: Login
-    },
-    {
-        path: '/plan',
-        name: 'plan',
-        component: Plan
-    },
-];
-
-const router = new VueRouter({
-    routes
-});
-
-router.beforeEach((to, from, next) => {
-    if (to.name != 'login' && !store.getters.hasUserSelected) {
+// eslint-disable-next-line
+function requireLogin(to: Route, from: Route, next: <V>(to?: (RawLocation | false | (<V>(vm: V) => any) | void)) => void) {
+    const selected: boolean = store.getters['UserInfo/hasUserSelected'];
+    if (!selected) {
         next({
             name: "login"
         })
@@ -37,6 +17,40 @@ router.beforeEach((to, from, next) => {
     else {
         next()
     }
+}
+
+const routes: Array<RouteConfig> = [
+    {
+        path: '/',
+        redirect: {
+            name: "login"
+        }
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: Login,
+        beforeEnter: (to, from, next) => {
+            if (store.getters['UserInfo/hasUserSelected']) {
+                next({
+                    name: "plan" // Default redirect if user is already logged in
+                })
+            }
+            else {
+                next()
+            }
+        }
+    },
+    {
+        path: '/plan',
+        name: 'plan',
+        component: Plan,
+        beforeEnter: requireLogin
+    },
+];
+
+const router = new VueRouter({
+    routes
 });
 
 export default router
