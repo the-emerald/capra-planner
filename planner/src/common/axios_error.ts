@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 export function handleAxiosError(error: any): string {
-    if (error.reponse) {
+    if (error.response) {
         return "Server encountered an error."
     }
     else if (error.request) {
