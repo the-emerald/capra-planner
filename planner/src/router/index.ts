@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter, {RawLocation, Route, RouteConfig} from 'vue-router'
+import VueRouter, {Route, RouteConfig} from 'vue-router'
 import Plan from '../views/Plan.vue'
 import Login from '../views/Login.vue'
 import store from "@/store";
@@ -7,7 +7,7 @@ import store from "@/store";
 Vue.use(VueRouter);
 
 // eslint-disable-next-line
-function requireLogin(to: Route, from: Route, next: <V>(to?: (RawLocation | false | (<V>(vm: V) => any) | void)) => void) {
+function requireLogin(to: Route, from: Route, next: any) {
     const selected: boolean = store.getters['UserInfo/hasUserSelected'];
     if (!selected) {
         next({
