@@ -1,4 +1,4 @@
-export enum segmentType {
+export enum SegmentType {
     NoDeco,
     DecoStop,
     DiveSegment,

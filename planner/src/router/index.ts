@@ -1,24 +1,51 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter, {Route, RouteConfig} from 'vue-router'
 import Plan from '../views/Plan.vue'
-import Test from "../views/Test.vue"
+import Login from '../views/Login.vue'
+import store from "@/store";
 
 Vue.use(VueRouter);
+
+// eslint-disable-next-line
+function requireLogin(to: Route, from: Route, next: any) {
+    const selected: boolean = store.getters['UserInfo/hasUserSelected'];
+    if (!selected) {
+        next({
+            name: "login"
+        })
+    }
+    else {
+        next()
+    }
+}
 
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        redirect: 'plan'
+        redirect: {
+            name: "login"
+        }
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: Login,
+        beforeEnter: (to, from, next) => {
+            if (store.getters['UserInfo/hasUserSelected']) {
+                next({
+                    name: "plan" // Default redirect if user is already logged in
+                })
+            }
+            else {
+                next()
+            }
+        }
     },
     {
         path: '/plan',
         name: 'plan',
-        component: Plan
-    },
-    {
-        path: '/test',
-        name: 'test',
-        component: Test
+        component: Plan,
+        beforeEnter: requireLogin
     },
 ];
 

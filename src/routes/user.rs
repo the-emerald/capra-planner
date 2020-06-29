@@ -3,32 +3,16 @@ use actix_web::{post, web, HttpResponse};
 use crate::db::models;
 use serde::{Serialize, Deserialize};
 use crate::db::actions::user::get_user_by_id;
-use crate::db::models::user::User;
-
-// A simplified user that only contains the id and name field.
-#[derive(Serialize, Deserialize)]
-struct SimplifiedUser {
-    id: i32,
-    name: String,
-}
-
-impl From<models::user::User> for SimplifiedUser {
-    fn from(value: User) -> Self {
-        SimplifiedUser {
-            id: value.id,
-            name: value.name.clone()
-        }
-    }
-}
+use crate::simplified::{SimplifiedUser, SimplifiedTissue, SimplifiedZHLSetting, SimplifiedVPMSetting, SimplifiedGasPlanSetting};
 
 // A combined struct that contains a user and all their settings.
 #[derive(Serialize, Deserialize)]
 struct CombinedUser {
     user: SimplifiedUser,
-    tissue: models::tissue::Tissue,
-    zhl_settings: models::settings::ZHLSetting,
-    vpm_settings: models::settings::VPMSetting,
-    gas_plan_settings: models::settings::GasPlanSetting,
+    tissue: SimplifiedTissue,
+    zhl_settings: SimplifiedZHLSetting,
+    vpm_settings: SimplifiedVPMSetting,
+    gas_plan_settings: SimplifiedGasPlanSetting,
 }
 
 #[post("/user/new")]
@@ -47,10 +31,10 @@ pub(crate) async fn add_user(
 
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
             user: user.into(),
-            tissue,
-            zhl_settings: settings.0,
-            vpm_settings: settings.1,
-            gas_plan_settings: settings.2
+            tissue: tissue.into(),
+            zhl_settings: settings.0.into(),
+            vpm_settings: settings.1.into(),
+            gas_plan_settings: settings.2.into()
         })
     })
         .await
@@ -84,10 +68,10 @@ pub(crate) async fn get_user(
 
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
             user: user.into(),
-            tissue,
-            zhl_settings: settings.0,
-            vpm_settings: settings.1,
-            gas_plan_settings: settings.2
+            tissue: tissue.into(),
+            zhl_settings: settings.0.into(),
+            vpm_settings: settings.1.into(),
+            gas_plan_settings: settings.2.into()
         })
     })
         .await

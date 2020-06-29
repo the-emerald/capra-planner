@@ -96,7 +96,7 @@ import {segmentType} from "@/common/segment_type";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
     import {DiveSegment} from "@/common/serde/dive_segment";
-    import {segmentType} from "@/common/serde/segment_type";
+    import {SegmentType} from "@/common/serde/segment_type";
     import {Gas} from "@/common/serde/gas";
     import {minutesSecondToMinutes} from "@/common/time";
     import {BottomSegmentElement} from "@/store/plan";
@@ -125,7 +125,7 @@ import {segmentType} from "@/common/segment_type";
                 descentRate: 20,
                 startDepth: Number(this.depth),
                 endDepth: Number(this.depth),
-                segmentType: segmentType.DiveSegment,
+                segmentType: SegmentType.DiveSegment,
                 time: minutesSecondToMinutes(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 

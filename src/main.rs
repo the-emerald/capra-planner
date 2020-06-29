@@ -9,6 +9,7 @@ use diesel::r2d2::ConnectionManager;
 pub mod routes;
 pub mod json_repr;
 pub mod db;
+pub mod simplified;
 
 type DBPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 

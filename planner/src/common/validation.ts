@@ -1,5 +1,6 @@
 import {extend} from "vee-validate"
 import {required} from "vee-validate/dist/rules";
+import {User} from "@/common/serde/user";
 
 extend('positive', value => {
     return value >= 0;
@@ -9,7 +10,6 @@ extend('required', required);
 
 extend('gas', {
     params: ['other'],
-    // Just shut up!
     // eslint-disable-next-line
     validate(value, x: any) {
         // This is done so that edits (which are strings) are checked correctly
@@ -38,5 +38,21 @@ extend('gt', {
     // eslint-disable-next-line
     validate(value, x: any) {
         return value > x.val
+    }
+});
+
+extend('uniqueName', {
+    params: ['val'],
+    // eslint-disable-next-line
+    validate(value, x: any) {
+        console.log(value);
+        const ns = x.val.map(
+            function (value: User) {
+                return value.name;
+            }
+        );
+
+        console.log(ns);
+        return !ns.includes(value)
     }
 });
