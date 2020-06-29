@@ -28,7 +28,8 @@
 
                 <b-col sm="1">
                     <b-button block variant="primary"
-                              v-bind:disabled="isSelected(-1)">
+                              v-bind:disabled="isSelected(-1)"
+                              @click="loginButtonPressed">
                         <b-icon-arrow-right></b-icon-arrow-right>
                     </b-button>
                 </b-col>
@@ -55,6 +56,7 @@
     import {User, userFromResponse} from "@/common/serde/user"
     import {listAllUsers} from "@/common/routes";
     import {namespace} from "vuex-class";
+    import router from "@/router";
 
     const userInfo = namespace('UserInfo');
 
@@ -67,6 +69,14 @@
 
         isSelected(idx: number): boolean {
             return this.selected == idx;
+        }
+
+        loginButtonPressed() {
+            // Update store
+            this.updateSelectedUser(this.selected);
+            router.push({
+                name: "plan"
+            })
         }
 
         @userInfo.State
