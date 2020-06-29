@@ -1,17 +1,22 @@
 <template>
     <div class="login">
         <b-container>
-            <b-row class="mb-2 mt-4 text-center" align-v="center">
+            <b-row class="mb-3 mt-4 text-center" align-v="center">
                 <b-col>
                     <h1>Capra Dive Planner</h1>
                 </b-col>
             </b-row>
-            <b-row class="mb-4 mt-5" align-v="center">
+            <b-row class="mb-4 mt-4" align-v="center">
                 <b-col></b-col>
 
                 <b-col>
-                    <!-- TODO: Add a placeholder for loading-->
+                    <b-list-group-item v-if="usersList.length === 0">
+                        <div class="d-flex justify-content-center mb-2 mt-2">
+                            <b-spinner></b-spinner>
+                        </div>
+                    </b-list-group-item>
                     <b-list-group-item
+                            v-else
                             v-for="(user, index) in usersList"
                             :key="`users-${index}`"
                             href="#"
