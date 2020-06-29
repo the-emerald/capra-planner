@@ -10,7 +10,6 @@ extend('required', required);
 
 extend('gas', {
     params: ['other'],
-    // Just shut up!
     // eslint-disable-next-line
     validate(value, x: any) {
         // This is done so that edits (which are strings) are checked correctly

@@ -123,7 +123,7 @@
     import {Component, Vue} from "vue-property-decorator";
     import {namespace} from 'vuex-class';
     import BSEditModal from "@/components/plan/bottom_segments/BSEditModal.vue";
-    import {segmentType} from "@/common/serde/segment_type";
+    import {SegmentType} from "@/common/serde/segment_type";
     import BSReorderModal from "@/components/plan/bottom_segments/BSReorderModal.vue";
     import {displayBottomSegmentElement} from "@/common/display";
     import BSNewModal from "@/components/plan/bottom_segments/BSNewModal.vue";
@@ -136,7 +136,7 @@
     export default class BottomSegments extends Vue {
         editSegment: BottomSegmentElement = {
             diveSegment: {
-                segmentType: segmentType.DiveSegment,
+                segmentType: SegmentType.DiveSegment,
                 startDepth: 0,
                 endDepth: 0,
                 time: 0,

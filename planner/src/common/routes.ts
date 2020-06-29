@@ -2,7 +2,6 @@ import axios, {AxiosResponse} from 'axios';
 import {User} from "@/common/serde/user";
 
 export function newUser(name: string): Promise<AxiosResponse> {
-    // Make request to server
     return axios.post(
         '/user/new',
         {
@@ -11,6 +10,7 @@ export function newUser(name: string): Promise<AxiosResponse> {
     )
 }
 
+// TODO: Figure out how to type response body
 export function aboutUser(id: number): Promise<AxiosResponse> {
     return axios.post(
         '/user',
