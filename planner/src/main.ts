@@ -15,6 +15,7 @@ Vue.use(IconsPlugin);
 // Set axios defaults
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.headers.post['content-type'] = 'application/json';
+axios.defaults.timeout = 5000; // 5 seconds
 
 Vue.config.productionTip = false;
 

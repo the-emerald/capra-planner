@@ -59,11 +59,13 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {User, userFromResponse} from "@/common/serde/user"
+    import {User} from "@/common/serde/user"
     import {listAllUsers, newUser} from "@/common/routes";
     import {namespace} from "vuex-class";
     import router from "@/router";
     import LoginNewModal from "@/components/login/LoginNewModal.vue";
+    import {makeErrorToast} from "@/common/toast";
+    import {handleAxiosError} from "@/common/axios_error";
 
     const userInfo = namespace('UserInfo');
 
@@ -102,19 +104,17 @@
         public updateSelectedUser!: (elem: number) => void;
 
         mounted() {
-            this.refreshUsersList()
+            this.refreshUsersList();
         }
 
         refreshUsersList() {
             this.usersList = [];
             listAllUsers()
                 .then(r => {
-                    r.data.forEach(
-                        // eslint-disable-next-line
-                        (value: any) => {
-                            this.usersList.push(userFromResponse(value))
-                        }
-                    )
+                    this.usersList = r.data;
+                })
+                .catch((error) => {
+                    makeErrorToast(this, handleAxiosError(error));
                 })
         }
     }
