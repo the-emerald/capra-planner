@@ -10,7 +10,7 @@ export function prettyFromMilliseconds(milli: number): string {
 
 export function millisecondsToMinutesSeconds(milli: number): [number, number] {
     return [
-        Math.floor((milli / (1000 * 60)) % 60),
+        Math.floor((milli / (1000 * 60))),
         Math.floor((milli / 1000) % 60)
     ];
 }
