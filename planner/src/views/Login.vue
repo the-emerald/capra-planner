@@ -1,13 +1,16 @@
 <template>
     <div class="login">
         <b-container>
-            <b-row class="mb-2 mt-4">
+            <b-row class="mb-2 mt-4 text-center" align-v="center">
                 <b-col>
-                    <h1 class="text-center">Capra Dive Planner</h1>
+                    <h1>Capra Dive Planner</h1>
                 </b-col>
             </b-row>
-            <b-row class="mb-4 mt-5">
+            <b-row class="mb-4 mt-5" align-v="center">
+                <b-col></b-col>
+
                 <b-col>
+                    <!-- TODO: Add a placeholder for loading-->
                     <b-list-group-item
                             v-for="(users, index) in usersList"
                             :key="`users-${index}`"
@@ -16,13 +19,27 @@
                             v-on:click="selectedUser = index">
                         {{users.name}}
                     </b-list-group-item>
-<!--                    <p class="text-center">Maybe put some divers here?</p>-->
                 </b-col>
+
+                <b-col></b-col>
             </b-row>
-            <b-row class="mb-4 mt-5">
-                <b-col>
-                    <p class="text-center">And a few buttons here!</p>
+            <b-row class="mb-4 mt-2 text-center" align-v="center">
+                <b-col></b-col>
+
+                <b-col sm="1">
+                    <b-button block variant="primary"><b-icon-arrow-right></b-icon-arrow-right></b-button>
                 </b-col>
+
+                <b-col></b-col>
+            </b-row>
+            <b-row class="mb-4 mt-2 text-center" align-v="center">
+                <b-col></b-col>
+
+                <b-col sm="1">
+                    <b-button block><b-icon-person-plus-fill></b-icon-person-plus-fill></b-button>
+                </b-col>
+
+                <b-col></b-col>
             </b-row>
         </b-container>
     </div>
