@@ -48,7 +48,7 @@
                 <b-col></b-col>
             </b-row>
         </b-container>
-        <LoginNewModal @submitted="onLoginNewSubmitted"></LoginNewModal>
+        <LoginNewModal @submitted="onLoginNewSubmitted" :existing-users="usersList"></LoginNewModal>
     </div>
 </template>
 
@@ -68,6 +68,7 @@
     })
     export default class Login extends Vue {
         usersList: Array<User> = [];
+
         selected = -1;
 
         isSelected(idx: number): boolean {

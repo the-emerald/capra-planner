@@ -10,7 +10,7 @@
                                 Name
                             </b-col>
                             <b-col>
-                                <ValidationProvider name="name" rules="required" v-slot="{valid, errors}">
+                                <ValidationProvider name="name" :rules="{required: true, uniqueName: {val: existingUsers}}" v-slot="{valid, errors}">
                                     <b-form-input
                                         type="text"
                                         v-model.number="userName"
@@ -32,9 +32,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue} from "vue-property-decorator";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
+    import {User} from "@/common/serde/user";
 
     @Component({
         components: {
@@ -46,6 +47,9 @@
         $refs!: {
             observer: InstanceType<typeof ValidationObserver>;
         };
+
+        @Prop() private existingUsers!: Array<User>;
+
 
         userName = '';
 
