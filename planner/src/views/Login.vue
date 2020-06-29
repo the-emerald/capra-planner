@@ -16,7 +16,7 @@
                             :key="`users-${index}`"
                             href="#"
                             v-bind:class="{active: isSelected(index)}"
-                            v-on:click="selectedUser = index">
+                            v-on:click="selected = index">
                         {{users.name}}
                     </b-list-group-item>
                 </b-col>
@@ -27,7 +27,10 @@
                 <b-col></b-col>
 
                 <b-col sm="1">
-                    <b-button block variant="primary" v-bind:disabled="isSelected(-1)"><b-icon-arrow-right></b-icon-arrow-right></b-button>
+                    <b-button block variant="primary"
+                              v-bind:disabled="isSelected(-1)">
+                        <b-icon-arrow-right></b-icon-arrow-right>
+                    </b-button>
                 </b-col>
 
                 <b-col></b-col>
@@ -36,7 +39,9 @@
                 <b-col></b-col>
 
                 <b-col sm="1">
-                    <b-button block><b-icon-person-plus-fill></b-icon-person-plus-fill></b-button>
+                    <b-button block>
+                        <b-icon-person-plus-fill></b-icon-person-plus-fill>
+                    </b-button>
                 </b-col>
 
                 <b-col></b-col>
@@ -49,17 +54,26 @@
     import {Component, Vue} from "vue-property-decorator";
     import {User, userFromResponse} from "@/common/serde/user"
     import {listAllUsers} from "@/common/routes";
+    import {namespace} from "vuex-class";
+
+    const userInfo = namespace('UserInfo');
 
     @Component({
         name: "Login"
     })
     export default class Login extends Vue {
         usersList: Array<User> = [];
-        selectedUser = -1;
+        selected = -1;
 
         isSelected(idx: number): boolean {
-            return this.selectedUser == idx;
+            return this.selected == idx;
         }
+
+        @userInfo.State
+        public selectedUser!: number;
+
+        @userInfo.Mutation
+        public updateSelectedUser!: (elem: number) => void;
 
         mounted() {
             listAllUsers()
