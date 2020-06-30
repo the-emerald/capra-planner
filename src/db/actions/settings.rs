@@ -69,6 +69,8 @@ pub fn get_vpm_settings_for_user(user: &models::user::User,
         .first::<VPMSettings>(conn)
 }
 
+// VPM Settings Update disabled
+
 pub fn get_general_settings_for_user(user: &models::user::User,
                                      conn: &SqliteConnection
 ) -> Result<GeneralSettings, diesel::result::Error> {
@@ -76,4 +78,47 @@ pub fn get_general_settings_for_user(user: &models::user::User,
     general_settings
         .filter(id.eq(user.current_general_settings_id))
         .first::<GeneralSettings>(conn)
+}
+
+pub fn update_general_settings_for_user(user: &models::user::User,
+                                    new: &NewGeneralSettings,
+                                    conn: &SqliteConnection
+) -> Result<(), diesel::result::Error> {
+    use crate::db::schema::general_settings::dsl::*;
+    conn.transaction::<(), diesel::result::Error, _>(|| {
+        let candidate_settings = general_settings
+            .filter(sac_bottom.eq(&new.sac_bottom))
+            .filter(sac_deco.eq(&new.sac_deco))
+            .filter(ascent_rate.eq(&new.ascent_rate))
+            .filter(descent_rate.eq(&new.descent_rate))
+            .first::<GeneralSettings>(conn)
+            .optional()?;
+
+        let candidate_settings = match candidate_settings {
+            Some(t) => { t },
+            None => {
+                diesel::insert_into(general_settings)
+                    .values(new)
+                    .execute(conn)?;
+
+                general_settings
+                    .filter(sac_bottom.eq(&new.sac_bottom))
+                    .filter(sac_deco.eq(&new.sac_deco))
+                    .filter(ascent_rate.eq(&new.ascent_rate))
+                    .filter(descent_rate.eq(&new.descent_rate))
+                    .first::<GeneralSettings>(conn)?
+            }
+        };
+
+        {
+            use crate::db::schema::users::dsl::*;
+            diesel::update(
+                users.filter(id.eq(&user.id))
+            )
+                .set(current_general_settings_id.eq(candidate_settings.id))
+                .execute(conn)?;
+        }
+
+        Ok(())
+    })
 }

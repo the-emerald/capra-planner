@@ -48,6 +48,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::user::get_all_users)
 
             .service(routes::settings::update_zhl_settings)
+            .service(routes::settings::update_general_settings)
     })
         .bind(&bind)?
         .run()
