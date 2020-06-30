@@ -97,7 +97,7 @@
                 this.updateSelectedUser(r.data.user);
                 this.updateZHLSettings(r.data.zhl_settings);
                 this.updateVPMSettings(r.data.vpm_settings);
-                this.updateGasPlanSettings(r.data.gas_plan_settings);
+                this.updateGeneralSettings(r.data.general_settings);
                 this.updateTissue(r.data.tissue);
                 router.push({
                     name: "plan"
@@ -128,7 +128,7 @@
         public updateVPMSettings!: (elem: VPMSettings) => void;
 
         @userInfo.Mutation
-        public updateGasPlanSettings!: (elem: GeneralSettings) => void;
+        public updateGeneralSettings!: (elem: GeneralSettings) => void;
 
         @userInfo.Mutation
         public updateTissue!: (elem: Tissue) => void;

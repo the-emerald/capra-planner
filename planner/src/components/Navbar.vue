@@ -18,12 +18,15 @@
                         <template v-slot:button-content>
                             {{user.name}}
                         </template>
-                        <b-dropdown-item href="#">Settings</b-dropdown-item>
+                        <b-dropdown-item href="#" @click="$bvModal.show('settings-modal')">
+                            Settings
+                        </b-dropdown-item>
                         <b-dropdown-item href="#">Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
+        <SettingsModal></SettingsModal>
     </div>
 </template>
 
@@ -31,10 +34,12 @@
     import {Component, Vue} from "vue-property-decorator";
     import {namespace} from "vuex-class";
     import {User} from "@/common/serde/user";
+    import SettingsModal from "@/components/SettingsModal.vue";
 
     const userInfo = namespace('UserInfo');
-
-    @Component
+    @Component({
+        components: {SettingsModal}
+    })
     export default class Navbar extends Vue {
         @userInfo.State
         public user!: User | null;
