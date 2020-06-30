@@ -3,19 +3,17 @@
         <b-modal id="settings-modal" title="Settings" @shown="syncFields" hide-footer>
             <ValidationObserver ref="observer" v-slot="{passes}">
                 <b-form @submit.prevent="passes(onSubmit)" @reset="resetForm">
-                    <b-card no-body>
-                        <b-tabs card>
-                            <b-tab title="General">
-                                <b-card-text>General settings</b-card-text>
-                            </b-tab>
-                            <b-tab title="ZHL">
-                                <b-card-text>ZHL settings</b-card-text>
-                            </b-tab>
-                            <b-tab title="VPM" disabled>
-                                <b-card-text>ZHL settings</b-card-text>
-                            </b-tab>
-                        </b-tabs>
-                    </b-card>
+                    <b-tabs content-class="mt-3">
+                        <b-tab title="General">
+                            <b-card-text>General settings</b-card-text>
+                        </b-tab>
+                        <b-tab title="ZHL">
+                            <b-card-text>ZHL settings</b-card-text>
+                        </b-tab>
+                        <b-tab title="VPM" disabled>
+                            <b-card-text>ZHL settings</b-card-text>
+                        </b-tab>
+                    </b-tabs>
                 </b-form>
             </ValidationObserver>
         </b-modal>
