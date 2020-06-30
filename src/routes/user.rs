@@ -12,7 +12,7 @@ struct CombinedUser {
     tissue: SimplifiedTissue,
     zhl_settings: SimplifiedZHLSettings,
     vpm_settings: SimplifiedVPMSettings,
-    gas_plan_settings: SimplifiedGeneralSettings,
+    general_settings: SimplifiedGeneralSettings,
 }
 
 #[post("/user/new")]
@@ -34,7 +34,7 @@ pub(crate) async fn add_user(
             tissue: tissue.into(),
             zhl_settings: settings.0.into(),
             vpm_settings: settings.1.into(),
-            gas_plan_settings: settings.2.into()
+            general_settings: settings.2.into()
         })
     })
         .await
@@ -71,7 +71,7 @@ pub(crate) async fn get_user(
             tissue: tissue.into(),
             zhl_settings: settings.0.into(),
             vpm_settings: settings.1.into(),
-            gas_plan_settings: settings.2.into()
+            general_settings: settings.2.into()
         })
     })
         .await
