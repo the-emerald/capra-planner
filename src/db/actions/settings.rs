@@ -21,6 +21,45 @@ pub fn get_zhl_settings_for_user(user: &models::user::User,
         .first::<ZHLSettings>(conn)
 }
 
+pub fn update_zhl_settings_for_user(user: &models::user::User,
+                                    new: &NewZHLSettings,
+                                    conn: &SqliteConnection
+) -> Result<(), diesel::result::Error> {
+    use crate::db::schema::zhl_settings::dsl::*;
+
+    conn.transaction::<(), diesel::result::Error, _>(|| {
+        let candidate_settings = zhl_settings
+            .filter(gfl.eq(&new.gfl))
+            .filter(gfh.eq(&new.gfh))
+            .first::<ZHLSettings>(conn)
+            .optional()?;
+
+        let candidate_settings = match candidate_settings {
+            Some(t) => { t }, // The system has seen this combination of gfl/gfh before
+            None => {
+                diesel::insert_into(zhl_settings)
+                    .values(new)
+                    .execute(conn)?;
+
+                zhl_settings
+                    .filter(gfl.eq(&new.gfl))
+                    .filter(gfh.eq(&new.gfh))
+                    .first::<ZHLSettings>(conn)?
+            }
+        };
+        {
+            use crate::db::schema::users::dsl::*;
+            diesel::update(
+                users.filter(id.eq(&user.id))
+            )
+                .set(current_zhl_settings_id.eq(candidate_settings.id))
+                .execute(conn)?;
+        }
+
+        Ok(())
+    })
+}
+
 pub fn get_vpm_settings_for_user(user: &models::user::User,
                                  conn: &SqliteConnection
 ) -> Result<VPMSettings, diesel::result::Error> {

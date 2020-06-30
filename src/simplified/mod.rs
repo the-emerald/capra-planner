@@ -20,7 +20,7 @@ impl From<models::user::User> for SimplifiedUser {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedTissue {
     // Nitrogen loadings
     pub n2_1: f64,
@@ -98,7 +98,7 @@ impl From<models::tissue::Tissue> for SimplifiedTissue {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedZHLSettings {
     pub gfl: i32,
     pub gfh: i32,
@@ -113,7 +113,7 @@ impl From<models::settings::ZHLSettings> for SimplifiedZHLSettings {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedVPMSettings {
 
 }
@@ -126,7 +126,7 @@ impl From<models::settings::VPMSettings> for SimplifiedVPMSettings {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedGeneralSettings {
     pub sac_bottom: i32,
     pub sac_deco: i32,
