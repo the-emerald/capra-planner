@@ -35,6 +35,6 @@ pub fn get_general_settings_for_user(user: &models::user::User,
 ) -> Result<GeneralSettings, diesel::result::Error> {
     use crate::db::schema::general_settings::dsl::*;
     general_settings
-        .filter(id.eq(user.current_vpm_settings_id))
+        .filter(id.eq(user.current_general_settings_id))
         .first::<GeneralSettings>(conn)
 }
