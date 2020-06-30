@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {User} from "@/common/serde/user";
 import {GeneralSettings, ZHLSettings} from "@/common/serde/settings";
-import set = Reflect.set;
 
 export function newUser(name: string): Promise<AxiosResponse> {
     return axios.post(
