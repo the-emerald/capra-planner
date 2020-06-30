@@ -1,5 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {User} from "@/common/serde/user";
+import {GeneralSettings, ZHLSettings} from "@/common/serde/settings";
+import set = Reflect.set;
 
 export function newUser(name: string): Promise<AxiosResponse> {
     return axios.post(
@@ -22,5 +24,19 @@ export function getUser(id: number): Promise<AxiosResponse> {
 export function listAllUsers(): Promise<AxiosResponse<Array<User>>> {
     return axios.post(
         '/user/all',
+    )
+}
+
+export function updateZHLSettings(settings: ZHLSettings): Promise<AxiosResponse> {
+    return axios.post(
+        '/settings/update/zhl',
+        settings
+    )
+}
+
+export function updateGeneralSettings(settings: GeneralSettings): Promise<AxiosResponse> {
+    return axios.post(
+        '/settings/update/general',
+        settings
     )
 }
