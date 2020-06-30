@@ -130,11 +130,9 @@
 
         onSubmit() {
             const newDiveSegment: DiveSegment = {
-                ascentRate: -10,
-                descentRate: 20,
-                startDepth: Number(this.depth),
-                endDepth: Number(this.depth),
-                segmentType: SegmentType.DiveSegment,
+                start_depth: Number(this.depth),
+                end_depth: Number(this.depth),
+                segment_type: SegmentType.DiveSegment,
                 time: minutesSecondToMilliseconds(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 
