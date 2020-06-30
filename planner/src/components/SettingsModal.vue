@@ -10,7 +10,7 @@
     import Component from "vue-class-component";
     import {Vue} from "vue/types/vue";
     import {namespace} from "vuex-class";
-    import {GasPlanSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
+    import {GeneralSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
 
     const userInfo = namespace('UserInfo');
 
@@ -24,8 +24,6 @@
 
         gfl = '';
         gfh = '';
-        ascentRate = '';
-        descentRate = '';
 
         @userInfo.State
         public userVPMSettings!: VPMSettings;
@@ -33,21 +31,23 @@
         // Nothing to see here
 
         @userInfo.State
-        public userGasPlanSettings!: GasPlanSettings;
+        public userGeneralSettings!: GeneralSettings;
 
         sacBottom = '';
         sacDeco = '';
+        ascentRate = '';
+        descentRate = '';
 
         syncFields() {
             // ZHL
             this.gfl = this.userZHLSettings.gfl.toString();
             this.gfh = this.userZHLSettings.gfh.toString();
-            this.ascentRate = this.userZHLSettings.ascent_rate.toString();
-            this.descentRate = this.userZHLSettings.descent_rate.toString();
 
-            // Gas Plan
-            this.sacBottom = this.userGasPlanSettings.sac_bottom.toString();
-            this.sacDeco = this.userGasPlanSettings.sac_deco.toString();
+            // General settings
+            this.sacBottom = this.userGeneralSettings.sac_bottom.toString();
+            this.sacDeco = this.userGeneralSettings.sac_deco.toString();
+            this.ascentRate = this.userGeneralSettings.ascent_rate.toString();
+            this.descentRate = this.userGeneralSettings.descent_rate.toString();
         }
     }
 </script>
