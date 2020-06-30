@@ -6,15 +6,7 @@ table! {
         timestamp -> Timestamp,
         zhl_settings_id -> Integer,
         vpm_settings_id -> Integer,
-        gas_plan_settings_id -> Integer,
-    }
-}
-
-table! {
-    gas_plan_settings (id) {
-        id -> Integer,
-        sac_bottom -> Integer,
-        sac_deco -> Integer,
+        general_settings_id -> Integer,
     }
 }
 
@@ -24,6 +16,16 @@ table! {
         dive_id -> Nullable<Integer>,
         o2 -> Integer,
         he -> Integer,
+    }
+}
+
+table! {
+    general_settings (id) {
+        id -> Integer,
+        sac_bottom -> Integer,
+        sac_deco -> Integer,
+        ascent_rate -> Integer,
+        descent_rate -> Integer,
     }
 }
 
@@ -83,7 +85,7 @@ table! {
         current_tissue_id -> Integer,
         current_zhl_settings_id -> Integer,
         current_vpm_settings_id -> Integer,
-        current_gas_plan_settings_id -> Integer,
+        current_general_settings_id -> Integer,
     }
 }
 
@@ -98,12 +100,10 @@ table! {
         id -> Integer,
         gfl -> Integer,
         gfh -> Integer,
-        ascent_rate -> Integer,
-        descent_rate -> Integer,
     }
 }
 
-joinable!(dives -> gas_plan_settings (gas_plan_settings_id));
+joinable!(dives -> general_settings (general_settings_id));
 joinable!(dives -> tissues (tissue_before_id));
 joinable!(dives -> users (user_id));
 joinable!(dives -> vpm_settings (vpm_settings_id));
@@ -111,15 +111,15 @@ joinable!(dives -> zhl_settings (zhl_settings_id));
 joinable!(gases -> dives (dive_id));
 joinable!(segments -> dives (dive_id));
 joinable!(segments -> gases (gas_id));
-joinable!(users -> gas_plan_settings (current_gas_plan_settings_id));
+joinable!(users -> general_settings (current_general_settings_id));
 joinable!(users -> tissues (current_tissue_id));
 joinable!(users -> vpm_settings (current_vpm_settings_id));
 joinable!(users -> zhl_settings (current_zhl_settings_id));
 
 allow_tables_to_appear_in_same_query!(
     dives,
-    gas_plan_settings,
     gases,
+    general_settings,
     segments,
     tissues,
     users,

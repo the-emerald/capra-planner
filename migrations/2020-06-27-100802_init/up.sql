@@ -5,30 +5,30 @@ CREATE TABLE users (
     current_tissue_id INTEGER NOT NULL DEFAULT 1,
     current_zhl_settings_id INTEGER NOT NULL DEFAULT 1,
     current_vpm_settings_id INTEGER NOT NULL DEFAULT 1,
-    current_gas_plan_settings_id INTEGER NOT NULL DEFAULT 1,
+    current_general_settings_id INTEGER NOT NULL DEFAULT 1,
 
     FOREIGN KEY (current_tissue_id) REFERENCES tissues(id),
     FOREIGN KEY (current_zhl_settings_id) REFERENCES zhl_settings(id),
     FOREIGN KEY (current_vpm_settings_id) REFERENCES vpm_settings(id),
-    FOREIGN KEY (current_gas_plan_settings_id) REFERENCES gas_plan_settings(id)
+    FOREIGN KEY (current_general_settings_id) REFERENCES general_settings (id)
 );
 
 CREATE TABLE zhl_settings (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     gfl INTEGER NOT NULL,
-    gfh INTEGER NOT NULL,
-    ascent_rate INTEGER NOT NULL,
-    descent_rate INTEGER NOT NULL
+    gfh INTEGER NOT NULL
 );
 
 CREATE TABLE vpm_settings (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
 );
 
-CREATE TABLE gas_plan_settings (
+CREATE TABLE general_settings (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     sac_bottom INTEGER NOT NULL,
-    sac_deco INTEGER NOT NULL
+    sac_deco INTEGER NOT NULL,
+    ascent_rate INTEGER NOT NULL,
+    descent_rate INTEGER NOT NULL
 );
 
 CREATE TABLE dives (
@@ -38,13 +38,13 @@ CREATE TABLE dives (
     timestamp DATETIME NOT NULL,
     zhl_settings_id INTEGER NOT NULL,
     vpm_settings_id INTEGER NOT NULL,
-    gas_plan_settings_id INTEGER NOT NULL,
+    general_settings_id INTEGER NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (tissue_before_id) REFERENCES tissues(id),
     FOREIGN KEY (zhl_settings_id) REFERENCES zhl_settings(id),
     FOREIGN KEY (vpm_settings_id) REFERENCES vpm_settings(id),
-    FOREIGN KEY (gas_plan_settings_id) REFERENCES gas_plan_settings(id)
+    FOREIGN KEY (general_settings_id) REFERENCES general_settings (id)
 );
 
 
@@ -107,13 +107,13 @@ CREATE TABLE tissues (
 
 -- Default values
 -- ZHL-16
-INSERT INTO zhl_settings VALUES (1, 50, 70, -10, 20);
+INSERT INTO zhl_settings VALUES (1, 50, 70);
 
 -- VPM
 INSERT INTO vpm_settings VALUES (1);
 
 -- Gas Planning
-INSERT INTO gas_plan_settings VALUES (1, 20, 15);
+INSERT INTO general_settings VALUES (1, 20, 15, -10, 20);
 
 -- Tissues
 INSERT INTO tissues VALUES (1, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79, 0.79,

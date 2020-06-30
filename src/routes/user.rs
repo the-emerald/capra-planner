@@ -3,16 +3,16 @@ use actix_web::{post, web, HttpResponse};
 use crate::db::models;
 use serde::{Serialize, Deserialize};
 use crate::db::actions::user::get_user_by_id;
-use crate::simplified::{SimplifiedUser, SimplifiedTissue, SimplifiedZHLSetting, SimplifiedVPMSetting, SimplifiedGasPlanSetting};
+use crate::simplified::{SimplifiedUser, SimplifiedTissue, SimplifiedZHLSettings, SimplifiedVPMSettings, SimplifiedGeneralSettings};
 
 // A combined struct that contains a user and all their settings.
 #[derive(Serialize, Deserialize)]
 struct CombinedUser {
     user: SimplifiedUser,
     tissue: SimplifiedTissue,
-    zhl_settings: SimplifiedZHLSetting,
-    vpm_settings: SimplifiedVPMSetting,
-    gas_plan_settings: SimplifiedGasPlanSetting,
+    zhl_settings: SimplifiedZHLSettings,
+    vpm_settings: SimplifiedVPMSettings,
+    gas_plan_settings: SimplifiedGeneralSettings,
 }
 
 #[post("/user/new")]

@@ -1,6 +1,6 @@
 import {VuexModule, Module, Mutation} from 'vuex-module-decorators'
 import {User} from "@/common/serde/user";
-import {GasPlanSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
+import {GeneralSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
 import {Tissue} from "@/common/serde/tissue";
 
 @Module({
@@ -12,7 +12,7 @@ class UserInfo extends VuexModule {
 
     public userZHLSettings: ZHLSettings | null = null;
     public userVPMSettings: VPMSettings | null = null;
-    public userGasPlanSettings: GasPlanSettings | null = null;
+    public userGeneralSettings: GeneralSettings | null = null;
 
     public userTissue: Tissue | null = null;
 
@@ -37,8 +37,8 @@ class UserInfo extends VuexModule {
     }
 
     @Mutation
-    public updateGasPlanSettings(elem: GasPlanSettings): void {
-        this.userGasPlanSettings = elem;
+    public updateGeneralSettings(elem: GeneralSettings): void {
+        this.userGeneralSettings = elem;
     }
 
     @Mutation

@@ -67,7 +67,7 @@
     import {makeErrorToast} from "@/common/toast";
     import {handleAxiosError} from "@/common/axios_error";
     import {Tissue} from "@/common/serde/tissue";
-    import {GasPlanSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
+    import {GeneralSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
 
     const userInfo = namespace('UserInfo');
 
@@ -128,7 +128,7 @@
         public updateVPMSettings!: (elem: VPMSettings) => void;
 
         @userInfo.Mutation
-        public updateGasPlanSettings!: (elem: GasPlanSettings) => void;
+        public updateGasPlanSettings!: (elem: GeneralSettings) => void;
 
         @userInfo.Mutation
         public updateTissue!: (elem: Tissue) => void;

@@ -2,7 +2,7 @@ use crate::db::models;
 use crate::db::models::user::User;
 use serde::{Serialize, Deserialize};
 use crate::db::models::tissue::Tissue;
-use crate::db::models::settings::{ZHLSetting, VPMSetting, GasPlanSetting};
+use crate::db::models::settings::{ZHLSettings, VPMSettings, GeneralSettings};
 
 // A simplified user that only contains the id and name field.
 #[derive(Serialize, Deserialize)]
@@ -99,31 +99,27 @@ impl From<models::tissue::Tissue> for SimplifiedTissue {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SimplifiedZHLSetting {
+pub struct SimplifiedZHLSettings {
     pub gfl: i32,
     pub gfh: i32,
-    pub ascent_rate: i32,
-    pub descent_rate: i32
 }
 
-impl From<models::settings::ZHLSetting> for SimplifiedZHLSetting {
-    fn from(value: ZHLSetting) -> Self {
+impl From<models::settings::ZHLSettings> for SimplifiedZHLSettings {
+    fn from(value: ZHLSettings) -> Self {
         Self {
             gfl: value.gfl,
             gfh: value.gfh,
-            ascent_rate: value.ascent_rate,
-            descent_rate: value.descent_rate
         }
     }
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SimplifiedVPMSetting {
+pub struct SimplifiedVPMSettings {
 
 }
 
-impl From<models::settings::VPMSetting> for SimplifiedVPMSetting {
-    fn from(_value: VPMSetting) -> Self {
+impl From<models::settings::VPMSettings> for SimplifiedVPMSettings {
+    fn from(_value: VPMSettings) -> Self {
         Self {
 
         }
@@ -131,16 +127,20 @@ impl From<models::settings::VPMSetting> for SimplifiedVPMSetting {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SimplifiedGasPlanSetting {
+pub struct SimplifiedGeneralSettings {
     pub sac_bottom: i32,
     pub sac_deco: i32,
+    pub ascent_rate: i32,
+    pub descent_rate: i32,
 }
 
-impl From<models::settings::GasPlanSetting> for SimplifiedGasPlanSetting {
-    fn from(value: GasPlanSetting) -> Self {
+impl From<models::settings::GeneralSettings> for SimplifiedGeneralSettings {
+    fn from(value: GeneralSettings) -> Self {
         Self {
             sac_bottom: value.sac_bottom,
-            sac_deco: value.sac_deco
+            sac_deco: value.sac_deco,
+            ascent_rate: value.ascent_rate,
+            descent_rate: value.descent_rate
         }
     }
 }
