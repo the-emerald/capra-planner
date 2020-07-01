@@ -14,6 +14,7 @@ pub struct Dive {
     pub user_id: i32,
     pub tissue_before_id: i32,
     pub timestamp: Timestamp,
+    pub executed: i32,
     pub zhl_settings_id: i32,
     pub vpm_settings_id: i32,
     pub general_settings_id: i32,

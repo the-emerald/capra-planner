@@ -36,6 +36,7 @@ CREATE TABLE dives (
     user_id INTEGER NOT NULL,
     tissue_before_id INTEGER NOT NULL,
     timestamp DATETIME NOT NULL,
+    executed INTEGER NOT NULL, -- Boolean
     zhl_settings_id INTEGER NOT NULL,
     vpm_settings_id INTEGER NOT NULL,
     general_settings_id INTEGER NOT NULL,

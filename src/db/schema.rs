@@ -4,6 +4,7 @@ table! {
         user_id -> Integer,
         tissue_before_id -> Integer,
         timestamp -> Timestamp,
+        executed -> Integer,
         zhl_settings_id -> Integer,
         vpm_settings_id -> Integer,
         general_settings_id -> Integer,
