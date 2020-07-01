@@ -5,6 +5,7 @@ use actix_web::{App, HttpServer};
 use actix_cors::Cors;
 use diesel::SqliteConnection;
 use diesel::r2d2::ConnectionManager;
+use crate::db::connection_options::ConnectionOptions;
 
 pub mod routes;
 pub mod json_repr;
@@ -21,6 +22,7 @@ async fn main() -> std::io::Result<()> {
     let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
     let manager = ConnectionManager::<SqliteConnection>::new(conn_spec);
     let pool = r2d2::Pool::builder()
+        .connection_customizer(Box::new(ConnectionOptions::default()))
         .build(manager)
         .expect("failed to create pool");
 
