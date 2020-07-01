@@ -17,7 +17,7 @@ table! {
         dive_id -> Nullable<Integer>,
         o2 -> Integer,
         he -> Integer,
-        maxOperatingDepth -> Integer,
+        max_operating_depth -> Nullable<Integer>,
     }
 }
 
