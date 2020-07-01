@@ -22,8 +22,11 @@ class UserInfo extends VuexModule {
     }
 
     @Mutation
-    public resetSelectedUser(): void {
+    public resetUserAll(): void {
         this.user = null;
+        this.userZHLSettings = null;
+        this.userVPMSettings = null;
+        this.userGeneralSettings = null;
     }
 
     @Mutation

@@ -11,17 +11,15 @@
                     <b-nav-item to="test">History</b-nav-item>
                 </b-navbar-nav>
 
-                <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
                     <b-nav-item-dropdown right>
-                        <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
                             {{user.name}}
                         </template>
                         <b-dropdown-item href="#" @click="$bvModal.show('settings-modal')">
                             Settings
                         </b-dropdown-item>
-                        <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+                        <b-dropdown-item href="#" @click="logout">Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </b-collapse>
@@ -35,6 +33,7 @@
     import {namespace} from "vuex-class";
     import {User} from "@/common/serde/user";
     import SettingsModal from "@/components/SettingsModal.vue";
+    import router from "@/router";
 
     const userInfo = namespace('UserInfo');
     @Component({
@@ -45,7 +44,14 @@
         public user!: User | null;
 
         @userInfo.Mutation
-        public resetSelectedUser!: () => void;
+        public resetUserAll!: () => void;
+
+        logout() {
+            this.resetUserAll();
+            router.push({
+                name: "login"
+            });
+        }
     }
 
 </script>

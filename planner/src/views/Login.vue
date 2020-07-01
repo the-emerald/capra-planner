@@ -101,7 +101,7 @@
                 this.updateTissue(r.data.tissue);
                 router.push({
                     name: "plan"
-                })
+                });
             })
             .catch((error) => {
                 makeErrorToast(this, handleAxiosError(error))
