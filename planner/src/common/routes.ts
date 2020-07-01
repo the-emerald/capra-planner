@@ -26,16 +26,22 @@ export function listAllUsers(): Promise<AxiosResponse<Array<User>>> {
     )
 }
 
-export function updateZHLSettings(settings: ZHLSettings): Promise<AxiosResponse> {
+export function updateZHLSettings(user: User, settings: ZHLSettings): Promise<AxiosResponse> {
     return axios.post(
         '/settings/update/zhl',
-        settings
+        {
+            "id": user.id,
+            "new_zhl_settings": settings
+        }
     )
 }
 
-export function updateGeneralSettings(settings: GeneralSettings): Promise<AxiosResponse> {
+export function updateGeneralSettings(user: User, settings: GeneralSettings): Promise<AxiosResponse> {
     return axios.post(
         '/settings/update/general',
-        settings
+        {
+            "id": user.id,
+            "new_general_settings": settings
+        }
     )
 }

@@ -7,11 +7,11 @@
                         <b-tab title="General">
                             <b-container>
                                 <b-form-row>
-                                    Surface Air Consumption
+                                    Surface air consumption:
                                 </b-form-row>
                                 <b-form-row class="mt-3">
                                     <b-col style="margin-top: 0.2rem" sm="4">
-                                        on bottom segments:
+                                        Bottom segments
                                     </b-col>
                                     <b-col>
                                         <ValidationProvider name="sacBottom" rules="required|positive" v-slot="{valid, errors}">
@@ -24,13 +24,59 @@
                                         </ValidationProvider>
                                     </b-col>
                                 </b-form-row>
+                                <b-form-row class="mt-3">
+                                    <b-col style="margin-top: 0.2rem" sm="4">
+                                        Deco segments
+                                    </b-col>
+                                    <b-col>
+                                        <ValidationProvider name="sacDeco" rules="required|positive" v-slot="{valid, errors}">
+                                            <b-form-input
+                                                    placeholder="ltr/min"
+                                                    type="number"
+                                                    v-model.number="sacDeco"
+                                                    :state="errors[0] ? false : (valid ? true : null)"
+                                            ></b-form-input>
+                                        </ValidationProvider>
+                                    </b-col>
+                                </b-form-row>
+                                <hr class="my-3">
+                                <b-form-row>
+                                    <b-col style="margin-top: 0.2rem" sm="4">
+                                        Ascent rate
+                                    </b-col>
+                                    <b-col>
+                                        <ValidationProvider name="sacDeco" rules="required|positive" v-slot="{valid, errors}">
+                                            <b-form-input
+                                                    placeholder="m/min"
+                                                    type="number"
+                                                    v-model.number="ascentRate"
+                                                    :state="errors[0] ? false : (valid ? true : null)"
+                                            ></b-form-input>
+                                        </ValidationProvider>
+                                    </b-col>
+                                </b-form-row>
+                                <b-form-row class="mt-3">
+                                    <b-col style="margin-top: 0.2rem" sm="4">
+                                        Descent rate
+                                    </b-col>
+                                    <b-col>
+                                        <ValidationProvider name="sacDeco" rules="required|positive" v-slot="{valid, errors}">
+                                            <b-form-input
+                                                    placeholder="m/min"
+                                                    type="number"
+                                                    v-model.number="descentRate"
+                                                    :state="errors[0] ? false : (valid ? true : null)"
+                                            ></b-form-input>
+                                        </ValidationProvider>
+                                    </b-col>
+                                </b-form-row>
                             </b-container>
                         </b-tab>
                         <b-tab title="ZHL">
                             <b-card-text>ZHL settings</b-card-text>
                         </b-tab>
                         <b-tab title="VPM" disabled>
-                            <b-card-text>ZHL settings</b-card-text>
+                            <b-card-text>VPM settings</b-card-text>
                         </b-tab>
                     </b-tabs>
                     <br>
@@ -52,6 +98,8 @@
     import {Vue} from "vue-property-decorator";
     import {updateGeneralSettings, updateZHLSettings} from "@/common/routes";
     import {makeErrorToast} from "@/common/toast";
+    import {handleAxiosError} from "@/common/axios_error";
+    import {User} from "@/common/serde/user";
 
     const userInfo = namespace('UserInfo');
 
@@ -63,7 +111,7 @@
     })
     export default class SettingsModal extends Vue {
         @userInfo.State
-        public selectedUser!: number;
+        public user!: User;
 
         @userInfo.State
         public userZHLSettings!: ZHLSettings;
@@ -92,7 +140,7 @@
             // General settings
             this.sacBottom = this.userGeneralSettings.sac_bottom.toString();
             this.sacDeco = this.userGeneralSettings.sac_deco.toString();
-            this.ascentRate = this.userGeneralSettings.ascent_rate.toString();
+            this.ascentRate = (this.userGeneralSettings.ascent_rate * -1).toString();
             this.descentRate = this.userGeneralSettings.descent_rate.toString();
         }
 
@@ -102,19 +150,19 @@
                 gfl: Number(this.gfl)
             };
             const generalSettings: GeneralSettings = {
-                ascent_rate: Number(this.ascentRate),
+                ascent_rate: Number(this.ascentRate) * -1,
                 descent_rate: Number(this.descentRate),
                 sac_bottom: Number(this.sacBottom),
                 sac_deco: Number(this.sacDeco)
             };
 
-            const z = updateZHLSettings(zhlSettings);
-            const g = updateGeneralSettings(generalSettings);
+            const z = updateZHLSettings(this.user, zhlSettings);
+            const g = updateGeneralSettings(this.user, generalSettings);
 
-            Promise.all([z, g])
+            Promise.all([z])
             .then()
             .catch((error) => {
-                makeErrorToast(this, error)
+                makeErrorToast(this, handleAxiosError(error))
             });
         }
 
