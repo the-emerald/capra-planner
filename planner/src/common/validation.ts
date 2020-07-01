@@ -3,7 +3,7 @@ import {required} from "vee-validate/dist/rules";
 import {User} from "@/common/serde/user";
 
 extend('positive', value => {
-    return value >= 0;
+    return Number(value) >= 0;
 });
 
 extend('required', required);
@@ -21,7 +21,7 @@ extend('lt', {
     params: ['val'],
     // eslint-disable-next-line
     validate(value, x: any) {
-        return value < x.val
+        return Number(value) < Number(x.val)
     }
 });
 
@@ -29,7 +29,7 @@ extend('eq', {
     params: ['val'],
     // eslint-disable-next-line
     validate(value, x: any) {
-        return value == x.val
+        return Number(value) == Number(x.val)
     }
 });
 

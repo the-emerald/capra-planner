@@ -45,7 +45,7 @@
                                         Ascent rate
                                     </b-col>
                                     <b-col>
-                                        <ValidationProvider name="sacDeco" rules="required|positive" v-slot="{valid, errors}">
+                                        <ValidationProvider name="ascentRate" rules="required|positive" v-slot="{valid, errors}">
                                             <b-form-input
                                                     placeholder="m/min"
                                                     type="number"
@@ -60,7 +60,7 @@
                                         Descent rate
                                     </b-col>
                                     <b-col>
-                                        <ValidationProvider name="sacDeco" rules="required|positive" v-slot="{valid, errors}">
+                                        <ValidationProvider name="descentRate" rules="required|positive" v-slot="{valid, errors}">
                                             <b-form-input
                                                     placeholder="m/min"
                                                     type="number"
@@ -73,7 +73,38 @@
                             </b-container>
                         </b-tab>
                         <b-tab title="ZHL">
-                            <b-card-text>ZHL settings</b-card-text>
+                            <b-container>
+                                <b-form-row class="mt-3">
+                                    <b-col style="margin-top: 0.2rem" sm="4">
+                                        GF Low
+                                    </b-col>
+                                    <b-col>
+                                        <ValidationProvider name="gfLow" rules="required|positive|lt:101" v-slot="{valid, errors}">
+                                            <b-form-input
+                                                    placeholder="0-100"
+                                                    type="number"
+                                                    v-model.number="gfl"
+                                                    :state="errors[0] ? false : (valid ? true : null)"
+                                            ></b-form-input>
+                                        </ValidationProvider>
+                                    </b-col>
+                                </b-form-row>
+                                <b-form-row class="mt-3">
+                                    <b-col style="margin-top: 0.2rem" sm="4">
+                                        GF High
+                                    </b-col>
+                                    <b-col>
+                                        <ValidationProvider name="gfHigh" rules="required|positive|lt:101" v-slot="{valid, errors}">
+                                            <b-form-input
+                                                    placeholder="0-100"
+                                                    type="number"
+                                                    v-model.number="gfh"
+                                                    :state="errors[0] ? false : (valid ? true : null)"
+                                            ></b-form-input>
+                                        </ValidationProvider>
+                                    </b-col>
+                                </b-form-row>
+                            </b-container>
                         </b-tab>
                         <b-tab title="VPM" disabled>
                             <b-card-text>VPM settings</b-card-text>
@@ -132,6 +163,15 @@
         ascentRate = '';
         descentRate = '';
 
+        @userInfo.Mutation
+        public updateZHLSettings!: (elem: ZHLSettings) => void;
+
+        @userInfo.Mutation
+        public updateVPMSettings!: (elem: VPMSettings) => void;
+
+        @userInfo.Mutation
+        public updateGeneralSettings!: (elem: GeneralSettings) => void;
+
         syncFields() {
             // ZHL
             this.gfl = this.userZHLSettings.gfl.toString();
@@ -162,6 +202,10 @@
             Promise.all([z, g])
             .then(() => {
                 makeSuccessToast(this, "Saved settings.");
+
+                this.updateGeneralSettings(generalSettings);
+                this.updateZHLSettings(zhlSettings);
+
                 this.$bvModal.hide('settings-modal')
             })
             .catch((error) => {
