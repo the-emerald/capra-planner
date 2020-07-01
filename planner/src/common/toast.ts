@@ -11,3 +11,15 @@ export function makeErrorToast(component: Vue, message: string) {
         }
     )
 }
+
+export function makeSuccessToast(component: Vue, message: string) {
+    component.$bvToast.toast(
+        message,
+        {
+            title: "Success",
+            variant: "success",
+            toaster: "b-toaster-top-center",
+            solid: true
+        }
+    )
+}

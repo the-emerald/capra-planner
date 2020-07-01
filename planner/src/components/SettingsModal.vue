@@ -97,7 +97,7 @@
     import {ValidationObserver, ValidationProvider} from "vee-validate";
     import {Vue} from "vue-property-decorator";
     import {updateGeneralSettings, updateZHLSettings} from "@/common/routes";
-    import {makeErrorToast} from "@/common/toast";
+    import {makeErrorToast, makeSuccessToast} from "@/common/toast";
     import {handleAxiosError} from "@/common/axios_error";
     import {User} from "@/common/serde/user";
 
@@ -159,8 +159,11 @@
             const z = updateZHLSettings(this.user, zhlSettings);
             const g = updateGeneralSettings(this.user, generalSettings);
 
-            Promise.all([z])
-            .then()
+            Promise.all([z, g])
+            .then(() => {
+                makeSuccessToast(this, "Saved settings.");
+                this.$bvModal.hide('settings-modal')
+            })
             .catch((error) => {
                 makeErrorToast(this, handleAxiosError(error))
             });
