@@ -9,4 +9,5 @@ pub struct Gas {
     pub dive_id: Option<i32>,
     pub o2: i32,
     pub he: i32,
+    pub max_operating_depth: Option<i32>,
 }

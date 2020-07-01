@@ -68,6 +68,7 @@ CREATE TABLE gases (
     dive_id INTEGER,
     o2 INTEGER NOT NULL,
     he INTEGER NOT NULL,
+    maxOperatingDepth INTEGER,
 
     FOREIGN KEY (dive_id) REFERENCES dives(id)
 );
