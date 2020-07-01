@@ -37,6 +37,8 @@ table! {
         start_depth -> Integer,
         end_depth -> Integer,
         time -> Integer,
+        ascent_rate -> Integer,
+        descent_rate -> Integer,
         gas_id -> Integer,
     }
 }

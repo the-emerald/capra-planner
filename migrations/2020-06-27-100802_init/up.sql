@@ -55,6 +55,8 @@ CREATE TABLE segments (
     start_depth INTEGER NOT NULL,
     end_depth INTEGER NOT NULL,
     time INTEGER NOT NULL,
+    ascent_rate INTEGER NOT NULL,
+    descent_rate INTEGER NOT NULL,
     gas_id INTEGER NOT NULL,
 
     FOREIGN KEY (dive_id) REFERENCES dives(id),

@@ -12,5 +12,7 @@ pub struct Segment {
     pub start_depth: i32,
     pub end_depth: i32,
     pub time: i32,
+    pub ascent_rate: i32,
+    pub descent_rate: i32,
     pub gas_id: i32,
 }
