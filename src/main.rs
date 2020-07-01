@@ -3,9 +3,10 @@ extern crate diesel;
 
 use actix_web::{App, HttpServer};
 use actix_cors::Cors;
-use diesel::SqliteConnection;
+use diesel::{SqliteConnection, Connection};
 use diesel::r2d2::ConnectionManager;
 use crate::db::connection_options::ConnectionOptions;
+use std::time::Duration;
 
 pub mod routes;
 pub mod json_repr;
@@ -23,6 +24,8 @@ async fn main() -> std::io::Result<()> {
     let manager = ConnectionManager::<SqliteConnection>::new(conn_spec);
     let pool = r2d2::Pool::builder()
         .connection_customizer(Box::new(ConnectionOptions::default()))
+        .max_size(1)
+        .connection_timeout(Duration::from_secs(5))
         .build(manager)
         .expect("failed to create pool");
 

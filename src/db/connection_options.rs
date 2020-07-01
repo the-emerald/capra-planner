@@ -9,11 +9,14 @@ pub struct ConnectionOptions {
 
 impl ConnectionOptions {
     pub fn apply(&self, conn: &SqliteConnection) -> QueryResult<()> {
+        conn.batch_execute(
+            &format!("PRAGMA foreign_keys = ON;")
+        )?;
         match self.busy_timeout {
             None => {},
             Some(t) => {
                 conn.batch_execute(
-                    &format!("PRAGMA busy_timeout = {}", t.whole_milliseconds())
+                    &format!("PRAGMA busy_timeout = {};", t.whole_milliseconds())
                 )?;
             },
         }
@@ -24,7 +27,7 @@ impl ConnectionOptions {
 impl Default for ConnectionOptions {
     fn default() -> Self {
         Self {
-            busy_timeout: Some(Duration::seconds(5))
+            busy_timeout: Some(Duration::seconds(1))
         }
     }
 }
