@@ -4,6 +4,7 @@ table! {
         user_id -> Integer,
         tissue_before_id -> Integer,
         timestamp -> Timestamp,
+        executed -> Integer,
         zhl_settings_id -> Integer,
         vpm_settings_id -> Integer,
         general_settings_id -> Integer,
@@ -16,6 +17,7 @@ table! {
         dive_id -> Nullable<Integer>,
         o2 -> Integer,
         he -> Integer,
+        max_operating_depth -> Nullable<Integer>,
     }
 }
 
@@ -36,6 +38,8 @@ table! {
         start_depth -> Integer,
         end_depth -> Integer,
         time -> Integer,
+        ascent_rate -> Integer,
+        descent_rate -> Integer,
         gas_id -> Integer,
     }
 }

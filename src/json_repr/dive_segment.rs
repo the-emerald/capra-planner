@@ -1,24 +1,22 @@
 use serde::{Deserialize, Serialize};
-use capra::common::dive_segment::{SegmentType, DiveSegmentError};
+use capra::common::dive_segment::{SegmentType};
 use capra::common::dive_segment;
 use std::convert::TryFrom;
 use time::Duration;
-use actix_web::{ResponseError, HttpResponse};
-use actix_web::http::StatusCode;
-use actix_web::dev::HttpResponseBuilder;
+use crate::result::{ServerDiveSegmentError};
 
 // Represents a DiveSegment sent by JSON.
 // Difference(s):
 // - `time` is represented in milliseconds instead of Duration
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
-pub(crate) struct DiveSegment {
-    segment_type: SegmentType,
-    start_depth: usize,
-    end_depth: usize,
-    time: i128,
+pub struct DiveSegment {
+    pub segment_type: SegmentType,
+    pub start_depth: usize,
+    pub end_depth: usize,
+    pub time: i128,
     // Ascent rate and descent rate are for reaching the current DiveSegment from the previous.
-    ascent_rate: isize,
-    descent_rate: isize,
+    pub ascent_rate: isize,
+    pub descent_rate: isize,
 }
 
 impl From<dive_segment::DiveSegment> for DiveSegment {
@@ -48,22 +46,5 @@ impl TryFrom<DiveSegment> for dive_segment::DiveSegment {
             value.descent_rate
             )?
         )
-    }
-}
-
-#[derive(thiserror::Error, Debug)]
-pub enum ServerDiveSegmentError {
-    #[error(transparent)]
-    IncorrectSegmentTypeError(#[from] DiveSegmentError)
-}
-
-impl ResponseError for ServerDiveSegmentError {
-    fn status_code(&self) -> StatusCode {
-        StatusCode::BAD_REQUEST
-    }
-
-    fn error_response(&self) -> HttpResponse {
-        HttpResponseBuilder::new(self.status_code())
-            .body(self.to_string())
     }
 }

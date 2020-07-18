@@ -36,6 +36,7 @@ CREATE TABLE dives (
     user_id INTEGER NOT NULL,
     tissue_before_id INTEGER NOT NULL,
     timestamp DATETIME NOT NULL,
+    executed INTEGER NOT NULL, -- Boolean
     zhl_settings_id INTEGER NOT NULL,
     vpm_settings_id INTEGER NOT NULL,
     general_settings_id INTEGER NOT NULL,
@@ -54,6 +55,8 @@ CREATE TABLE segments (
     start_depth INTEGER NOT NULL,
     end_depth INTEGER NOT NULL,
     time INTEGER NOT NULL,
+    ascent_rate INTEGER NOT NULL,
+    descent_rate INTEGER NOT NULL,
     gas_id INTEGER NOT NULL,
 
     FOREIGN KEY (dive_id) REFERENCES dives(id),
@@ -65,6 +68,7 @@ CREATE TABLE gases (
     dive_id INTEGER,
     o2 INTEGER NOT NULL,
     he INTEGER NOT NULL,
+    max_operating_depth INTEGER,
 
     FOREIGN KEY (dive_id) REFERENCES dives(id)
 );

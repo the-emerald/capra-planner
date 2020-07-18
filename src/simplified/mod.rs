@@ -1,8 +1,10 @@
 use crate::db::models;
 use crate::db::models::user::User;
 use serde::{Serialize, Deserialize};
+use crate::db::schema::{tissues};
 use crate::db::models::tissue::Tissue;
 use crate::db::models::settings::{ZHLSettings, VPMSettings, GeneralSettings};
+use crate::json_repr;
 
 // A simplified user that only contains the id and name field.
 #[derive(Serialize, Deserialize)]
@@ -20,7 +22,8 @@ impl From<models::user::User> for SimplifiedUser {
     }
 }
 
-#[derive(Serialize, Deserialize, Copy, Clone)]
+#[derive(Serialize, Deserialize, Copy, Clone, Debug, Insertable)]
+#[table_name = "tissues"] // Double duty!
 pub struct SimplifiedTissue {
     // Nitrogen loadings
     pub n2_1: f64,
@@ -98,6 +101,45 @@ impl From<models::tissue::Tissue> for SimplifiedTissue {
     }
 }
 
+impl From<capra::deco::tissue::Tissue> for SimplifiedTissue {
+    fn from(value: capra::deco::tissue::Tissue) -> Self {
+        Self {
+            n2_1: value.p_n2()[0],
+            n2_2: value.p_n2()[1],
+            n2_3: value.p_n2()[2],
+            n2_4: value.p_n2()[3],
+            n2_5: value.p_n2()[4],
+            n2_6: value.p_n2()[5],
+            n2_7: value.p_n2()[6],
+            n2_8: value.p_n2()[7],
+            n2_9: value.p_n2()[8],
+            n2_10: value.p_n2()[9],
+            n2_11: value.p_n2()[10],
+            n2_12: value.p_n2()[11],
+            n2_13: value.p_n2()[12],
+            n2_14: value.p_n2()[13],
+            n2_15: value.p_n2()[14],
+            n2_16: value.p_n2()[15],
+            he_1: value.p_he()[0],
+            he_2: value.p_he()[1],
+            he_3: value.p_he()[2],
+            he_4: value.p_he()[3],
+            he_5: value.p_he()[4],
+            he_6: value.p_he()[5],
+            he_7: value.p_he()[6],
+            he_8: value.p_he()[7],
+            he_9: value.p_he()[8],
+            he_10: value.p_he()[9],
+            he_11: value.p_he()[10],
+            he_12: value.p_he()[11],
+            he_13: value.p_he()[12],
+            he_14: value.p_he()[13],
+            he_15: value.p_he()[14],
+            he_16: value.p_he()[15],
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedZHLSettings {
     pub gfl: i32,
@@ -143,4 +185,10 @@ impl From<models::settings::GeneralSettings> for SimplifiedGeneralSettings {
             descent_rate: value.descent_rate
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct SimplifiedDive {
+    pub segments: Vec<(json_repr::dive_segment::DiveSegment, json_repr::gas::Gas)>,
+    pub deco_gases: Vec<json_repr::gas::Gas>,
 }
