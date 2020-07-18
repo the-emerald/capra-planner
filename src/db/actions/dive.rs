@@ -50,29 +50,20 @@ pub fn add_dive(
             .values(new_dive)
             .execute(conn)?;
 
-        println!("new dive added");
-
         let dive_record = dives
             .filter(user_id.eq(&user.id))
             .order(user_id.desc())
             .first::<models::dive::Dive>(conn)?;
 
-        println!("record found");
-
         // Insert segments
         for (sg, gs) in &dive.segments {
             add_segment(dive_record.id, sg, gs, conn)?;
-            println!("segment added");
         }
-
-        println!("done segments");
 
         // Insert deco gases
         for dcg in &dive.deco_gases {
             add_gas(Some(dive_record.id), dcg, conn)?;
         }
-
-        println!("gases added");
 
         Ok(())
     })
@@ -89,7 +80,6 @@ pub fn add_segment(
     conn.transaction::<(), diesel::result::Error, _>(|| {
         // Do the gas first
         add_gas(None, gas, conn)?;
-        println!("add segment: Gas");
 
         let gas_row = {
             use crate::db::schema::gases::dsl::*;
@@ -100,8 +90,6 @@ pub fn add_segment(
                 .filter(max_operating_depth.is_null()) // segment gas cannot have MOD
                 .first::<Gas>(conn)?
         };
-
-        println!("add segment: Gas row");
 
         // Now the segment
         let new_segment = NewSegment {
@@ -117,8 +105,6 @@ pub fn add_segment(
         diesel::insert_into(segments)
             .values(new_segment)
             .execute(conn)?;
-
-        println!("add segment: segment");
 
         Ok(())
     })
@@ -138,8 +124,6 @@ pub fn add_gas(
             he: gas.he as i32,
             max_operating_depth: gas.max_op_depth.and_then(|x| Some(x as i32))
         };
-
-        dbg!(&new_gas);
 
         diesel::insert_into(gases)
             .values(new_gas)

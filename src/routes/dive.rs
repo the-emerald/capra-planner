@@ -143,9 +143,6 @@ async fn dive<T: DecoAlgorithm>(
         )
         .collect::<Result<Vec<(capra::common::gas::Gas, Option<usize>)>, ServerDivePlanningError>>()?;
 
-    dbg!(&c_dg);
-    dbg!(&c_segs);
-
     let gsu = user.clone();
     let general_settings = web::block(move || {
         get_general_settings_for_user(&gsu, &conn)
