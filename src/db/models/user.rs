@@ -3,7 +3,7 @@ use crate::db::models::settings::*;
 use crate::db::models::tissue::Tissue;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Identifiable, Associations, Serialize, Deserialize)]
+#[derive(Queryable, Identifiable, Associations, Serialize, Deserialize, Clone)]
 #[table_name = "users"]
 #[belongs_to(parent = "Tissue", foreign_key = "current_tissue_id")]
 #[belongs_to(parent = "ZHLSettings", foreign_key = "current_zhl_settings_id")]

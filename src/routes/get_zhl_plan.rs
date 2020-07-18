@@ -2,7 +2,6 @@ use actix_web::{post, web, HttpResponse};
 use serde::{Serialize, Deserialize};
 use crate::json_repr;
 use std::convert::TryInto;
-use crate::json_repr::gas::ServerGasError;
 use capra::deco::zhl16::ZHL16;
 use capra::common::gas::Gas;
 use capra::deco::zhl16::util::{ZHL16B_N2_A, ZHL16B_N2_B, ZHL16B_N2_HALFLIFE, ZHL16B_HE_A, ZHL16B_HE_B, ZHL16B_HE_HALFLIFE};

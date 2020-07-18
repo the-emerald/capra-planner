@@ -3,7 +3,7 @@ extern crate diesel;
 
 use actix_web::{App, HttpServer};
 use actix_cors::Cors;
-use diesel::{SqliteConnection, Connection};
+use diesel::{SqliteConnection};
 use diesel::r2d2::ConnectionManager;
 use crate::db::connection_options::ConnectionOptions;
 use std::time::Duration;
@@ -12,6 +12,7 @@ pub mod routes;
 pub mod json_repr;
 pub mod db;
 pub mod simplified;
+pub mod result;
 
 type DBPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -54,6 +55,8 @@ async fn main() -> std::io::Result<()> {
 
             .service(routes::settings::update_zhl_settings)
             .service(routes::settings::update_general_settings)
+
+            .service(routes::dive::dive_route)
     })
         .bind(&bind)?
         .run()
