@@ -9,14 +9,33 @@
                                 Results
                             </b-col>
                             <!--UI buttons-->
-
-                            <!--Reorder-->
                             <b-col>
                                 <b-button block
-                                          class="float-right" id="rearrange"
+                                          variant="primary"
+                                          class="float-right" id="si"
                                           size="sm"
-                                          title="Reorder">
-                                    <b-icon-list-ol></b-icon-list-ol>
+                                          title="SI">
+                                    SI
+                                </b-button>
+                            </b-col>
+
+                            <b-col>
+                                <b-button block
+                                          variant="primary"
+                                          class="float-right" id="exec"
+                                          size="sm"
+                                          title="Execute">
+                                    Plan
+                                </b-button>
+                            </b-col>
+
+                            <b-col>
+                                <b-button block
+                                          variant="success"
+                                          class="float-right" id="plan"
+                                          size="sm"
+                                          title="Plan">
+                                    Execute
                                 </b-button>
                             </b-col>
 
@@ -26,7 +45,17 @@
                     <!--Relevant modals-->
                 </b-card-header>
                 <b-container>
-                    <p>Reserved for showing dive results bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg bleg</p>
+                    <br>
+                    <b-row>
+                        <b-col>
+                            <p>Dive plan will appear here...</p>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <p>Gas plan will appear here...</p>
+                        </b-col>
+                    </b-row>
                 </b-container>
             </b-card>
         </b-card-group>
