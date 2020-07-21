@@ -15,6 +15,8 @@ use crate::db::actions::settings::{get_zhl_settings_for_user, get_general_settin
 use capra::planning::modes::open_circuit::OpenCircuit;
 use capra::planning::DivePlan;
 use capra::common::DENSITY_SALTWATER;
+use capra::common::dive_segment::SegmentType::DiveSegment;
+use time::Duration;
 
 // TODO: Consider moving this to capra crate
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
@@ -43,37 +45,11 @@ pub(crate) async fn dive_route(
     pool: web::Data<DBPool>,
     form: web::Json<DiveRouteInput>
 ) -> actix_web::Result<HttpResponse> {
-    let conn = pool
-        .get()
-        .map_err(|_| HttpResponse::InternalServerError().finish())?;
-
     // Get user
-    let id = form.id;
-    let user = web::block(move || -> Result<User, diesel::result::Error>{
-        get_user_by_id(id, &conn)?
-            .ok_or(diesel::result::Error::NotFound)
-    })
-        .await
-        .map_err(|e| {
-            eprintln!("{}", e);
-            HttpResponse::InternalServerError().finish()
-        })?;
-
-    // Re-acquire connection
-    let conn = pool
-        .get()
-        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+    let user = get_user_by_id_blocking(pool.clone(), form.id).await?;
 
     // Get user tissue
-    let tu = user.clone();
-    let tissue = web::block(move || {
-        get_tissue_of_user(&tu, &conn)
-    })
-        .await
-        .map_err(|e| {
-            eprintln!("{}", e);
-            HttpResponse::InternalServerError().finish()
-        })?;
+    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?;
 
     match form.algorithm {
         Algorithm::ZHL16 => {
@@ -108,6 +84,38 @@ pub(crate) async fn dive_route(
             Ok(HttpResponse::NotImplemented().finish())
         },
     }
+}
+
+async fn get_tissue_of_user_blocking(pool: web::Data<DBPool>, user: User)
+    -> Result<crate::db::models::tissue::Tissue, HttpResponse> {
+    let conn = pool
+        .get()
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    web::block(move || {
+        get_tissue_of_user(&user, &conn)
+    })
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })
+}
+
+async fn get_user_by_id_blocking(pool: web::Data<DBPool>, id: i32) -> Result<User, HttpResponse> {
+    let conn = pool
+        .get()
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    web::block(move || -> Result<User, diesel::result::Error>{
+        get_user_by_id(id, &conn)?
+            .ok_or(diesel::result::Error::NotFound)
+    })
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })
 }
 
 async fn dive<T: DecoAlgorithm>(
@@ -149,7 +157,7 @@ async fn dive<T: DecoAlgorithm>(
     })
         .await
         .map_err(|e| {
-            eprintln!("gs {}", e);
+            eprintln!("{}", e);
             HttpResponse::InternalServerError().finish()
         })?;
 
@@ -197,7 +205,7 @@ async fn dive<T: DecoAlgorithm>(
     })
         .await
         .map_err(|e| {
-            eprintln!("dv {}", e);
+            eprintln!("{}", e);
             HttpResponse::InternalServerError().finish()
         })?;
 
@@ -213,10 +221,76 @@ async fn dive<T: DecoAlgorithm>(
         })
             .await
             .map_err(|e| {
-                eprintln!("ts {}", e);
+                eprintln!("{}", e);
                 HttpResponse::InternalServerError().finish()
             })?;
     }
 
     Ok(HttpResponse::Ok().json(out))
+}
+
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct SurfaceIntervalInput {
+    pub(crate) id: i32,
+    pub(crate) algorithm: Algorithm,
+    pub(crate) duration: u64 // Milliseconds
+}
+
+#[post("/dive/si")]
+pub(crate) async fn surface_interval(
+    pool: web::Data<DBPool>,
+    form: web::Json<SurfaceIntervalInput>,
+) -> actix_web::Result<HttpResponse> {
+    let user = get_user_by_id_blocking(pool.clone(), form.id).await?;
+    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?;
+
+    let after_si_tissue = match form.algorithm {
+        Algorithm::ZHL16 => {
+            let mut z = capra::deco::zhl16::ZHL16::new(
+                tissue.into(),
+                ZHL16B_N2_A,
+                ZHL16B_N2_B,
+                ZHL16B_N2_HALFLIFE,
+                ZHL16B_HE_A,
+                ZHL16B_HE_B,
+                ZHL16B_HE_HALFLIFE,
+                100, 100 // GF doesn't matter
+            );
+
+            let air = capra::common::gas::Gas::new(21, 0, 79).unwrap();
+
+            let surface_interval_segment = capra::common::dive_segment::DiveSegment::new(
+                DiveSegment,
+                0,
+                0,
+                Duration::milliseconds(form.duration as i64),
+                1, 1
+            )
+                .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+            z.add_dive_segment(&surface_interval_segment, &air, 10000.0);
+
+            z.tissue()
+        },
+        Algorithm::VPM => {
+            return Ok(HttpResponse::NotImplemented().finish())
+        },
+    };
+
+    let conn = pool
+        .get()
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    web::block(move || {
+        update_tissue_of_user(&user, after_si_tissue.into(), &conn)
+    })
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })?;
+
+    Ok(HttpResponse::Ok().finish())
+
 }
