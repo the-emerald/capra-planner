@@ -17,6 +17,7 @@ use capra::planning::DivePlan;
 use capra::common::DENSITY_SALTWATER;
 use capra::common::dive_segment::SegmentType::DiveSegment;
 use time::Duration;
+use std::cmp::Ordering;
 
 // TODO: Consider moving this to capra crate
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
@@ -35,6 +36,7 @@ pub(crate) struct DiveRouteOutput {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub(crate) struct DiveRouteInput {
     id: i32,
+    surface_interval: u64, // Milliseconds
     plan_type: PlanType,
     algorithm: Algorithm,
     parameters: SimplifiedDive
@@ -77,6 +79,29 @@ pub(crate) async fn dive_route(
                 ZHL16B_HE_B,
                 ZHL16B_HE_HALFLIFE,
                 zs.gfl as usize, zs.gfh as usize);
+
+            // let si = form.surface_interval;
+            let zhl = match form.surface_interval.cmp(&(0 as u64)) {
+                Ordering::Equal => {
+                    zhl
+                },
+                _ => {
+                    let new_t = add_surface_interval(
+                        zhl,
+                        Duration::milliseconds(form.surface_interval as i64)
+                    )?;
+
+                    capra::deco::zhl16::ZHL16::new(
+                        new_t.into(),
+                        ZHL16B_N2_A,
+                        ZHL16B_N2_B,
+                        ZHL16B_N2_HALFLIFE,
+                        ZHL16B_HE_A,
+                        ZHL16B_HE_B,
+                        ZHL16B_HE_HALFLIFE,
+                        zs.gfl as usize, zs.gfh as usize)
+                },
+            };
 
             dive(pool, form, user, zhl).await
         },
@@ -247,7 +272,7 @@ pub(crate) async fn surface_interval(
 
     let after_si_tissue = match form.algorithm {
         Algorithm::ZHL16 => {
-            let mut z = capra::deco::zhl16::ZHL16::new(
+            let z = capra::deco::zhl16::ZHL16::new(
                 tissue.into(),
                 ZHL16B_N2_A,
                 ZHL16B_N2_B,
@@ -258,20 +283,7 @@ pub(crate) async fn surface_interval(
                 100, 100 // GF doesn't matter
             );
 
-            let air = capra::common::gas::Gas::new(21, 0, 79).unwrap();
-
-            let surface_interval_segment = capra::common::dive_segment::DiveSegment::new(
-                DiveSegment,
-                0,
-                0,
-                Duration::milliseconds(form.duration as i64),
-                1, 1
-            )
-                .map_err(|_| HttpResponse::InternalServerError().finish())?;
-
-            z.add_dive_segment(&surface_interval_segment, &air, 10000.0);
-
-            z.tissue()
+            add_surface_interval(z, Duration::milliseconds(form.duration as i64))?
         },
         Algorithm::VPM => {
             return Ok(HttpResponse::NotImplemented().finish())
@@ -293,4 +305,21 @@ pub(crate) async fn surface_interval(
 
     Ok(HttpResponse::Ok().finish())
 
+}
+
+fn add_surface_interval<T: DecoAlgorithm>(mut deco: T, duration: Duration) -> actix_web::Result<capra::deco::tissue::Tissue> {
+    let air = capra::common::gas::Gas::new(21, 0, 79).unwrap();
+
+    let surface_interval_segment = capra::common::dive_segment::DiveSegment::new(
+        DiveSegment,
+        0,
+        0,
+        duration,
+        1, 1
+    )
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    deco.add_dive_segment(&surface_interval_segment, &air, 10000.0);
+
+    Ok(deco.get_tissue())
 }

@@ -146,8 +146,9 @@
             planDive(
                 this.user,
                 this.selectedAlgo,
+                this.surfaceIntervalDuration,
                 segments,
-                gases
+                gases,
             )
             .then(r => {
                 this.planResults = r.data
