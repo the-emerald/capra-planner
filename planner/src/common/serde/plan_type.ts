@@ -1,4 +1,4 @@
 export enum PlanType {
-    PLAN,
-    EXECUTE
+    PLAN = "PLAN",
+    EXECUTE = "EXECUTE"
 }

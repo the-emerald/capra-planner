@@ -4,6 +4,7 @@ import {GeneralSettings, ZHLSettings} from "@/common/serde/settings";
 import {DiveSegment} from "@/common/serde/dive_segment";
 import {Gas} from "@/common/serde/gas";
 import {PlanType} from "@/common/serde/plan_type";
+import {Algorithm} from "@/common/serde/algorithm";
 
 export function newUser(name: string): Promise<AxiosResponse> {
     return axios.post(
@@ -49,14 +50,43 @@ export function updateGeneralSettings(user: User, settings: GeneralSettings): Pr
     )
 }
 
-function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    // TODO: Finish this
+function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm, segments: Array<[DiveSegment, Gas]>, decoGases: Array<Gas>):
+    Promise<AxiosResponse<PlanDiveResponse>> {
+    console.log(JSON.stringify(
+        {
+            "id": user.id,
+            "plan_type": diveType,
+            "algorithm": algorithm,
+            "parameters": {
+                "segments": segments,
+                "deco_gases": decoGases
+            }
+        }
+    ));
+
+    return axios.post(
+        '/dive/',
+        {
+            "id": user.id,
+            "plan_type": diveType,
+            "algorithm": algorithm,
+            "parameters": {
+                "segments": segments,
+                "deco_gases": decoGases
+            }
+        }
+    )
 }
 
-export function planDive(user: User, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    getDivePlan(user, PlanType.PLAN, algorithm, segments, decoGases)
+export function planDive(user: User, algorithm: Algorithm, segments: Array<[DiveSegment, Gas]>, decoGases: Array<Gas>): Promise<AxiosResponse> {
+    return getDivePlan(user, PlanType.PLAN, algorithm, segments, decoGases)
 }
 
-export function executeDive(user: User, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    getDivePlan(user, PlanType.EXECUTE, algorithm, segments, decoGases)
+export function executeDive(user: User, algorithm: Algorithm, segments: Array<[DiveSegment, Gas]>, decoGases: Array<Gas>): Promise<AxiosResponse> {
+    return getDivePlan(user, PlanType.EXECUTE, algorithm, segments, decoGases)
+}
+
+export interface PlanDiveResponse {
+    segments: Array<[DiveSegment, Gas]>;
+    gas_used: Array<[Gas, number]>;
 }

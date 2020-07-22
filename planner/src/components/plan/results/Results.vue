@@ -39,7 +39,8 @@
                                           variant="primary"
                                           class="float-right" id="exec"
                                           size="sm"
-                                          title="Execute">
+                                          title="Execute"
+                                          @click="onPlanButtonClick">
                                     Plan
                                 </b-button>
                             </b-col>
@@ -49,7 +50,7 @@
                                           variant="success"
                                           class="float-right" id="plan"
                                           size="sm"
-                                          title="Plan">
+                                          title="Plan"> <!-- TODO: Make a modal for execute -->
                                     Execute
                                 </b-button>
                             </b-col>
@@ -84,6 +85,13 @@
     import {BottomSegmentElement, DecoGasElement} from "@/store/plan";
     import {Algorithm} from "@/common/serde/algorithm";
     import SurfaceIntervalModal from "@/components/plan/results/SurfaceIntervalModal.vue";
+    import {GeneralSettings, ZHLSettings} from "@/common/serde/settings";
+    import {User} from "@/common/serde/user";
+    import {DiveSegment} from "@/common/serde/dive_segment";
+    import {Gas} from "@/common/serde/gas";
+    import {planDive, PlanDiveResponse} from "@/common/routes";
+    import {makeErrorToast} from "@/common/toast";
+    import {handleAxiosError} from "@/common/axios_error";
 
     const plan = namespace('Plan');
     const userInfo = namespace('UserInfo')
@@ -92,6 +100,11 @@
         components: {SurfaceIntervalModal}
     })
     export default class Results extends Vue {
+        planResults: PlanDiveResponse = {
+            gas_used: [],
+            segments: []
+        };
+
         selectedAlgo: Algorithm = Algorithm.ZHL16;
 
         updateSelectedAlgo(a: string) {
@@ -109,11 +122,58 @@
             this.surfaceIntervalDuration = value;
         }
 
+        onPlanButtonClick() {
+            const ascentRate = this.userGeneralSettings.ascent_rate;
+            const descentRate = this.userGeneralSettings.descent_rate;
+
+            const segments = this.bottomSegments
+            .filter(x => x[0]) // Filter disabled segments
+            .map(y => y[1]) // Remove boolean
+            .map(function (z): [DiveSegment, Gas] { // Destructure
+                return [z.diveSegment, z.gas]
+            })
+            .map(function (a): [DiveSegment, Gas] { // Add ascent rate and descent rate
+                a[0].ascent_rate = ascentRate;
+                a[0].descent_rate = descentRate;
+
+                return [a[0], a[1]];
+            })
+
+            const gases = this.decoGases
+            .filter(x => x[0]) // Filter disabled gases
+            .map(y => y[1].gas) // Map element
+
+            planDive(
+                this.user,
+                this.selectedAlgo,
+                segments,
+                gases
+            )
+            .then(r => {
+                this.planResults = r.data
+            })
+            .catch((error) => {
+                makeErrorToast(this, handleAxiosError(error));
+            })
+        }
+
         @plan.State
         public bottomSegments!: Array<[boolean, BottomSegmentElement]>;
 
         @plan.State
         public decoGases!: Array<[boolean, DecoGasElement]>;
+
+        @userInfo.State
+        public user!: User;
+
+        @userInfo.State
+        public userZHLSettings!: ZHLSettings;
+
+        // @userInfo.State
+        // public userVPMSettings!: VPMSettings;
+
+        @userInfo.State
+        public userGeneralSettings!: GeneralSettings;
 
     }
 

@@ -1,6 +1,6 @@
 export enum SegmentType {
-    NoDeco,
-    DecoStop,
-    DiveSegment,
-    AscDesc
+    NoDeco = "NoDeco",
+    DecoStop = "DecoStop",
+    DiveSegment = "DiveSegment",
+    AscDesc = "AscDesc"
 }
