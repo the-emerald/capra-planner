@@ -11,16 +11,16 @@ use crate::db::models::gas::{NewGas, Gas};
 use crate::db::models::segments::NewSegment;
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, Ord, PartialOrd, Eq, PartialEq)]
-pub enum DiveType {
+pub enum PlanType {
     PLAN,
     EXECUTE
 }
 
-impl DiveType {
+impl PlanType {
     pub fn value(&self) -> i32 {
         match self {
-            DiveType::PLAN => { 0 },
-            DiveType::EXECUTE => { 1 },
+            PlanType::PLAN => { 0 },
+            PlanType::EXECUTE => { 1 },
         }
     }
 }
@@ -28,7 +28,7 @@ impl DiveType {
 pub fn add_dive(
     user: &models::user::User,
     dive: &SimplifiedDive,
-    dive_type: &DiveType,
+    dive_type: &PlanType,
     conn: &SqliteConnection
 ) -> Result<(), diesel::result::Error> {
     use crate::db::schema::dives::dsl::*;

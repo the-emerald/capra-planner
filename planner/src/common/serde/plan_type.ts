@@ -1,4 +1,4 @@
-export enum DiveType {
+export enum PlanType {
     PLAN,
     EXECUTE
 }

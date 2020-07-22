@@ -1,8 +1,8 @@
 use actix_web::{post, web, HttpResponse};
 use crate::{DBPool, json_repr};
 use crate::simplified::SimplifiedDive;
-use crate::db::actions::dive::{DiveType, add_dive};
-use crate::db::actions::dive::DiveType::{EXECUTE};
+use crate::db::actions::dive::{PlanType, add_dive};
+use crate::db::actions::dive::PlanType::{EXECUTE};
 use serde::{Serialize, Deserialize};
 use std::convert::TryInto;
 use crate::result::ServerDivePlanningError;
@@ -35,7 +35,7 @@ pub(crate) struct DiveRouteOutput {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub(crate) struct DiveRouteInput {
     id: i32,
-    dive_type: DiveType,
+    plan_type: PlanType,
     algorithm: Algorithm,
     parameters: SimplifiedDive
 }
@@ -199,7 +199,7 @@ async fn dive<T: DecoAlgorithm>(
         add_dive(
             &adu,
             &sd.parameters,
-            &sd.dive_type,
+            &sd.plan_type,
             &conn
         )
     })
@@ -209,7 +209,7 @@ async fn dive<T: DecoAlgorithm>(
             HttpResponse::InternalServerError().finish()
         })?;
 
-    if form.dive_type == EXECUTE {
+    if form.plan_type == EXECUTE {
         // Update tissue as well
         let conn = pool
             .get()

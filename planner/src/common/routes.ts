@@ -1,9 +1,9 @@
 import axios, {AxiosResponse} from 'axios';
 import {User} from "@/common/serde/user";
 import {GeneralSettings, ZHLSettings} from "@/common/serde/settings";
-import {DiveType} from "@/common/serde/dive_type";
 import {DiveSegment} from "@/common/serde/dive_segment";
 import {Gas} from "@/common/serde/gas";
+import {PlanType} from "@/common/serde/plan_type";
 
 export function newUser(name: string): Promise<AxiosResponse> {
     return axios.post(
@@ -49,14 +49,14 @@ export function updateGeneralSettings(user: User, settings: GeneralSettings): Pr
     )
 }
 
+function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
+    // TODO: Finish this
+}
+
 export function planDive(user: User, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    getDivePlan(user, DiveType.PLAN, algorithm, segments, decoGases)
+    getDivePlan(user, PlanType.PLAN, algorithm, segments, decoGases)
 }
 
 export function executeDive(user: User, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    getDivePlan(user, DiveType.EXECUTE, algorithm, segments, decoGases)
-}
-
-function getDivePlan(user: User, diveType: DiveType, algorithm: Algorithm, segments: Array<DiveSegment>, decoGases: Array<[Gas, number?]>) {
-    // TODO: Finish this
+    getDivePlan(user, PlanType.EXECUTE, algorithm, segments, decoGases)
 }
