@@ -9,7 +9,7 @@ use crate::result::ServerDivePlanningError;
 use crate::db::actions::tissue::{get_tissue_of_user, update_tissue_of_user};
 use crate::db::actions::user::get_user_by_id;
 use crate::db::models::user::User;
-use capra::deco::zhl16::util::{ZHL16B_N2_A, ZHL16B_N2_B, ZHL16B_N2_HALFLIFE, ZHL16B_HE_A, ZHL16B_HE_B, ZHL16B_HE_HALFLIFE};
+use capra::deco::zhl16::util::{ZHL16B_N2_A, ZHL16B_N2_B, ZHL16B_N2_HALFLIFE, ZHL16B_HE_A, ZHL16B_HE_B, ZHL16B_HE_HALFLIFE, ZHL16C_N2_A, ZHL16C_N2_B, ZHL16C_N2_HALFLIFE, ZHL16C_HE_A, ZHL16C_HE_B, ZHL16C_HE_HALFLIFE};
 use capra::deco::deco_algorithm::DecoAlgorithm;
 use crate::db::actions::settings::{get_zhl_settings_for_user, get_general_settings_for_user};
 use capra::planning::modes::open_circuit::OpenCircuit;
@@ -29,7 +29,6 @@ pub(crate) enum Algorithm {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub(crate) struct DiveRouteOutput {
     segments: Vec<(json_repr::dive_segment::DiveSegment, json_repr::gas::Gas)>,
-    // gas_used: HashMap<json_repr::gas::Gas, usize>,
     gas_used: Vec<(json_repr::gas::Gas, usize)>
 }
 
@@ -70,15 +69,33 @@ pub(crate) async fn dive_route(
                     HttpResponse::InternalServerError().finish()
                 })?;
 
-            let zhl = capra::deco::zhl16::ZHL16::new(
-                tissue.into(),
-                ZHL16B_N2_A,
-                ZHL16B_N2_B,
-                ZHL16B_N2_HALFLIFE,
-                ZHL16B_HE_A,
-                ZHL16B_HE_B,
-                ZHL16B_HE_HALFLIFE,
-                zs.gfl as usize, zs.gfh as usize);
+            let zhl = match zs.variant.as_str() {
+                "B" => {
+                    capra::deco::zhl16::ZHL16::new(
+                        tissue.into(),
+                        ZHL16B_N2_A,
+                        ZHL16B_N2_B,
+                        ZHL16B_N2_HALFLIFE,
+                        ZHL16B_HE_A,
+                        ZHL16B_HE_B,
+                        ZHL16B_HE_HALFLIFE,
+                        zs.gfl as usize, zs.gfh as usize)
+                },
+                "C" => {
+                    capra::deco::zhl16::ZHL16::new(
+                        tissue.into(),
+                        ZHL16C_N2_A,
+                        ZHL16C_N2_B,
+                        ZHL16C_N2_HALFLIFE,
+                        ZHL16C_HE_A,
+                        ZHL16C_HE_B,
+                        ZHL16C_HE_HALFLIFE,
+                        zs.gfl as usize, zs.gfh as usize)
+                },
+                _ => {
+                    return Ok(HttpResponse::InternalServerError().finish());
+                }
+            };
 
             // let si = form.surface_interval;
             let zhl = match form.surface_interval.cmp(&(0 as u64)) {
@@ -90,16 +107,33 @@ pub(crate) async fn dive_route(
                         zhl,
                         Duration::milliseconds(form.surface_interval as i64)
                     )?;
-
-                    capra::deco::zhl16::ZHL16::new(
-                        new_t.into(),
-                        ZHL16B_N2_A,
-                        ZHL16B_N2_B,
-                        ZHL16B_N2_HALFLIFE,
-                        ZHL16B_HE_A,
-                        ZHL16B_HE_B,
-                        ZHL16B_HE_HALFLIFE,
-                        zs.gfl as usize, zs.gfh as usize)
+                    match zs.variant.as_str() {
+                        "B" => {
+                            capra::deco::zhl16::ZHL16::new(
+                                new_t.into(),
+                                ZHL16B_N2_A,
+                                ZHL16B_N2_B,
+                                ZHL16B_N2_HALFLIFE,
+                                ZHL16B_HE_A,
+                                ZHL16B_HE_B,
+                                ZHL16B_HE_HALFLIFE,
+                                zs.gfl as usize, zs.gfh as usize)
+                        },
+                        "C" => {
+                            capra::deco::zhl16::ZHL16::new(
+                                new_t.into(),
+                                ZHL16C_N2_A,
+                                ZHL16C_N2_B,
+                                ZHL16C_N2_HALFLIFE,
+                                ZHL16C_HE_A,
+                                ZHL16C_HE_B,
+                                ZHL16C_HE_HALFLIFE,
+                                zs.gfl as usize, zs.gfh as usize)
+                        },
+                        _ => {
+                            return Ok(HttpResponse::InternalServerError().finish());
+                        }
+                    }
                 },
             };
 
