@@ -223,13 +223,13 @@ async fn dive<T: DecoAlgorithm>(
     let out = DiveRouteOutput {
         segments: {
             res.total_segments()
-                .into_iter()
+                .iter()
                 .map(|x| (x.0.into(), x.1.into()))
                 .collect()
         },
         gas_used: {
             res.gas_used()
-                .into_iter()
+                .iter()
                 .map(|(k, v)| (json_repr::gas::Gas::from(*k), *v))
                 .collect()
         }

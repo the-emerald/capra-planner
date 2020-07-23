@@ -122,7 +122,7 @@ pub fn add_gas(
             dive_id: dive_id_,
             o2: gas.o2 as i32,
             he: gas.he as i32,
-            max_operating_depth: gas.max_op_depth.and_then(|x| Some(x as i32))
+            max_operating_depth: gas.max_op_depth.map(|x| x as i32)
         };
 
         diesel::insert_into(gases)

@@ -19,7 +19,7 @@ impl From<models::user::User> for SimplifiedUser {
     fn from(value: User) -> Self {
         SimplifiedUser {
             id: value.id,
-            name: value.name.clone()
+            name: value.name
         }
     }
 }
