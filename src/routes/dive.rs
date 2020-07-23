@@ -9,7 +9,6 @@ use crate::result::ServerDivePlanningError;
 use crate::db::actions::tissue::{get_tissue_of_user, update_tissue_of_user};
 use crate::db::actions::user::get_user_by_id;
 use crate::db::models::user::User;
-use capra::deco::zhl16::util::{ZHL16B_N2_A, ZHL16B_N2_B, ZHL16B_N2_HALFLIFE, ZHL16B_HE_A, ZHL16B_HE_B, ZHL16B_HE_HALFLIFE, ZHL16C_N2_A, ZHL16C_N2_B, ZHL16C_N2_HALFLIFE, ZHL16C_HE_A, ZHL16C_HE_B, ZHL16C_HE_HALFLIFE};
 use capra::deco::deco_algorithm::DecoAlgorithm;
 use crate::db::actions::settings::{get_zhl_settings_for_user, get_general_settings_for_user};
 use capra::planning::modes::open_circuit::OpenCircuit;
@@ -18,6 +17,7 @@ use capra::common::DENSITY_SALTWATER;
 use capra::common::dive_segment::SegmentType::DiveSegment;
 use time::Duration;
 use std::cmp::Ordering;
+use crate::db::models::settings::ZHLSettings;
 
 // TODO: Consider moving this to capra crate
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
@@ -50,47 +50,27 @@ pub(crate) async fn dive_route(
     let user = get_user_by_id_blocking(pool.clone(), form.id).await?;
 
     // Get user tissue
-    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?;
+    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?.into();
 
     match form.algorithm {
         Algorithm::ZHL16 => {
             // Get ZHL16 settings
-            let conn = pool
-                .get()
-                .map_err(|_| HttpResponse::InternalServerError().finish())?;
-
-            let zsu = user.clone();
-            let zs = web::block(move || {
-                get_zhl_settings_for_user(&zsu, &conn)
-            })
-                .await
-                .map_err(|e| {
-                    eprintln!("{}", e);
-                    HttpResponse::InternalServerError().finish()
-                })?;
+            let zs = get_zhl_setting_of_user_blocking(pool.clone(), user.clone()).await?;
 
             let zhl = match zs.variant.as_str() {
                 "B" => {
-                    capra::deco::zhl16::ZHL16::new(
-                        tissue.into(),
-                        ZHL16B_N2_A,
-                        ZHL16B_N2_B,
-                        ZHL16B_N2_HALFLIFE,
-                        ZHL16B_HE_A,
-                        ZHL16B_HE_B,
-                        ZHL16B_HE_HALFLIFE,
-                        zs.gfl as usize, zs.gfh as usize)
+                    capra::deco::zhl16::ZHL16::new_by_variant(
+                        tissue,
+                        zs.gfl as usize, zs.gfh as usize,
+                        capra::deco::zhl16::variant::Variant::B,
+                    )
                 },
                 "C" => {
-                    capra::deco::zhl16::ZHL16::new(
-                        tissue.into(),
-                        ZHL16C_N2_A,
-                        ZHL16C_N2_B,
-                        ZHL16C_N2_HALFLIFE,
-                        ZHL16C_HE_A,
-                        ZHL16C_HE_B,
-                        ZHL16C_HE_HALFLIFE,
-                        zs.gfl as usize, zs.gfh as usize)
+                    capra::deco::zhl16::ZHL16::new_by_variant(
+                        tissue,
+                        zs.gfl as usize, zs.gfh as usize,
+                        capra::deco::zhl16::variant::Variant::C,
+                    )
                 },
                 _ => {
                     return Ok(HttpResponse::InternalServerError().finish());
@@ -109,26 +89,18 @@ pub(crate) async fn dive_route(
                     )?;
                     match zs.variant.as_str() {
                         "B" => {
-                            capra::deco::zhl16::ZHL16::new(
-                                new_t.into(),
-                                ZHL16B_N2_A,
-                                ZHL16B_N2_B,
-                                ZHL16B_N2_HALFLIFE,
-                                ZHL16B_HE_A,
-                                ZHL16B_HE_B,
-                                ZHL16B_HE_HALFLIFE,
-                                zs.gfl as usize, zs.gfh as usize)
+                            capra::deco::zhl16::ZHL16::new_by_variant(
+                                new_t,
+                                zs.gfl as usize, zs.gfh as usize,
+                                capra::deco::zhl16::variant::Variant::B,
+                            )
                         },
                         "C" => {
-                            capra::deco::zhl16::ZHL16::new(
-                                new_t.into(),
-                                ZHL16C_N2_A,
-                                ZHL16C_N2_B,
-                                ZHL16C_N2_HALFLIFE,
-                                ZHL16C_HE_A,
-                                ZHL16C_HE_B,
-                                ZHL16C_HE_HALFLIFE,
-                                zs.gfl as usize, zs.gfh as usize)
+                            capra::deco::zhl16::ZHL16::new_by_variant(
+                                new_t,
+                                zs.gfl as usize, zs.gfh as usize,
+                                capra::deco::zhl16::variant::Variant::C,
+                            )
                         },
                         _ => {
                             return Ok(HttpResponse::InternalServerError().finish());
@@ -143,6 +115,21 @@ pub(crate) async fn dive_route(
             Ok(HttpResponse::NotImplemented().finish())
         },
     }
+}
+
+async fn get_zhl_setting_of_user_blocking(pool: web::Data<DBPool>, user: User) -> Result<ZHLSettings, HttpResponse> {
+    let conn = pool
+        .get()
+        .map_err(|_| HttpResponse::InternalServerError().finish())?;
+
+    web::block(move || {
+        get_zhl_settings_for_user(&user, &conn)
+    })
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })
 }
 
 async fn get_tissue_of_user_blocking(pool: web::Data<DBPool>, user: User)
@@ -302,20 +289,29 @@ pub(crate) async fn surface_interval(
     form: web::Json<SurfaceIntervalInput>,
 ) -> actix_web::Result<HttpResponse> {
     let user = get_user_by_id_blocking(pool.clone(), form.id).await?;
-    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?;
+    let tissue = get_tissue_of_user_blocking(pool.clone(), user.clone()).await?.into();
 
     let after_si_tissue = match form.algorithm {
         Algorithm::ZHL16 => {
-            let z = capra::deco::zhl16::ZHL16::new(
-                tissue.into(),
-                ZHL16B_N2_A,
-                ZHL16B_N2_B,
-                ZHL16B_N2_HALFLIFE,
-                ZHL16B_HE_A,
-                ZHL16B_HE_B,
-                ZHL16B_HE_HALFLIFE,
-                100, 100 // GF doesn't matter
-            );
+            let zs = get_zhl_setting_of_user_blocking(pool.clone(), user.clone()).await?;
+
+            let z = match zs.variant.as_str() {
+                "B" => {
+                    capra::deco::zhl16::ZHL16::new_by_variant(
+                        tissue,
+                        100, 100,
+                        capra::deco::zhl16::variant::Variant::B,
+                    )
+                },
+                "C" => {
+                    capra::deco::zhl16::ZHL16::new_by_variant(
+                        tissue,
+                        100, 100,
+                        capra::deco::zhl16::variant::Variant::C,
+                    )
+                },
+                _ => { return Ok(HttpResponse::InternalServerError().finish()) }
+            };
 
             add_surface_interval(z, Duration::milliseconds(form.duration as i64))?
         },
