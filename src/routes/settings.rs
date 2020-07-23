@@ -20,7 +20,7 @@ pub(crate) async fn update_zhl_settings(
         .get()
         .map_err(|_| HttpResponse::InternalServerError().finish())?;
 
-    let nz = form.new_zhl_settings.into();
+    let nz = form.new_zhl_settings.clone().into();
 
     web::block(move || {
         let user = get_user_by_id(form.id, &conn)?

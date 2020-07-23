@@ -15,6 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE zhl_settings (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    subtype TEXT NOT NULL,
     gfl INTEGER NOT NULL,
     gfh INTEGER NOT NULL
 );
@@ -111,7 +112,7 @@ CREATE TABLE tissues (
 
 -- Default values
 -- ZHL-16
-INSERT INTO zhl_settings VALUES (1, 50, 70);
+INSERT INTO zhl_settings VALUES (1, 'B', 50, 70);
 
 -- VPM
 INSERT INTO vpm_settings VALUES (1);

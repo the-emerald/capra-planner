@@ -140,8 +140,9 @@ impl From<capra::deco::tissue::Tissue> for SimplifiedTissue {
     }
 }
 
-#[derive(Serialize, Deserialize, Copy, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct SimplifiedZHLSettings {
+    pub subtype: String,
     pub gfl: i32,
     pub gfh: i32,
 }
@@ -149,6 +150,7 @@ pub struct SimplifiedZHLSettings {
 impl From<models::settings::ZHLSettings> for SimplifiedZHLSettings {
     fn from(value: ZHLSettings) -> Self {
         Self {
+            subtype: value.subtype,
             gfl: value.gfl,
             gfh: value.gfh,
         }
