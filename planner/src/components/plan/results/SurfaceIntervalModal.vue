@@ -77,7 +77,6 @@
         };
 
         onSubmit() {
-            // TODO: Finish onSubmit
             const time_millis = (Number(this.siTimeHour) * 3600000) + (Number(this.siTimeMin) * 60000)
 
             this.$emit(

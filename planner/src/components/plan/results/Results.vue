@@ -37,6 +37,7 @@
                             <b-col>
                                 <b-button block
                                           variant="primary"
+                                          :disabled="bottomSegments.length === 0"
                                           class="float-right" id="exec"
                                           size="sm"
                                           title="Plan"
@@ -48,6 +49,7 @@
                             <b-col>
                                 <b-button block
                                           variant="success"
+                                          :disabled="bottomSegments.length === 0"
                                           class="float-right" id="plan"
                                           size="sm"
                                           title="Execute"> <!-- TODO: Make a modal for execute -->
