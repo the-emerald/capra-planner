@@ -61,16 +61,16 @@
                     <!--Relevant modals-->
                     <SurfaceIntervalModal :current-s-i="surfaceIntervalDuration" @submitted="onSIUpdateSubmitted"></SurfaceIntervalModal>
                 </b-card-header>
-                <b-container>
+                <b-container class="tbl">
                     <br>
                     <b-row>
                         <b-col>
-                            <p>Dive plan will appear here...</p>
+                            <PlanTable :total-segments="planResults.segments"></PlanTable>
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col>
-                            <p>Gas plan will appear here...</p>
+                            <GasTable :gas-plan="planResults.gas_used"></GasTable>
                         </b-col>
                     </b-row>
                 </b-container>
@@ -92,12 +92,14 @@
     import {planDive, PlanDiveResponse} from "@/common/routes";
     import {makeErrorToast} from "@/common/toast";
     import {handleAxiosError} from "@/common/axios_error";
+    import PlanTable from "@/components/plan/results/PlanTable.vue";
+    import GasTable from "@/components/plan/results/GasTable.vue";
 
     const plan = namespace('Plan');
     const userInfo = namespace('UserInfo')
 
     @Component({
-        components: {SurfaceIntervalModal}
+        components: {GasTable, PlanTable, SurfaceIntervalModal}
     })
     export default class Results extends Vue {
         planResults: PlanDiveResponse = {
@@ -151,7 +153,8 @@
                 gases,
             )
             .then(r => {
-                this.planResults = r.data
+                this.planResults = r.data;
+                console.log("OK!");
             })
             .catch((error) => {
                 makeErrorToast(this, handleAxiosError(error));
@@ -182,5 +185,8 @@
 </script>
 
 <style scoped>
-
+    .tbl {
+        height: 75vh;
+        overflow-y: auto;
+    }
 </style>
