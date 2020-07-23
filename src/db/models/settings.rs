@@ -23,7 +23,7 @@ pub struct NewZHLSettings {
 impl From<SimplifiedZHLSettings> for NewZHLSettings {
     fn from(value: SimplifiedZHLSettings) -> Self {
         Self {
-            subtype: value.subtype,
+            subtype: String::from(value.subtype),
             gfl: value.gfl,
             gfh: value.gfh
         }

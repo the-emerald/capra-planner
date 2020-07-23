@@ -29,6 +29,7 @@ pub fn update_zhl_settings_for_user(user: &models::user::User,
 
     conn.transaction::<(), diesel::result::Error, _>(|| {
         let candidate_settings = zhl_settings
+            .filter(subtype.eq(&new.subtype))
             .filter(gfl.eq(&new.gfl))
             .filter(gfh.eq(&new.gfh))
             .first::<ZHLSettings>(conn)
@@ -42,6 +43,7 @@ pub fn update_zhl_settings_for_user(user: &models::user::User,
                     .execute(conn)?;
 
                 zhl_settings
+                    .filter(subtype.eq(&new.subtype))
                     .filter(gfl.eq(&new.gfl))
                     .filter(gfh.eq(&new.gfh))
                     .first::<ZHLSettings>(conn)?

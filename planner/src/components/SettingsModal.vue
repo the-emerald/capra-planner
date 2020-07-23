@@ -76,6 +76,14 @@
                             <b-container>
                                 <b-form-row class="mt-3">
                                     <b-col style="margin-top: 0.2rem" sm="4">
+                                        Algorithm subtype:
+                                    </b-col>
+                                    <b-col>
+                                        <b-form-select v-model="zhlSubtype" :options="zhlSubtypeOptions"></b-form-select>
+                                    </b-col>
+                                </b-form-row>
+                                <b-form-row class="mt-3">
+                                    <b-col style="margin-top: 0.2rem" sm="4">
                                         GF Low
                                     </b-col>
                                     <b-col>
@@ -124,7 +132,7 @@
 <script lang="ts">
     import Component from "vue-class-component";
     import {namespace} from "vuex-class";
-    import {GeneralSettings, VPMSettings, ZHLSettings} from "@/common/serde/settings";
+    import {GeneralSettings, VPMSettings, ZHLSettings, ZHLSubtypeFromString} from "@/common/serde/settings";
     import {ValidationObserver, ValidationProvider} from "vee-validate";
     import {Vue} from "vue-property-decorator";
     import {updateGeneralSettings, updateZHLSettings} from "@/common/routes";
@@ -147,6 +155,8 @@
         @userInfo.State
         public userZHLSettings!: ZHLSettings;
 
+        zhlSubtypeOptions: Array<string> = ["B", "C"]
+        zhlSubtype = '';
         gfl = '';
         gfh = '';
 
@@ -174,6 +184,7 @@
 
         syncFields() {
             // ZHL
+            this.zhlSubtype = this.userZHLSettings.subtype.toString()
             this.gfl = this.userZHLSettings.gfl.toString();
             this.gfh = this.userZHLSettings.gfh.toString();
 
@@ -186,6 +197,7 @@
 
         onSubmit() {
             const zhlSettings: ZHLSettings = {
+                subtype: ZHLSubtypeFromString(this.zhlSubtype),
                 gfh: Number(this.gfh),
                 gfl: Number(this.gfl)
             };

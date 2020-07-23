@@ -5,6 +5,8 @@ use crate::db::schema::{tissues};
 use crate::db::models::tissue::Tissue;
 use crate::db::models::settings::{ZHLSettings, VPMSettings, GeneralSettings};
 use crate::json_repr;
+use std::convert::{TryFrom, TryInto};
+use crate::result::ZHLSettingError;
 
 // A simplified user that only contains the id and name field.
 #[derive(Serialize, Deserialize)]
@@ -140,20 +142,51 @@ impl From<capra::deco::tissue::Tissue> for SimplifiedTissue {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Copy, Clone, Serialize, Deserialize)]
+pub enum ZHLSubtype {
+    B,
+    C
+}
+
+impl From<ZHLSubtype> for String {
+    fn from(value: ZHLSubtype) -> Self {
+        match value {
+            ZHLSubtype::B => { String::from("B") },
+            ZHLSubtype::C => { String::from("C") },
+        }
+    }
+}
+
+impl TryFrom<String> for ZHLSubtype {
+    type Error = ZHLSettingError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.as_str() {
+            "B" => { Ok(ZHLSubtype::B) }
+            "C" => { Ok(ZHLSubtype::C) }
+            _ => { Err(ZHLSettingError::ConversionError) }
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedZHLSettings {
-    pub subtype: String,
+    pub subtype: ZHLSubtype,
     pub gfl: i32,
     pub gfh: i32,
 }
 
-impl From<models::settings::ZHLSettings> for SimplifiedZHLSettings {
-    fn from(value: ZHLSettings) -> Self {
-        Self {
-            subtype: value.subtype,
-            gfl: value.gfl,
-            gfh: value.gfh,
-        }
+impl TryFrom<models::settings::ZHLSettings> for SimplifiedZHLSettings {
+    type Error = ZHLSettingError;
+
+    fn try_from(value: ZHLSettings) -> Result<Self, Self::Error> {
+        Ok(
+            Self {
+                subtype: value.subtype.try_into()?,
+                gfl: value.gfl,
+                gfh: value.gfh
+            }
+        )
     }
 }
 
