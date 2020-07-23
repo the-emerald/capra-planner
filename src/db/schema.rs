@@ -102,6 +102,7 @@ table! {
 table! {
     zhl_settings (id) {
         id -> Integer,
+        variant -> Text,
         gfl -> Integer,
         gfh -> Integer,
     }
