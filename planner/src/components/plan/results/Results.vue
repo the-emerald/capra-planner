@@ -39,7 +39,7 @@
                                           variant="primary"
                                           class="float-right" id="exec"
                                           size="sm"
-                                          title="Execute"
+                                          title="Plan"
                                           @click="onPlanButtonClick">
                                     Plan
                                 </b-button>
@@ -50,7 +50,7 @@
                                           variant="success"
                                           class="float-right" id="plan"
                                           size="sm"
-                                          title="Plan"> <!-- TODO: Make a modal for execute -->
+                                          title="Execute"> <!-- TODO: Make a modal for execute -->
                                     Execute
                                 </b-button>
                             </b-col>
