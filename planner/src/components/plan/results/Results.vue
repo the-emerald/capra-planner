@@ -52,6 +52,7 @@
                                           :disabled="bottomSegments.length === 0"
                                           class="float-right" id="plan"
                                           size="sm"
+                                          @click="$bvModal.show('execute-dive-modal')"
                                           title="Execute"> <!-- TODO: Make a modal for execute -->
                                     Execute
                                 </b-button>
@@ -62,6 +63,7 @@
 
                     <!--Relevant modals-->
                     <SurfaceIntervalModal :current-s-i="surfaceIntervalDuration" @submitted="onSIUpdateSubmitted"></SurfaceIntervalModal>
+                    <ExecuteDiveModal @submitted="onExecuteModalConfirmed"></ExecuteDiveModal>
                 </b-card-header>
                 <b-container class="tbl">
                     <br>
@@ -98,17 +100,19 @@
     import {User} from "@/common/serde/user";
     import {DiveSegment} from "@/common/serde/dive_segment";
     import {Gas} from "@/common/serde/gas";
-    import {planDive, PlanDiveResponse} from "@/common/routes";
-    import {makeErrorToast} from "@/common/toast";
+    import {getDivePlan, PlanDiveResponse} from "@/common/routes";
+    import {makeErrorToast, makeSuccessToast} from "@/common/toast";
     import {handleAxiosError} from "@/common/axios_error";
     import PlanTable from "@/components/plan/results/PlanTable.vue";
     import GasTable from "@/components/plan/results/GasTable.vue";
+    import ExecuteDiveModal from "@/components/plan/results/ExecuteDiveModal.vue";
+    import {PlanType} from "@/common/serde/plan_type";
 
     const plan = namespace('Plan');
     const userInfo = namespace('UserInfo')
 
     @Component({
-        components: {GasTable, PlanTable, SurfaceIntervalModal}
+        components: {ExecuteDiveModal, GasTable, PlanTable, SurfaceIntervalModal}
     })
     export default class Results extends Vue {
         planResults: PlanDiveResponse = {
@@ -133,7 +137,16 @@
             this.surfaceIntervalDuration = value;
         }
 
+        onExecuteModalConfirmed() {
+            this.contactServerForPlan(PlanType.EXECUTE);
+            makeSuccessToast(this, "Executed dive.")
+        }
+
         onPlanButtonClick() {
+            this.contactServerForPlan(PlanType.PLAN);
+        }
+
+        contactServerForPlan(planType: PlanType) {
             const ascentRate = this.userGeneralSettings.ascent_rate;
             const descentRate = this.userGeneralSettings.descent_rate;
 
@@ -154,8 +167,9 @@
             .filter(x => x[0]) // Filter disabled gases
             .map(y => y[1].gas) // Map element
 
-            planDive(
+            getDivePlan(
                 this.user,
+                planType,
                 this.selectedAlgo,
                 this.surfaceIntervalDuration,
                 segments,
