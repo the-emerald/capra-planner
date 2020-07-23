@@ -13,9 +13,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
-    import {ValidationObserver, ValidationProvider} from "vee-validate"
-    import "@/common/validation"
+    import {Component, Vue} from "vue-property-decorator";
 
     @Component({})
     export default class SurfaceIntervalModal extends Vue {
