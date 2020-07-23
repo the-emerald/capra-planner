@@ -15,7 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE zhl_settings (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    subtype TEXT NOT NULL,
+    variant TEXT NOT NULL,
     gfl INTEGER NOT NULL,
     gfh INTEGER NOT NULL
 );

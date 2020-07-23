@@ -7,7 +7,7 @@ use crate::simplified::{SimplifiedZHLSettings, SimplifiedGeneralSettings};
 #[table_name = "zhl_settings"]
 pub struct ZHLSettings {
     pub id: i32,
-    pub subtype: String,
+    pub variant: String,
     pub gfl: i32,
     pub gfh: i32,
 }
@@ -15,7 +15,7 @@ pub struct ZHLSettings {
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
 #[table_name = "zhl_settings"]
 pub struct NewZHLSettings {
-    pub subtype: String,
+    pub variant: String,
     pub gfl: i32,
     pub gfh: i32,
 }
@@ -23,7 +23,7 @@ pub struct NewZHLSettings {
 impl From<SimplifiedZHLSettings> for NewZHLSettings {
     fn from(value: SimplifiedZHLSettings) -> Self {
         Self {
-            subtype: String::from(value.subtype),
+            variant: String::from(value.variant),
             gfl: value.gfl,
             gfh: value.gfh
         }

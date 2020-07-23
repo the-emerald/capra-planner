@@ -143,27 +143,27 @@ impl From<capra::deco::tissue::Tissue> for SimplifiedTissue {
 }
 
 #[derive(Copy, Clone, Serialize, Deserialize)]
-pub enum ZHLSubtype {
+pub enum ZHLVariant {
     B,
     C
 }
 
-impl From<ZHLSubtype> for String {
-    fn from(value: ZHLSubtype) -> Self {
+impl From<ZHLVariant> for String {
+    fn from(value: ZHLVariant) -> Self {
         match value {
-            ZHLSubtype::B => { String::from("B") },
-            ZHLSubtype::C => { String::from("C") },
+            ZHLVariant::B => { String::from("B") },
+            ZHLVariant::C => { String::from("C") },
         }
     }
 }
 
-impl TryFrom<String> for ZHLSubtype {
+impl TryFrom<String> for ZHLVariant {
     type Error = ZHLSettingError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         match value.as_str() {
-            "B" => { Ok(ZHLSubtype::B) }
-            "C" => { Ok(ZHLSubtype::C) }
+            "B" => { Ok(ZHLVariant::B) }
+            "C" => { Ok(ZHLVariant::C) }
             _ => { Err(ZHLSettingError::ConversionError) }
         }
     }
@@ -171,7 +171,7 @@ impl TryFrom<String> for ZHLSubtype {
 
 #[derive(Serialize, Deserialize, Copy, Clone)]
 pub struct SimplifiedZHLSettings {
-    pub subtype: ZHLSubtype,
+    pub variant: ZHLVariant,
     pub gfl: i32,
     pub gfh: i32,
 }
@@ -182,7 +182,7 @@ impl TryFrom<models::settings::ZHLSettings> for SimplifiedZHLSettings {
     fn try_from(value: ZHLSettings) -> Result<Self, Self::Error> {
         Ok(
             Self {
-                subtype: value.subtype.try_into()?,
+                variant: value.variant.try_into()?,
                 gfl: value.gfl,
                 gfh: value.gfh
             }

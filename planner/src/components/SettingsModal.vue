@@ -184,7 +184,7 @@
 
         syncFields() {
             // ZHL
-            this.zhlSubtype = this.userZHLSettings.subtype.toString()
+            this.zhlSubtype = this.userZHLSettings.variant.toString()
             this.gfl = this.userZHLSettings.gfl.toString();
             this.gfh = this.userZHLSettings.gfh.toString();
 
@@ -197,7 +197,7 @@
 
         onSubmit() {
             const zhlSettings: ZHLSettings = {
-                subtype: ZHLSubtypeFromString(this.zhlSubtype),
+                variant: ZHLSubtypeFromString(this.zhlSubtype),
                 gfh: Number(this.gfh),
                 gfl: Number(this.gfl)
             };

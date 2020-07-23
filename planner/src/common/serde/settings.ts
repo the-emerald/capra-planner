@@ -1,23 +1,23 @@
-export enum ZHLSubtype {
+export enum ZHLVariant {
     B = "B",
     C = "C"
 }
 
-export function ZHLSubtypeFromString(s: string): ZHLSubtype {
+export function ZHLSubtypeFromString(s: string): ZHLVariant {
     if (s == "B") {
-        return ZHLSubtype.B
+        return ZHLVariant.B
     }
     else if (s == "C") {
-        return ZHLSubtype.C
+        return ZHLVariant.C
     }
     else {
         console.log("Unable to convert ZHL Subtype from string!");
-        return ZHLSubtype.B; // Meh.
+        return ZHLVariant.B; // Meh.
     }
 }
 
 export interface ZHLSettings {
-    subtype: ZHLSubtype;
+    variant: ZHLVariant;
     gfl: number;
     gfh: number;
 }
