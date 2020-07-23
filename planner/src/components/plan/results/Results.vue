@@ -65,6 +65,13 @@
                 </b-card-header>
                 <b-container class="tbl">
                     <br>
+                    <b-row v-if="showModifiedAlert">
+                        <b-col>
+                            <b-alert show variant="danger">
+                                <b>Plan modified:</b> Results shown below do not reflect the current parameters.
+                            </b-alert>
+                        </b-col>
+                    </b-row>
                     <b-row>
                         <b-col>
                             <PlanTable :total-segments="planResults.segments"></PlanTable>
@@ -156,11 +163,18 @@
             )
             .then(r => {
                 this.planResults = r.data;
-                console.log("OK!");
+                this.updateResultSync(true);
             })
             .catch((error) => {
                 makeErrorToast(this, handleAxiosError(error));
             })
+        }
+
+        get showModifiedAlert(): boolean {
+            const x = !this.resultSync && !(this.planResults.segments.length === 0);
+            console.log("Yo");
+            console.log(x);
+            return !this.resultSync && !(this.planResults.segments.length === 0);
         }
 
         @plan.State
@@ -168,6 +182,12 @@
 
         @plan.State
         public decoGases!: Array<[boolean, DecoGasElement]>;
+
+        @plan.State
+        public resultSync!: boolean;
+
+        @plan.Mutation
+        public updateResultSync!: (b: boolean) => void;
 
         @userInfo.State
         public user!: User;
