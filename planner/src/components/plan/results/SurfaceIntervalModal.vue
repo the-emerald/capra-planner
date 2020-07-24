@@ -49,6 +49,7 @@
     import {Component, Prop, Vue} from "vue-property-decorator";
     import {ValidationObserver, ValidationProvider} from "vee-validate"
     import "@/common/validation"
+    import {millisecondsToHourMinutes} from "@/common/time";
 
     @Component({
         components: {
@@ -63,13 +64,14 @@
         siTimeMin = '';
 
         zeroFields() {
-            this.siTimeHour = '';
-            this.siTimeMin = '';
+            this.siTimeHour = '0';
+            this.siTimeMin = '0';
         }
 
         syncFields() {
-            this.siTimeHour = Math.floor((this.currentSI / (1000 * 60 * 60))).toString();
-            this.siTimeMin = Math.floor((this.currentSI / (1000 * 60)) % 60).toString();
+            const hm = millisecondsToHourMinutes(this.currentSI);
+            this.siTimeHour = hm[0].toString();
+            this.siTimeMin = hm[1].toString();
         }
 
         $refs!: {

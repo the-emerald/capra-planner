@@ -14,3 +14,17 @@ export function millisecondsToMinutesSeconds(milli: number): [number, number] {
         Math.floor((milli / 1000) % 60)
     ];
 }
+
+export function millisecondsToHourMinutes(milli: number): [number, number] {
+    return [
+        Math.floor((milli / (1000 * 60 * 60))),
+        Math.floor((milli / (1000 * 60)) % 60)
+    ]
+}
+
+export function prettyHourMinuteFromMilliseconds(milli: number): string {
+    const hm = millisecondsToHourMinutes(milli);
+    const h = hm[0];
+    const m = hm[1];
+    return (Number(m) == 60 ? (h+1) + ":00" : h + ":" + (Number(m) < 10 ? "0" : "") + m);
+}

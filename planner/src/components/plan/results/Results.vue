@@ -30,7 +30,7 @@
                                           size="sm"
                                           title="SI"
                                           @click="$bvModal.show('surface-interval-modal')">
-                                    SI
+                                    SI ({{hourMinuteFromMilliseconds}})
                                 </b-button>
                             </b-col>
 
@@ -119,6 +119,7 @@
     import GasTable from "@/components/plan/results/GasTable.vue";
     import ExecuteDiveModal from "@/components/plan/results/ExecuteDiveModal.vue";
     import {PlanType} from "@/common/serde/plan_type";
+    import {prettyHourMinuteFromMilliseconds} from "@/common/time";
 
     const plan = namespace('Plan');
     const userInfo = namespace('UserInfo')
@@ -228,6 +229,9 @@
         @userInfo.State
         public userGeneralSettings!: GeneralSettings;
 
+        get hourMinuteFromMilliseconds(): string {
+            return prettyHourMinuteFromMilliseconds(this.surfaceIntervalDuration);
+        }
     }
 
 
