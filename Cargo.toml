@@ -10,7 +10,22 @@ edition = "2018"
 actix-web = "2"
 actix-rt = "1"
 actix-cors = "0.2.0"
-serde = "1.0.106"
-capra = {path="../capra"}
-time = "0.2.9"
-thiserror = "1.0.19"
+serde = { version = "1.0.114" }
+capra = { path="../capra", features = ["use-serde"] }
+time = { version = "0.2.16", features = ["serde"] }
+thiserror = "1.0.20"
+diesel = {version = "1.4.5", features = ["sqlite", "numeric", "64-column-tables", "r2d2", "chrono"]}
+r2d2 = "0.8.9"
+dotenv = "0.15.0"
+chrono = { version = "0.4.13", features = ["serde"] }
+
+[profile.release]
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = 'fat'
+panic = 'unwind'
+incremental = false
+codegen-units = 16
+rpath = false

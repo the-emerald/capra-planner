@@ -4,3 +4,9 @@
 
 # IntelliJ
 .idea/
+
+# Databases
+*.db
+
+# Release staging folders
+release/
