@@ -8,7 +8,7 @@
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
                     <b-nav-item to="plan">Planner</b-nav-item>
-                    <b-nav-item to="test">History</b-nav-item>
+                    <b-nav-item to="history" disabled>History</b-nav-item>
                 </b-navbar-nav>
 
                 <b-navbar-nav class="ml-auto">
