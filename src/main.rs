@@ -45,7 +45,6 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(
                 Cors::new()
-                    .allowed_origin("http://localhost:8080")
                     .allowed_methods(vec!["GET", "POST"])
                     .finish()
             )

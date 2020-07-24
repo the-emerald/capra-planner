@@ -20,5 +20,7 @@ module.exports = {
 
                 return options
             })
-    }
+    },
+
+    publicPath: ''
 }
