@@ -8,7 +8,7 @@
                         <b-img src="../static/1f410.svg"></b-img>
                     </b-col>
                     <b-col>
-                        <p><b>Capra Dive Planner v0.1.0</b></p>
+                        <p><b>Capra Dive Planner v0.1.1</b></p>
                         <p>Copyright © 2020 Anson Cheung</p>
                         <a href="#" @click="repo">View source</a>
                     </b-col>
