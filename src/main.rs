@@ -13,6 +13,7 @@ pub mod json_repr;
 pub mod db;
 pub mod simplified;
 pub mod result;
+pub mod splash;
 
 type DBPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -35,6 +36,8 @@ async fn main() -> std::io::Result<()> {
         std::env::var("BIND_PORT").expect("BIND_PORT")
     );
 
+    println!("{}", splash::SPLASH_LOGO);
+    println!("Capra Dive Planner Server v{}", env!("CARGO_PKG_VERSION"));
     println!("Starting server on: {}", &bind);
 
     // Start the server
