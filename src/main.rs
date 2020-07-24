@@ -57,6 +57,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::settings::update_general_settings)
 
             .service(routes::dive::dive_route)
+            .service(routes::dive::surface_interval)
     })
         .bind(&bind)?
         .run()

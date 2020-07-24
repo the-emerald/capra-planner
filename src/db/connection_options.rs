@@ -10,7 +10,7 @@ pub struct ConnectionOptions {
 impl ConnectionOptions {
     pub fn apply(&self, conn: &SqliteConnection) -> QueryResult<()> {
         conn.batch_execute(
-            &format!("PRAGMA foreign_keys = ON;")
+            &"PRAGMA foreign_keys = ON;".to_string()
         )?;
         match self.busy_timeout {
             None => {},

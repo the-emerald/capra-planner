@@ -4,6 +4,7 @@ use crate::simplified::{SimplifiedZHLSettings, SimplifiedGeneralSettings};
 use crate::db::actions::settings::{update_zhl_settings_for_user, update_general_settings_for_user};
 use serde::{Serialize, Deserialize};
 use crate::db::actions::user::get_user_by_id;
+use std::convert::TryInto;
 
 #[derive(Serialize, Deserialize)]
 pub(crate) struct UpdateZHLSettings {
@@ -20,7 +21,7 @@ pub(crate) async fn update_zhl_settings(
         .get()
         .map_err(|_| HttpResponse::InternalServerError().finish())?;
 
-    let nz = form.new_zhl_settings.into();
+    let nz = form.new_zhl_settings.try_into()?;
 
     web::block(move || {
         let user = get_user_by_id(form.id, &conn)?

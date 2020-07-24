@@ -4,6 +4,7 @@ use crate::db::models;
 use serde::{Serialize, Deserialize};
 use crate::db::actions::user::get_user_by_id;
 use crate::simplified::{SimplifiedUser, SimplifiedTissue, SimplifiedZHLSettings, SimplifiedVPMSettings, SimplifiedGeneralSettings};
+use std::convert::TryInto;
 
 // A combined struct that contains a user and all their settings.
 #[derive(Serialize, Deserialize)]
@@ -32,7 +33,7 @@ pub(crate) async fn add_user(
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
             user: user.into(),
             tissue: tissue.into(),
-            zhl_settings: settings.0.into(),
+            zhl_settings: settings.0.try_into().map_err(|_| diesel::result::Error::NotFound)?,
             vpm_settings: settings.1.into(),
             general_settings: settings.2.into()
         })
@@ -69,7 +70,7 @@ pub(crate) async fn get_user(
         Ok::<CombinedUser, diesel::result::Error>(CombinedUser {
             user: user.into(),
             tissue: tissue.into(),
-            zhl_settings: settings.0.into(),
+            zhl_settings: settings.0.try_into().map_err(|_| diesel::result::Error::NotFound)?,
             vpm_settings: settings.1.into(),
             general_settings: settings.2.into()
         })
