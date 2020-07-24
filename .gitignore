@@ -7,3 +7,6 @@
 
 # Databases
 *.db
+
+# Release staging folders
+release/
