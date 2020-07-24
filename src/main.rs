@@ -48,6 +48,7 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(
                 Cors::new()
+                    .send_wildcard()
                     .allowed_methods(vec!["GET", "POST"])
                     .finish()
             )
