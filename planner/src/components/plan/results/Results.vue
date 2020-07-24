@@ -74,16 +74,28 @@
                             </b-alert>
                         </b-col>
                     </b-row>
-                    <b-row>
-                        <b-col>
-                            <PlanTable :total-segments="planResults.segments"></PlanTable>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <GasTable :gas-plan="planResults.gas_used"></GasTable>
-                        </b-col>
-                    </b-row>
+                    <template v-if="showTables">
+                        <b-row>
+                            <b-col>
+                                <PlanTable :total-segments="planResults.segments"></PlanTable>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <GasTable :gas-plan="planResults.gas_used"></GasTable>
+                            </b-col>
+                        </b-row>
+                    </template>
+                    <template v-else>
+                        <b-row>
+                            <b-col>
+                                <b-alert show variant="info">
+                                    To begin, construct your dive using the sections on your left, then click "Plan"
+                                    or "Execute".
+                                </b-alert>
+                            </b-col>
+                        </b-row>
+                    </template>
                 </b-container>
             </b-card>
         </b-card-group>
@@ -185,10 +197,11 @@
         }
 
         get showModifiedAlert(): boolean {
-            const x = !this.resultSync && !(this.planResults.segments.length === 0);
-            console.log("Yo");
-            console.log(x);
             return !this.resultSync && !(this.planResults.segments.length === 0);
+        }
+
+        get showTables(): boolean {
+            return this.planResults.segments.length !== 0
         }
 
         @plan.State
