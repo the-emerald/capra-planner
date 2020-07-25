@@ -432,6 +432,8 @@ dependencies = [
 [[package]]
 name = "capra"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9827ba8b92565a88c790df8569c99ee39efaeb3aea74f94d9cac76b30f5dc20f"
 dependencies = [
  "num-traits",
  "serde",
