@@ -10,11 +10,16 @@
                 <b-col></b-col>
 
                 <b-col>
-                    <b-list-group-item v-if="usersList.length === 0">
+                    <b-list-group-item v-if="dbNoUsers">
+                        To get started, create a new diver.
+                    </b-list-group-item>
+
+                    <b-list-group-item v-else-if="usersList.length === 0">
                         <div class="d-flex justify-content-center mb-2 mt-2">
                             <b-spinner></b-spinner>
                         </div>
                     </b-list-group-item>
+
                     <b-list-group-item
                             v-else
                             v-for="(user, index) in usersList"
@@ -77,6 +82,7 @@
     })
     export default class Login extends Vue {
         usersList: Array<User> = [];
+        dbNoUsers = false;
 
         selected = -1;
         selectedId = -1;
@@ -148,6 +154,7 @@
             listAllUsers()
                 .then(r => {
                     this.usersList = r.data;
+                    this.dbNoUsers = (this.usersList.length == 0)
                 })
                 .catch((error) => {
                     makeErrorToast(this, handleAxiosError(error));
