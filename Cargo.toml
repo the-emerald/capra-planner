@@ -9,18 +9,18 @@ edition = "2018"
 [dependencies]
 actix-web = "2"
 actix-rt = "1"
-actix-cors = "0.2.0"
-serde = { version = "1.0.114" }
+actix-cors = "^0.2.0"
+serde = { version = "^1.0.114" }
 capra = { path="../capra", features = ["use-serde"] }
-time = { version = "0.2.16", features = ["serde"] }
-thiserror = "1.0.20"
-diesel = {version = "1.4.5", features = ["sqlite", "numeric", "64-column-tables", "r2d2", "chrono"]}
-r2d2 = "0.8.9"
-dotenv = "0.15.0"
-chrono = { version = "0.4.13", features = ["serde"] }
+time = { version = "^0.2.16", features = ["serde"] }
+thiserror = "^1.0.20"
+diesel = {version = "^1.4.5", features = ["sqlite", "numeric", "64-column-tables", "r2d2", "chrono"]}
+r2d2 = "^0.8.9"
+dotenv = "^0.15.0"
+chrono = { version = "^0.4.13", features = ["serde"] }
 
 [target.'cfg(windows)'.dependencies]
-libsqlite3-sys = { version = "0.18.0", features = ["bundled"]}
+libsqlite3-sys = { version = "^0.18.0", features = ["bundled"]}
 
 [profile.release]
 opt-level = 3
