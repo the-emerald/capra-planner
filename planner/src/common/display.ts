@@ -11,8 +11,8 @@ export function displayBottomSegmentElement(input: BottomSegmentElement): string
 }
 
 export function displayDecoGasElement(input: DecoGasElement): string {
-    if (input.gas.maxOpDepth) { // If MOD exists
-        return `${displayGas(input.gas)} (${input.gas.maxOpDepth}m)`
+    if (input.gas.mod_) { // If MOD exists
+        return `${displayGas(input.gas)} (${input.gas.mod_}m)`
     }
     else {
         return displayGas(input.gas)

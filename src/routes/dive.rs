@@ -192,7 +192,7 @@ async fn dive<T: DecoAlgorithm>(
         .map(|x|
             Ok(
                 (x.try_into()?,
-                x.max_op_depth)
+                x.mod_)
             )
         )
         .collect::<Result<Vec<(capra::common::gas::Gas, Option<usize>)>, ServerDivePlanningError>>()?;

@@ -78,8 +78,8 @@
         syncFields() {
             this.he = this.editGas.gas.he.toString();
             this.o2 = this.editGas.gas.o2.toString();
-            if (this.editGas.gas.maxOpDepth) {
-                this.maxOpDepth = this.editGas.gas.maxOpDepth.toString();
+            if (this.editGas.gas.mod_) {
+                this.maxOpDepth = this.editGas.gas.mod_.toString();
             }
         }
 
@@ -100,7 +100,7 @@
             };
 
             if (this.maxOpDepth != '') { // Try to read MOD
-                elem.gas.maxOpDepth = Number(this.maxOpDepth);
+                elem.gas.mod_ = Number(this.maxOpDepth);
             }
 
             this.$emit(

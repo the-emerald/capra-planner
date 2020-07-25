@@ -11,12 +11,12 @@ use crate::result::ServerGasError;
 pub struct Gas {
     pub o2: usize,
     pub he: usize,
-    pub max_op_depth: Option<usize>
+    pub mod_: Option<usize>
 }
 
 impl Gas {
     pub fn max_op_depth(&self) -> Option<usize> {
-        self.max_op_depth
+        self.mod_
     }
 }
 
@@ -25,7 +25,7 @@ impl From<gas::Gas> for Gas {
         Self {
             o2: value.o2(),
             he: value.he(),
-            max_op_depth: None
+            mod_: None
         }
     }
 }
