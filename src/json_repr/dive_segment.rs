@@ -1,9 +1,8 @@
+use crate::result::ServerDiveSegmentError;
+use capra_core::common::{dive_segment, SegmentType};
 use serde::{Deserialize, Serialize};
-use capra::common::dive_segment::{SegmentType};
-use capra::common::dive_segment;
 use std::convert::TryFrom;
 use time::Duration;
-use crate::result::{ServerDiveSegmentError};
 
 // Represents a DiveSegment sent by JSON.
 // Difference(s):
@@ -19,7 +18,7 @@ pub struct DiveSegment {
     pub descent_rate: isize,
 }
 
-impl From<dive_segment::DiveSegment> for DiveSegment {
+impl From<capra_core::common::DiveSegment> for DiveSegment {
     fn from(value: dive_segment::DiveSegment) -> Self {
         Self {
             segment_type: value.segment_type(),
@@ -27,7 +26,7 @@ impl From<dive_segment::DiveSegment> for DiveSegment {
             end_depth: value.end_depth(),
             time: value.time().whole_milliseconds(),
             ascent_rate: value.ascent_rate(),
-            descent_rate: value.descent_rate()
+            descent_rate: value.descent_rate(),
         }
     }
 }
@@ -36,15 +35,13 @@ impl TryFrom<DiveSegment> for dive_segment::DiveSegment {
     type Error = ServerDiveSegmentError;
 
     fn try_from(value: DiveSegment) -> Result<Self, Self::Error> {
-        Ok(
-            Self::new(
+        Ok(Self::new(
             value.segment_type,
             value.start_depth,
             value.end_depth,
             Duration::milliseconds(value.time as i64),
             value.ascent_rate,
-            value.descent_rate
-            )?
-        )
+            value.descent_rate,
+        )?)
     }
 }

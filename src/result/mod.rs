@@ -1,13 +1,13 @@
-use capra::common::gas::GasError;
-use capra::common::dive_segment::DiveSegmentError;
-use actix_web::{ResponseError, HttpResponse};
-use actix_web::http::StatusCode;
 use actix_web::dev::HttpResponseBuilder;
+use actix_web::http::StatusCode;
+use actix_web::{HttpResponse, ResponseError};
+use capra_core::common::dive_segment::DiveSegmentError;
+use capra_core::common::gas::GasError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ZHLSettingError {
     #[error("could not convert string to zhl subtype")]
-    ConversionError
+    ConversionError,
 }
 
 impl ResponseError for ZHLSettingError {
@@ -16,8 +16,7 @@ impl ResponseError for ZHLSettingError {
     }
 
     fn error_response(&self) -> HttpResponse {
-        HttpResponseBuilder::new(self.status_code())
-            .body(self.to_string())
+        HttpResponseBuilder::new(self.status_code()).body(self.to_string())
     }
 }
 
@@ -26,7 +25,7 @@ pub enum ServerDivePlanningError {
     #[error(transparent)]
     Gas(#[from] ServerGasError),
     #[error(transparent)]
-    DiveSegment(#[from] ServerDiveSegmentError)
+    DiveSegment(#[from] ServerDiveSegmentError),
 }
 
 impl ResponseError for ServerDivePlanningError {
@@ -35,15 +34,14 @@ impl ResponseError for ServerDivePlanningError {
     }
 
     fn error_response(&self) -> HttpResponse {
-        HttpResponseBuilder::new(self.status_code())
-            .body(self.to_string())
+        HttpResponseBuilder::new(self.status_code()).body(self.to_string())
     }
 }
 
 #[derive(thiserror::Error, Debug)]
 pub enum ServerGasError {
     #[error(transparent)]
-    FractionError(#[from] GasError)
+    FractionError(#[from] GasError),
 }
 
 impl ResponseError for ServerGasError {
@@ -52,15 +50,14 @@ impl ResponseError for ServerGasError {
     }
 
     fn error_response(&self) -> HttpResponse {
-        HttpResponseBuilder::new(self.status_code())
-            .body(self.to_string())
+        HttpResponseBuilder::new(self.status_code()).body(self.to_string())
     }
 }
 
 #[derive(thiserror::Error, Debug)]
 pub enum ServerDiveSegmentError {
     #[error(transparent)]
-    IncorrectSegmentTypeError(#[from] DiveSegmentError)
+    IncorrectSegmentTypeError(#[from] DiveSegmentError),
 }
 
 impl ResponseError for ServerDiveSegmentError {
@@ -69,7 +66,6 @@ impl ResponseError for ServerDiveSegmentError {
     }
 
     fn error_response(&self) -> HttpResponse {
-        HttpResponseBuilder::new(self.status_code())
-            .body(self.to_string())
+        HttpResponseBuilder::new(self.status_code()).body(self.to_string())
     }
 }

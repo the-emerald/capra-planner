@@ -1,5 +1,5 @@
 // pub mod ndl;
 // pub mod get_zhl_plan;
-pub mod user;
-pub mod settings;
 pub mod dive;
+pub mod settings;
+pub mod user;
