@@ -106,6 +106,14 @@ impl SettingsTree {
         Ok(serde_json::from_slice(&*slice)?)
     }
 
+    pub fn update_zhl_of_user(&self, id: UserID, new: ZHLSettings) -> Result<(), DatabaseError> {
+        self.zhl
+            .0
+            .insert(serde_json::to_vec(&id)?, serde_json::to_vec(&new)?)?;
+
+        Ok(())
+    }
+
     pub fn get_general_of_user(&self, id: UserID) -> Result<GeneralSettings, DatabaseError> {
         let slice = self
             .general
@@ -114,5 +122,17 @@ impl SettingsTree {
             .ok_or(MissingEntry)?;
 
         Ok(serde_json::from_slice(&*slice)?)
+    }
+
+    pub fn update_general_of_user(
+        &self,
+        id: UserID,
+        new: GeneralSettings,
+    ) -> Result<(), DatabaseError> {
+        self.general
+            .0
+            .insert(serde_json::to_vec(&id)?, serde_json::to_vec(&new)?)?;
+
+        Ok(())
     }
 }

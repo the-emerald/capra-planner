@@ -45,6 +45,7 @@ impl ResponseError for DatabaseError {
         match self {
             DatabaseError::Sled(e) => {
                 eprintln!("Serious error: {}", e);
+                eprintln!("You should stop using the dive planner immediately and file a bug report here: https://github.com/the-emerald/capra-planner/issues");
                 StatusCode::INTERNAL_SERVER_ERROR
             }
             DatabaseError::Json(_) => StatusCode::INTERNAL_SERVER_ERROR,
