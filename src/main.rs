@@ -1,7 +1,10 @@
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use std::time::Duration;
+use crate::db::Database;
+use std::sync::Arc;
 
+pub mod db;
 pub mod json_repr;
 pub mod result;
 pub mod routes;
@@ -13,17 +16,22 @@ async fn main() -> std::io::Result<()> {
 
     let bind = format!(
         "{}:{}",
-        std::env::var("BIND_ADDRESS").expect("BIND_ADDRESS"),
-        std::env::var("BIND_PORT").expect("BIND_PORT")
+        std::env::var("BIND_ADDRESS").expect("no BIND_ADDRESS set"),
+        std::env::var("BIND_PORT").expect("no BIND_PORT set ")
     );
 
     println!("{}", splash::SPLASH_LOGO);
     println!("Capra Dive Planner Server v{}", env!("CARGO_PKG_VERSION"));
     println!("Starting server on: {}", &bind);
 
+    // Open database
+    let db = sled::open(std::env::var("DATABASE").expect("no DATABASE set"))
+        .expect("could not open database");
+
     // Start the server
     HttpServer::new(move || {
         App::new()
+            .data(Arc::new(Database::new(&db).expect("could not initialise database")))
             .wrap(Cors::new().finish())
             .service(routes::user::add_user)
             .service(routes::user::get_user)
