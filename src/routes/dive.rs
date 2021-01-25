@@ -13,6 +13,7 @@ use capra_core::deco::zhl16::{Variant, ZHL16};
 use capra_core::deco::DecoAlgorithm;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
+use capra::modes::OpenCircuit;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -71,7 +72,7 @@ pub(crate) async fn dive_route(
         .map(|x| Ok((x.try_into()?, x.max_op_depth())))
         .collect::<Result<Vec<(Gas, Option<usize>)>, ServerDivePlanningError>>()?;
 
-    match json.algorithm {
+    let res = match json.algorithm {
         Algorithm::ZHL16 => {
             let zhl = database.settings.get_zhl_of_user(json.id)?;
             let deco = ZHL16::new(
@@ -80,13 +81,14 @@ pub(crate) async fn dive_route(
                 zhl.gfl as usize,
                 zhl.gfh as usize,
             );
+            dive(deco, general.into(), &segments, &deco_gases)
         }
         Algorithm::VPM => {
             return Ok(HttpResponse::NotImplemented()
                 .reason("vpm not implemented")
                 .finish());
         }
-    }
+    }.await;
 
     Ok(HttpResponse::Ok().finish())
 }
@@ -96,6 +98,12 @@ pub(crate) async fn surface_interval() -> actix_web::Result<HttpResponse> {
     todo!()
 }
 
-async fn dive<T: DecoAlgorithm>(deco: T, parameters: DiveParameters) -> DiveResult<T> {
-    unimplemented!()
+async fn dive<T: DecoAlgorithm>(
+    deco: T,
+    parameters: DiveParameters,
+    segments: &[(DiveSegment, Gas)],
+    deco_gases: &[(Gas, Option<usize>)]
+) -> DiveResult<T> {
+    let open_circuit = OpenCircuit::new(deco, deco_gases, segments, parameters);
+    open_circuit.plan()
 }

@@ -6,6 +6,7 @@ use capra_core::deco::zhl16;
 use capra_core::deco::zhl16::Variant;
 use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
+use capra::parameters::DiveParameters;
 
 #[derive(Clone, Debug)]
 pub struct ZHLSettingsTree(Tree, Db);
@@ -65,6 +66,18 @@ impl Default for GeneralSettings {
             ascent_rate: -10,
             descent_rate: 20,
             water_density: DENSITY_SALTWATER,
+        }
+    }
+}
+
+impl From<GeneralSettings> for DiveParameters {
+    fn from(val: GeneralSettings) -> Self {
+        Self {
+            ascent_rate: val.ascent_rate as isize,
+            descent_rate: val.descent_rate as isize,
+            metres_per_bar: 10000.0 / val.water_density,
+            sac_bottom: val.sac_bottom as usize,
+            sac_deco: val.sac_deco as usize
         }
     }
 }
