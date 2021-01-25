@@ -1,5 +1,6 @@
 use crate::db::users::UserID;
 use crate::db::DatabaseError;
+use crate::db::DatabaseError::MissingEntry;
 use capra_core::deco::zhl16;
 use capra_core::deco::zhl16::Variant;
 use serde::{Deserialize, Serialize};
@@ -93,5 +94,25 @@ impl SettingsTree {
         )?;
 
         Ok(old_general.is_some() || old_zhl.is_some())
+    }
+
+    pub fn get_zhl_of_user(&self, id: UserID) -> Result<ZHLSettings, DatabaseError> {
+        let slice = self
+            .zhl
+            .0
+            .get(serde_json::to_vec(&id)?)?
+            .ok_or(MissingEntry)?;
+
+        Ok(serde_json::from_slice(&*slice)?)
+    }
+
+    pub fn get_general_of_user(&self, id: UserID) -> Result<GeneralSettings, DatabaseError> {
+        let slice = self
+            .general
+            .0
+            .get(serde_json::to_vec(&id)?)?
+            .ok_or(MissingEntry)?;
+
+        Ok(serde_json::from_slice(&*slice)?)
     }
 }

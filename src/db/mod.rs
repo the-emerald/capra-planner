@@ -32,8 +32,10 @@ impl Database {
 
 #[derive(Error, Debug)]
 pub enum DatabaseError {
-    #[error("internal database error")]
+    #[error("sled: internal database error")]
     Sled(#[from] sled::Error),
+    #[error("missing entry detected")]
+    MissingEntry,
     #[error("could not serialize/deserialize json")]
     Json(#[from] serde_json::Error),
 }
@@ -46,6 +48,7 @@ impl ResponseError for DatabaseError {
                 StatusCode::INTERNAL_SERVER_ERROR
             }
             DatabaseError::Json(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            DatabaseError::MissingEntry => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
