@@ -1,4 +1,4 @@
-use crate::db::users::User;
+use crate::db::users::{User, UserID};
 use crate::db::Database;
 use actix_web::web::{Data, Json};
 use actix_web::{post, web, HttpResponse};
@@ -16,21 +16,33 @@ pub(crate) async fn add_user(
     json: Json<AddUserData>,
 ) -> actix_web::Result<HttpResponse> {
     // Set up new user
-    let new_user = database.users.add_user(json.clone().name)?.ok_or(
+    let user_id = database.users.add_user(json.clone().name)?.ok_or(
         HttpResponse::Conflict()
             .reason("user already exists")
             .finish(),
     )?;
 
     // Set up settings
-    database.settings.initialise_user(new_user.id)?;
+    database.settings.initialise_user(user_id)?;
 
     Ok(HttpResponse::Ok().finish())
 }
+#[derive(Copy, Clone, Serialize, Deserialize)]
+pub struct GetUserData {
+    id: UserID,
+}
 
 #[post("/user")]
-pub(crate) async fn get_user() -> actix_web::Result<HttpResponse> {
-    todo!()
+pub(crate) async fn get_user(
+    database: Data<Database>,
+    json: Json<GetUserData>,
+) -> actix_web::Result<HttpResponse> {
+    let user = database
+        .users
+        .get_user(&json.id)?
+        .ok_or(HttpResponse::Conflict().reason("user not found").finish())?;
+
+    Ok(HttpResponse::Ok().json(user))
 }
 
 #[post("/user/all")]

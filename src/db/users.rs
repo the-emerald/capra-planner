@@ -1,4 +1,5 @@
 use crate::db::DatabaseError;
+use actix_web::web::Data;
 use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
 use serde_json::Error;
@@ -10,7 +11,7 @@ pub struct UserID(pub u64);
 // Value component of the users tree
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: UserID,
+    pub name: String,
     pub tissue: Tissue,
 }
 
@@ -23,23 +24,34 @@ impl UsersTree {
         Ok(Self(database.open_tree("users")?, database.clone()))
     }
 
-    pub fn add_user(&self, name: String) -> Result<Option<User>, DatabaseError> {
+    pub fn add_user(&self, name: String) -> Result<Option<UserID>, DatabaseError> {
         // Does this user already exist?
-        if let None = self.0.get(&name)? {
+        if !self.0.iter().try_fold(false, |a, b| {
+            let u: User = serde_json::from_slice(&*b?.1)?;
+            Ok::<bool, DatabaseError>(a | (u.name == name))
+        })? {
             return Ok(None);
         }
+
         let user = User {
-            id: UserID(self.1.generate_id()?),
+            name,
             tissue: Tissue::default(),
         };
 
-        self.0
-            .insert(name, serde_json::to_string(&user)?.as_bytes())?;
+        let id = UserID(self.1.generate_id()?);
 
-        Ok(Some(user))
+        self.0
+            .insert(serde_json::to_vec(&id)?, serde_json::to_vec(&user)?)?;
+
+        Ok(Some(id))
     }
 
-    pub fn get_user(&self, name: String) -> sled::Result<Option<User>> {
-        todo!()
+    pub fn get_user(&self, id: &UserID) -> Result<Option<User>, DatabaseError> {
+        let k = serde_json::to_vec(&id)?;
+        if !self.0.contains_key(&k)? {
+            return Ok(None);
+        }
+
+        Ok(Some(serde_json::from_slice(&*self.0.get(&k)?.unwrap())?))
     }
 }

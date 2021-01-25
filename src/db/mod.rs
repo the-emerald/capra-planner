@@ -45,7 +45,7 @@ impl ResponseError for DatabaseError {
                 eprintln!("Serious error: {}", e);
                 StatusCode::INTERNAL_SERVER_ERROR
             }
-            DatabaseError::Json(e) => StatusCode::INTERNAL_SERVER_ERROR,
+            DatabaseError::Json(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
