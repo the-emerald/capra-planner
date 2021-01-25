@@ -8,19 +8,19 @@ use std::convert::TryFrom;
 // - no `n2` field
 // - `max_op_depth` field is included for MOD
 #[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq, Hash)]
-pub struct Gas {
+pub struct JSONGas {
     pub o2: usize,
     pub he: usize,
     pub mod_: Option<usize>,
 }
 
-impl Gas {
+impl JSONGas {
     pub fn max_op_depth(&self) -> Option<usize> {
         self.mod_
     }
 }
 
-impl From<gas::Gas> for Gas {
+impl From<gas::Gas> for JSONGas {
     fn from(value: gas::Gas) -> Self {
         Self {
             o2: value.o2(),
@@ -30,10 +30,10 @@ impl From<gas::Gas> for Gas {
     }
 }
 
-impl TryFrom<Gas> for gas::Gas {
+impl TryFrom<JSONGas> for gas::Gas {
     type Error = ServerGasError;
 
-    fn try_from(value: Gas) -> Result<Self, Self::Error> {
+    fn try_from(value: JSONGas) -> Result<Self, Self::Error> {
         Ok(Self::new(value.o2, value.he, 100 - value.o2 - value.he)?)
     }
 }

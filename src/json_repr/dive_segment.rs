@@ -8,7 +8,7 @@ use time::Duration;
 // Difference(s):
 // - `time` is represented in milliseconds instead of Duration
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
-pub struct DiveSegment {
+pub struct JSONDiveSegment {
     pub segment_type: SegmentType,
     pub start_depth: usize,
     pub end_depth: usize,
@@ -18,7 +18,7 @@ pub struct DiveSegment {
     pub descent_rate: isize,
 }
 
-impl From<capra_core::common::DiveSegment> for DiveSegment {
+impl From<capra_core::common::DiveSegment> for JSONDiveSegment {
     fn from(value: dive_segment::DiveSegment) -> Self {
         Self {
             segment_type: value.segment_type(),
@@ -31,10 +31,10 @@ impl From<capra_core::common::DiveSegment> for DiveSegment {
     }
 }
 
-impl TryFrom<DiveSegment> for dive_segment::DiveSegment {
+impl TryFrom<JSONDiveSegment> for dive_segment::DiveSegment {
     type Error = ServerDiveSegmentError;
 
-    fn try_from(value: DiveSegment) -> Result<Self, Self::Error> {
+    fn try_from(value: JSONDiveSegment) -> Result<Self, Self::Error> {
         Ok(Self::new(
             value.segment_type,
             value.start_depth,

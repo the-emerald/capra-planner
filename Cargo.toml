@@ -15,8 +15,8 @@ serde_json = "^1.0.48"
 time = { version = "^0.2.16", features = ["serde"] }
 thiserror = "^1.0.20"
 dotenv = "^0.15.0"
-capra = { version = "^0.2.0", features = ["use-serde"] }
-capra-core = { version = "^0.3.0", features = ["use-serde"] }
+capra = { version = "^0.3.0", features = ["use-serde"] }
+capra-core = { version = "^0.4.0", features = ["use-serde"] }
 sled = "^0.34.6"
 
 [profile.release]
