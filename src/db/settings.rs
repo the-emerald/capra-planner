@@ -1,6 +1,7 @@
 use crate::db::users::UserID;
 use crate::db::DatabaseError;
 use crate::db::DatabaseError::MissingEntry;
+use capra_core::common::DENSITY_SALTWATER;
 use capra_core::deco::zhl16;
 use capra_core::deco::zhl16::Variant;
 use serde::{Deserialize, Serialize};
@@ -53,6 +54,7 @@ pub struct GeneralSettings {
     pub sac_deco: u16,
     pub ascent_rate: i16,
     pub descent_rate: i16,
+    pub water_density: f64,
 }
 
 impl Default for GeneralSettings {
@@ -62,6 +64,7 @@ impl Default for GeneralSettings {
             sac_deco: 15,
             ascent_rate: -10,
             descent_rate: 20,
+            water_density: DENSITY_SALTWATER,
         }
     }
 }
