@@ -1,8 +1,8 @@
+use crate::db::Database;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
-use std::time::Duration;
-use crate::db::Database;
 use std::sync::Arc;
+use std::time::Duration;
 
 pub mod db;
 pub mod json_repr;
@@ -31,7 +31,9 @@ async fn main() -> std::io::Result<()> {
     // Start the server
     HttpServer::new(move || {
         App::new()
-            .data(Arc::new(Database::new(&db).expect("could not initialise database")))
+            .data(Arc::new(
+                Database::new(&db).expect("could not initialise database"),
+            ))
             .wrap(Cors::new().finish())
             .service(routes::user::add_user)
             .service(routes::user::get_user)

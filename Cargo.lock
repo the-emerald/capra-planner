@@ -490,6 +490,7 @@ dependencies = [
  "capra-core",
  "dotenv",
  "serde",
+ "serde_json",
  "sled",
  "thiserror",
  "time 0.2.25",
