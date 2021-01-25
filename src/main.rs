@@ -2,7 +2,6 @@ use crate::db::Database;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use std::sync::Arc;
-use std::time::Duration;
 
 pub mod db;
 pub mod json_repr;

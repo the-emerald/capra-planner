@@ -1,8 +1,6 @@
 use crate::db::DatabaseError;
-use actix_web::web::Data;
 use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
-use serde_json::Error;
 use sled::{Db, Tree};
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]

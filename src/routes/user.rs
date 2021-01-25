@@ -1,9 +1,8 @@
 use crate::db::users::{User, UserID};
 use crate::db::Database;
 use actix_web::web::{Data, Json};
-use actix_web::{post, web, HttpResponse};
+use actix_web::{post, HttpResponse};
 use serde::{Deserialize, Serialize};
-use std::convert::TryInto;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct AddUserData {
