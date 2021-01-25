@@ -54,4 +54,17 @@ impl UsersTree {
 
         Ok(Some(serde_json::from_slice(&*self.0.get(&k)?.unwrap())?))
     }
+
+    pub fn get_all_users(&self) -> Result<Vec<(UserID, User)>, DatabaseError> {
+        self.0
+            .iter()
+            .map(|x| {
+                let y = x?;
+                Ok((
+                    serde_json::from_slice(&*y.0)?,
+                    serde_json::from_slice(&*y.1)?,
+                ))
+            })
+            .collect()
+    }
 }

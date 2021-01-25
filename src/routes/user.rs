@@ -45,7 +45,29 @@ pub(crate) async fn get_user(
     Ok(HttpResponse::Ok().json(user))
 }
 
+#[derive(Clone, Serialize, Deserialize)]
+pub struct UserWithId {
+    name: String,
+    id: UserID
+}
+
+impl From<(UserID, User)> for UserWithId {
+    fn from(val: (UserID, User)) -> Self {
+        Self {
+            name: val.1.name,
+            id: val.0
+        }
+    }
+}
+
 #[post("/user/all")]
-pub(crate) async fn get_all_users() -> actix_web::Result<HttpResponse> {
-    todo!()
+pub(crate) async fn get_all_users(
+    database: Data<Database>,
+) -> actix_web::Result<HttpResponse> {
+    let all = database.users.get_all_users()?
+        .into_iter()
+        .map(|x| x.into())
+        .collect::<Vec<UserWithId>>();
+
+    Ok(HttpResponse::Ok().json(all))
 }
