@@ -1,5 +1,5 @@
 use crate::result::ServerGasError;
-use capra_core::common::gas;
+use capra_core::common::{gas, Gas};
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 
@@ -17,6 +17,16 @@ pub struct JSONGas {
 impl JSONGas {
     pub fn max_op_depth(&self) -> Option<usize> {
         self.mod_
+    }
+}
+
+impl From<(gas::Gas, Option<usize>)> for JSONGas {
+    fn from(val: (Gas, Option<usize>)) -> Self {
+        Self {
+            o2: val.0.o2(),
+            he: val.0.he(),
+            mod_: val.1
+        }
     }
 }
 

@@ -1,6 +1,7 @@
-use crate::db::dives::{Dive, DiveID, PlanType};
+use crate::db::dives::{DiveID, PlanType};
 use crate::db::users::UserID;
 use crate::db::{Database, DatabaseError};
+use crate::json_repr::dive::JSONDive;
 use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};
 use serde::{Deserialize, Serialize};
@@ -50,7 +51,12 @@ pub(crate) async fn dive_history(
                     .map_or(true, |z| z.0 > y.1.timestamp && z.1 < y.1.timestamp)
             })
         })
-        .collect::<Result<Vec<(DiveID, Dive)>, DatabaseError>>()?;
+        // Now map them into JSON Dives
+        .map(|x| {
+            let d = x?;
+            Ok((d.0, d.1.into()))
+        })
+        .collect::<Result<Vec<(DiveID, JSONDive)>, DatabaseError>>()?;
 
     Ok(HttpResponse::Ok().json(dives))
 }
