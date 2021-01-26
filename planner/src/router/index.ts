@@ -3,6 +3,7 @@ import VueRouter, {Route, RouteConfig} from 'vue-router'
 import Plan from '../views/Plan.vue'
 import Login from '../views/Login.vue'
 import store from "@/store";
+import History from "@/views/History.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,12 @@ const routes: Array<RouteConfig> = [
         component: Plan,
         beforeEnter: requireLogin
     },
+    {
+        path: '/history',
+        name: 'history',
+        component: History,
+        beforeEnter: requireLogin
+    }
 ];
 
 const router = new VueRouter({
