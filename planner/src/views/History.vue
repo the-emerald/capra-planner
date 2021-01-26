@@ -3,9 +3,7 @@
         <Navbar></Navbar>
         <br>
         <b-container fluid="true" class="ml-3 mr-3">
-            <b-row>
-<!--              todo: write history components-->
-            </b-row>
+              <HistoryMain></HistoryMain>
         </b-container>
     </div>
 </template>
@@ -13,10 +11,12 @@
 <script lang="ts">
     import Navbar from "@/components/Navbar.vue";
     import {Component, Vue} from "vue-property-decorator";
+    import HistoryMain from "@/components/history/HistoryMain.vue";
 
     @Component({
         name: "History",
         components: {
+          HistoryMain,
             Navbar,
         }
     })
