@@ -8,7 +8,7 @@ use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};
 use capra::modes::OpenCircuit;
 use capra::parameters::DiveParameters;
-use capra::{DivePlan, DiveResult};
+use capra::DivePlan;
 use capra_core::common::{DiveSegment, Gas, SegmentType};
 use capra_core::deco::zhl16::tissue_constants::TissueConstants;
 use capra_core::deco::zhl16::ZHL16;
@@ -17,7 +17,6 @@ use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::sync::Arc;
 use time::{Duration, OffsetDateTime};
-use capra_core::deco::zhl16::variant::Variant::C;
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
@@ -110,14 +109,9 @@ pub(crate) async fn dive_route(
                 .await
         }
         Algorithm::VPM => {
-            // return Ok(HttpResponse::NotImplemented()
-            //     .reason("vpm not implemented")
-            //     .finish());
-            let dummy = DummyDeco;
-            let x = vec![];
-            let y = vec![];
-            dive(dummy, general.into(), &x, &y)
-                .await
+            return Ok(HttpResponse::NotImplemented()
+                .reason("vpm not implemented")
+                .finish());
         }
     };
 
@@ -155,22 +149,6 @@ pub(crate) async fn dive_route(
                 .collect()
         },
     }))
-}
-
-#[derive(Copy, Clone)]
-pub struct DummyDeco;
-impl DecoAlgorithm for DummyDeco {
-    fn add_dive_segment(&mut self, segment: &DiveSegment, gas: &Gas, metres_per_bar: f64) {
-        unimplemented!()
-    }
-
-    fn surface(&mut self, ascent_rate: isize, descent_rate: isize, gas: &Gas, metres_per_bar: f64) -> Vec<DiveSegment> {
-        unimplemented!()
-    }
-
-    fn get_tissue(&self) -> Tissue {
-        unimplemented!()
-    }
 }
 
 #[derive(Clone, Serialize, Deserialize)]
