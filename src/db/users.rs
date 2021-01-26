@@ -3,7 +3,7 @@ use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
 
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct UserID(pub u64);
 
 // Value component of the users tree

@@ -2,7 +2,6 @@ use crate::db::users::UserID;
 use crate::db::DatabaseError;
 use crate::db::DatabaseError::MissingEntry;
 use capra::parameters::DiveParameters;
-use capra_core::common::DENSITY_SALTWATER;
 use capra_core::deco::zhl16;
 use capra_core::deco::zhl16::Variant;
 use serde::{Deserialize, Serialize};

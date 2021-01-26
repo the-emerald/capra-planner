@@ -1,4 +1,4 @@
-use crate::db::dives::DiveType;
+use crate::db::dives::PlanType;
 use crate::db::users::UserID;
 use crate::db::Database;
 use crate::json_repr::dive_segment::JSONDiveSegment;
@@ -26,7 +26,7 @@ pub(crate) enum Algorithm {
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DiveRouteInput {
     id: UserID,
-    plan_type: DiveType,
+    plan_type: PlanType,
     surface_interval: u64, // Milliseconds
     algorithm: Algorithm,
     parameters: DiveRouteParameters,
@@ -91,7 +91,7 @@ pub(crate) async fn dive_route(
     }
     .await;
 
-    if json.plan_type == DiveType::Execution {
+    if json.plan_type == PlanType::Execution {
         database
             .users
             .update_tissue(json.id, res.deco_algorithm().tissue())?;
