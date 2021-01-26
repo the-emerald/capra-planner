@@ -5,6 +5,10 @@ use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use time::OffsetDateTime;
+
+#[derive(Copy, Clone, Serialize, Deserialize)]
+pub struct DatetimeRange(pub OffsetDateTime, pub OffsetDateTime);
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DiveHistoryInput {
@@ -12,6 +16,8 @@ pub struct DiveHistoryInput {
     exclude_types: Option<Vec<PlanType>>,
     // filter by user
     user: Option<UserID>,
+    // filter by time range
+    datetime_range: Option<DatetimeRange>,
 }
 
 // TODO: Figure out exact API for filtering
@@ -24,6 +30,7 @@ pub(crate) async fn dive_history(
     let dives = database
         .dives
         .dives_iter()
+        // User
         .filter(|x| {
             x.as_ref()
                 // If database error, let the Err pass.
@@ -31,9 +38,17 @@ pub(crate) async fn dive_history(
                 // If the filter was specified then perform a check.
                 .map_or(true, |y| json.user.map_or(true, |z| y.1.user == z))
         })
+        // Plan type
         .filter(|x| {
             x.as_ref()
                 .map_or(true, |y| plan_types.contains(&y.1.plan_type))
+        })
+        // Time range
+        .filter(|x| {
+            x.as_ref().map_or(true, |y| {
+                json.datetime_range
+                    .map_or(true, |z| z.0 > y.1.timestamp && z.1 < y.1.timestamp)
+            })
         })
         .collect::<Result<Vec<(DiveID, Dive)>, DatabaseError>>()?;
 
