@@ -1,12 +1,12 @@
 use crate::db::users::UserID;
 use crate::db::DatabaseError;
 use crate::db::DatabaseError::MissingEntry;
+use capra::parameters::DiveParameters;
 use capra_core::common::DENSITY_SALTWATER;
 use capra_core::deco::zhl16;
 use capra_core::deco::zhl16::Variant;
 use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
-use capra::parameters::DiveParameters;
 
 #[derive(Clone, Debug)]
 pub struct ZHLSettingsTree(Tree, Db);
@@ -77,7 +77,7 @@ impl From<GeneralSettings> for DiveParameters {
             descent_rate: val.descent_rate as isize,
             metres_per_bar: 10000.0 / val.water_density,
             sac_bottom: val.sac_bottom as usize,
-            sac_deco: val.sac_deco as usize
+            sac_deco: val.sac_deco as usize,
         }
     }
 }

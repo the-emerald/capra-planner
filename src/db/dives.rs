@@ -5,9 +5,11 @@ use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
 use time::PrimitiveDateTime;
 
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub enum DiveType {
+    #[serde(alias = "PLAN")]
     Plan,
+    #[serde(alias = "EXECUTE")]
     Execution,
 }
 

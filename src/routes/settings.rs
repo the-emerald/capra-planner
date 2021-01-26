@@ -2,7 +2,7 @@ use crate::db::settings::{GeneralSettings, ZHLSettings};
 use crate::db::users::UserID;
 use crate::db::Database;
 use actix_web::web::{Data, Json};
-use actix_web::{post, web, HttpResponse};
+use actix_web::{post, HttpResponse};
 use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Serialize, Deserialize)]

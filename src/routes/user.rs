@@ -1,5 +1,5 @@
 use crate::db::settings::{GeneralSettings, ZHLSettings};
-use crate::db::users::{User, UserID};
+use crate::db::users::UserID;
 use crate::db::Database;
 use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};

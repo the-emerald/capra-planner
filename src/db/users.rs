@@ -65,4 +65,12 @@ impl UsersTree {
             })
             .collect()
     }
+
+    pub fn update_tissue(&self, id: UserID, new: Tissue) -> Result<(), DatabaseError> {
+        let k = serde_json::to_vec(&id)?;
+        let mut user: User = self.get_user(&id)?.unwrap();
+        user.tissue = new;
+        self.0.insert(&k, serde_json::to_vec(&user)?)?;
+        Ok(())
+    }
 }
