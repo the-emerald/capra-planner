@@ -1,4 +1,4 @@
-use crate::db::dives::{PlanType, Dive};
+use crate::db::dives::{Dive, PlanType};
 use crate::db::users::UserID;
 use crate::db::Database;
 use crate::json_repr::dive_segment::JSONDiveSegment;
@@ -14,10 +14,10 @@ use capra_core::deco::zhl16::tissue_constants::TissueConstants;
 use capra_core::deco::zhl16::ZHL16;
 use capra_core::deco::{DecoAlgorithm, Tissue};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::convert::TryInto;
 use std::sync::Arc;
 use time::{Duration, OffsetDateTime};
-use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -88,7 +88,7 @@ pub(crate) async fn dive_route(
             .finish()
     })?;
 
-    let res= match json.algorithm {
+    let res = match json.algorithm {
         Algorithm::ZHL16 => {
             let zhl = database.settings.get_zhl_of_user(json.id)?;
             let mut deco = ZHL16::new(
@@ -105,8 +105,7 @@ pub(crate) async fn dive_route(
                 10000.0 / general.water_density, // todo: write conversion helper function
             );
 
-            dive(deco, general.into(), &bottom_segments, &deco_gases)
-                .await
+            dive(deco, general.into(), &bottom_segments, &deco_gases).await
         }
         Algorithm::VPM => {
             return Ok(HttpResponse::NotImplemented()
@@ -125,14 +124,12 @@ pub(crate) async fn dive_route(
         zhl_settings: database.settings.get_zhl_of_user(json.id)?,
         general_settings: database.settings.get_general_of_user(json.id)?,
         segments: bottom_segments,
-        deco_gases
+        deco_gases,
     })?;
 
     // Update tissue if this is an execution
     if json.plan_type == PlanType::Execution {
-        database
-            .users
-            .update_tissue(json.id, res.tissue)?;
+        database.users.update_tissue(json.id, res.tissue)?;
     }
 
     Ok(HttpResponse::Ok().json(DiveRouteOutput {
@@ -155,7 +152,7 @@ pub(crate) async fn dive_route(
 pub struct TissueDiveResult {
     tissue: Tissue,
     total_segments: Vec<(DiveSegment, Gas)>,
-    gas_used: HashMap<Gas, usize>
+    gas_used: HashMap<Gas, usize>,
 }
 
 #[post("/dive/si")]
@@ -173,6 +170,6 @@ async fn dive<T: DecoAlgorithm>(
     TissueDiveResult {
         tissue: result.deco_algorithm().get_tissue(),
         total_segments: result.total_segments().clone(),
-        gas_used: result.gas_used().clone()
+        gas_used: result.gas_used().clone(),
     }
 }
