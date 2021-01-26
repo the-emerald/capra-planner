@@ -5,7 +5,7 @@ use capra_core::common::{DiveSegment, Gas};
 use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
-use time::PrimitiveDateTime;
+use time::OffsetDateTime;
 
 #[derive(Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct DiveID(pub u64);
@@ -23,8 +23,9 @@ pub enum PlanType {
 pub struct Dive {
     pub user: UserID,
     pub plan_type: PlanType,
-    pub tissue_before: Tissue,
-    pub timestamp: PrimitiveDateTime, // TODO: Make sure this type is appropriate
+    pub tissue_before: Tissue, // Before surface interval
+    pub surface_interval: u64,
+    pub timestamp: OffsetDateTime,
 
     // Snapshot of ZHL and General settings used at that time.
     pub zhl_settings: ZHLSettings,

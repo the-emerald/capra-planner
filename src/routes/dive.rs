@@ -1,4 +1,4 @@
-use crate::db::dives::PlanType;
+use crate::db::dives::{PlanType, Dive};
 use crate::db::users::UserID;
 use crate::db::Database;
 use crate::json_repr::dive_segment::JSONDiveSegment;
@@ -16,7 +16,7 @@ use capra_core::deco::DecoAlgorithm;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::sync::Arc;
-use time::Duration;
+use time::{Duration, OffsetDateTime};
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -113,6 +113,19 @@ pub(crate) async fn dive_route(
         }
     }
     .await;
+
+    // Record into dives
+    database.dives.add_dive(&Dive {
+        user: json.id,
+        plan_type: json.plan_type,
+        tissue_before: user.tissue,
+        surface_interval: json.surface_interval,
+        timestamp: OffsetDateTime::now_utc(),
+        zhl_settings: database.settings.get_zhl_of_user(json.id)?,
+        general_settings: database.settings.get_general_of_user(json.id)?,
+        segments: bottom_segments,
+        deco_gases
+    })?;
 
     // Update tissue if this is an execution
     if json.plan_type == PlanType::Execution {
