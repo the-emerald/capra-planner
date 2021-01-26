@@ -32,4 +32,5 @@ export interface GeneralSettings {
     sac_deco: number;
     ascent_rate: number;
     descent_rate: number;
+    water_density: number;
 }

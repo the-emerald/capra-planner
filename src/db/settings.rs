@@ -65,7 +65,7 @@ impl Default for GeneralSettings {
             sac_deco: 15,
             ascent_rate: -10,
             descent_rate: 20,
-            water_density: DENSITY_SALTWATER,
+            water_density: 1024 as f64,
         }
     }
 }

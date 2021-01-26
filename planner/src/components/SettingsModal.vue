@@ -70,6 +70,28 @@
                                         </ValidationProvider>
                                     </b-col>
                                 </b-form-row>
+                                <b-form-row class="mt-3">
+                                  <b-col style="margin-top: 0.2rem" sm="4">
+                                    Water density
+                                  </b-col>
+                                  <b-col>
+                                    <b-form-select
+                                        v-model="waterDensity"
+                                        :options="waterDensityOptions"
+                                    ></b-form-select>
+                                  </b-col>
+                                  <b-col sm="4">
+                                    <ValidationProvider name="waterDensity" rules="required|positive|gt:0" v-slot="{valid, errors}">
+                                      <b-form-input
+                                          placeholder="kg/m^-3"
+                                          type="number"
+                                          v-model.number="waterDensity"
+                                          :state="errors[0] ? false : (valid ? true : null)"
+                                      >
+                                      </b-form-input>
+                                    </ValidationProvider>
+                                  </b-col>
+                                </b-form-row>
                             </b-container>
                         </b-tab>
                         <b-tab title="ZHL">
@@ -172,6 +194,16 @@
         sacDeco = '';
         ascentRate = '';
         descentRate = '';
+        waterDensity = '';
+
+        // waterDensityOptions: Array<string> = ["Fresh", "EN13319", "Salt", "Custom"];
+        // waterDensityValues: Array<number> = [997, 1020, 1024] // TODO: Are these values correct?
+        waterDensityOptions = [
+          { value: '', text: "Choose preset", disabled: true },
+          { value: 997, text: "Fresh" },
+          { value: 1020, text: "EN13319" },
+          { value: 1024, text: "Salt" },
+        ];
 
         @userInfo.Mutation
         public updateZHLSettings!: (elem: ZHLSettings) => void;
@@ -193,6 +225,7 @@
             this.sacDeco = this.userGeneralSettings.sac_deco.toString();
             this.ascentRate = (this.userGeneralSettings.ascent_rate * -1).toString();
             this.descentRate = this.userGeneralSettings.descent_rate.toString();
+            this.waterDensity = this.userGeneralSettings.water_density.toString();
         }
 
         onSubmit() {
@@ -205,7 +238,8 @@
                 ascent_rate: Number(this.ascentRate) * -1,
                 descent_rate: Number(this.descentRate),
                 sac_bottom: Number(this.sacBottom),
-                sac_deco: Number(this.sacDeco)
+                sac_deco: Number(this.sacDeco),
+                water_density: Number(this.waterDensity)
             };
 
             const z = updateZHLSettings(this.user, zhlSettings);
