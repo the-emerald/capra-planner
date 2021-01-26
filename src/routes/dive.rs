@@ -15,6 +15,7 @@ use capra_core::deco::zhl16::ZHL16;
 use capra_core::deco::DecoAlgorithm;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
+use std::sync::Arc;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -45,7 +46,7 @@ pub struct DiveRouteOutput {
 
 #[post("/dive/")]
 pub(crate) async fn dive_route(
-    database: Data<Database>,
+    database: Data<Arc<Database>>,
     json: Json<DiveRouteInput>,
 ) -> actix_web::Result<HttpResponse> {
     let user = database.users.get_user(&json.id)?.ok_or(

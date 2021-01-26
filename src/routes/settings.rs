@@ -4,6 +4,7 @@ use crate::db::Database;
 use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 #[derive(Copy, Clone, Serialize, Deserialize)]
 pub struct UpdateZHLSettingsInput {
@@ -13,7 +14,7 @@ pub struct UpdateZHLSettingsInput {
 
 #[post("/settings/update/zhl")]
 pub(crate) async fn update_zhl_settings(
-    database: Data<Database>,
+    database: Data<Arc<Database>>,
     json: Json<UpdateZHLSettingsInput>,
 ) -> actix_web::Result<HttpResponse> {
     if !database.users.get_user(&json.id)?.is_some() {
@@ -35,7 +36,7 @@ pub struct UpdateGeneralSettingsInput {
 
 #[post("/settings/update/general")]
 pub(crate) async fn update_general_settings(
-    database: Data<Database>,
+    database: Data<Arc<Database>>,
     json: Json<UpdateGeneralSettingsInput>,
 ) -> actix_web::Result<HttpResponse> {
     if !database.users.get_user(&json.id)?.is_some() {

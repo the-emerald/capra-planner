@@ -24,15 +24,16 @@ async fn main() -> std::io::Result<()> {
     println!("Starting server on: {}", &bind);
 
     // Open database
-    let db = sled::open(std::env::var("DATABASE").expect("no DATABASE set"))
-        .expect("could not open database");
+    let database = {
+        let db = sled::open(std::env::var("DATABASE").expect("no DATABASE set"))
+            .expect("could not open database");
+        Arc::new(Database::new(&db).expect("could not initialise database"))
+    };
 
     // Start the server
     HttpServer::new(move || {
         App::new()
-            .data(Arc::new(
-                Database::new(&db).expect("could not initialise database"),
-            ))
+            .data(database.clone())
             .wrap(Cors::new().finish())
             .service(routes::user::add_user)
             .service(routes::user::get_user)

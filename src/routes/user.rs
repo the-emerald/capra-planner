@@ -5,6 +5,7 @@ use actix_web::web::{Data, Json};
 use actix_web::{post, HttpResponse};
 use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct AddUserInput {
@@ -13,7 +14,7 @@ pub struct AddUserInput {
 
 #[post("/user/new")]
 pub(crate) async fn add_user(
-    database: Data<Database>,
+    database: Data<Arc<Database>>,
     json: Json<AddUserInput>,
 ) -> actix_web::Result<HttpResponse> {
     // Set up new user
@@ -44,7 +45,7 @@ pub struct GetUserOutput {
 
 #[post("/user")]
 pub(crate) async fn get_user(
-    database: Data<Database>,
+    database: Data<Arc<Database>>,
     json: Json<GetUserInput>,
 ) -> actix_web::Result<HttpResponse> {
     let user = database
@@ -71,7 +72,9 @@ pub struct UserWithId {
 }
 
 #[post("/user/all")]
-pub(crate) async fn get_all_users(database: Data<Database>) -> actix_web::Result<HttpResponse> {
+pub(crate) async fn get_all_users(
+    database: Data<Arc<Database>>,
+) -> actix_web::Result<HttpResponse> {
     let all = database
         .users
         .get_all_users()?
