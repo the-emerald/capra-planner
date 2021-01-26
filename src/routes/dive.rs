@@ -12,11 +12,13 @@ use capra::{DivePlan, DiveResult};
 use capra_core::common::{DiveSegment, Gas, SegmentType};
 use capra_core::deco::zhl16::tissue_constants::TissueConstants;
 use capra_core::deco::zhl16::ZHL16;
-use capra_core::deco::DecoAlgorithm;
+use capra_core::deco::{DecoAlgorithm, Tissue};
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::sync::Arc;
 use time::{Duration, OffsetDateTime};
+use capra_core::deco::zhl16::variant::Variant::C;
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -87,7 +89,7 @@ pub(crate) async fn dive_route(
             .finish()
     })?;
 
-    let res = match json.algorithm {
+    let res= match json.algorithm {
         Algorithm::ZHL16 => {
             let zhl = database.settings.get_zhl_of_user(json.id)?;
             let mut deco = ZHL16::new(
@@ -105,14 +107,19 @@ pub(crate) async fn dive_route(
             );
 
             dive(deco, general.into(), &bottom_segments, &deco_gases)
+                .await
         }
         Algorithm::VPM => {
-            return Ok(HttpResponse::NotImplemented()
-                .reason("vpm not implemented")
-                .finish());
+            // return Ok(HttpResponse::NotImplemented()
+            //     .reason("vpm not implemented")
+            //     .finish());
+            let dummy = DummyDeco;
+            let x = vec![];
+            let y = vec![];
+            dive(dummy, general.into(), &x, &y)
+                .await
         }
-    }
-    .await;
+    };
 
     // Record into dives
     database.dives.add_dive(&Dive {
@@ -131,23 +138,46 @@ pub(crate) async fn dive_route(
     if json.plan_type == PlanType::Execution {
         database
             .users
-            .update_tissue(json.id, res.deco_algorithm().tissue())?;
+            .update_tissue(json.id, res.tissue)?;
     }
 
     Ok(HttpResponse::Ok().json(DiveRouteOutput {
         segments: {
-            res.total_segments()
+            res.total_segments
                 .iter()
                 .map(|x| (x.0.into(), x.1.into()))
                 .collect()
         },
         gas_used: {
-            res.gas_used()
+            res.gas_used
                 .iter()
                 .map(|(k, v)| ((*k).into(), *v))
                 .collect()
         },
     }))
+}
+
+#[derive(Copy, Clone)]
+pub struct DummyDeco;
+impl DecoAlgorithm for DummyDeco {
+    fn add_dive_segment(&mut self, segment: &DiveSegment, gas: &Gas, metres_per_bar: f64) {
+        unimplemented!()
+    }
+
+    fn surface(&mut self, ascent_rate: isize, descent_rate: isize, gas: &Gas, metres_per_bar: f64) -> Vec<DiveSegment> {
+        unimplemented!()
+    }
+
+    fn get_tissue(&self) -> Tissue {
+        unimplemented!()
+    }
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct TissueDiveResult {
+    tissue: Tissue,
+    total_segments: Vec<(DiveSegment, Gas)>,
+    gas_used: HashMap<Gas, usize>
 }
 
 #[post("/dive/si")]
@@ -160,7 +190,11 @@ async fn dive<T: DecoAlgorithm>(
     parameters: DiveParameters,
     bottom_segments: &[(DiveSegment, Gas)],
     deco_gases: &[(Gas, Option<usize>)],
-) -> DiveResult<T> {
-    let open_circuit = OpenCircuit::new(deco, deco_gases, bottom_segments, parameters);
-    open_circuit.plan()
+) -> TissueDiveResult {
+    let result = OpenCircuit::new(deco, deco_gases, bottom_segments, parameters).plan();
+    TissueDiveResult {
+        tissue: result.deco_algorithm().get_tissue(),
+        total_segments: result.total_segments().clone(),
+        gas_used: result.gas_used().clone()
+    }
 }
