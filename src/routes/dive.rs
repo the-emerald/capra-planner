@@ -9,13 +9,14 @@ use actix_web::{post, HttpResponse};
 use capra::modes::OpenCircuit;
 use capra::parameters::DiveParameters;
 use capra::{DivePlan, DiveResult};
-use capra_core::common::{DiveSegment, Gas};
+use capra_core::common::{DiveSegment, Gas, SegmentType};
 use capra_core::deco::zhl16::tissue_constants::TissueConstants;
 use capra_core::deco::zhl16::ZHL16;
 use capra_core::deco::DecoAlgorithm;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::sync::Arc;
+use time::Duration;
 
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
 pub(crate) enum Algorithm {
@@ -72,15 +73,37 @@ pub(crate) async fn dive_route(
         .map(|x| Ok((x.try_into()?, x.max_op_depth())))
         .collect::<Result<Vec<(Gas, Option<usize>)>, ServerDivePlanningError>>()?;
 
+    let si = DiveSegment::new(
+        SegmentType::DiveSegment, // not really a good variant to pick
+        0,
+        0,
+        Duration::milliseconds(json.surface_interval as i64),
+        general.ascent_rate as isize,
+        general.descent_rate as isize,
+    )
+    .map_err(|_| {
+        HttpResponse::InternalServerError()
+            .reason("surface interval invalid")
+            .finish()
+    })?;
+
     let res = match json.algorithm {
         Algorithm::ZHL16 => {
             let zhl = database.settings.get_zhl_of_user(json.id)?;
-            let deco = ZHL16::new(
+            let mut deco = ZHL16::new(
                 user.tissue,
                 TissueConstants::new_by_variant(zhl.variant),
                 zhl.gfl as usize,
                 zhl.gfh as usize,
             );
+
+            // Apply SI
+            deco.add_dive_segment(
+                &si,
+                &Gas::new(21, 0, 79).unwrap(),
+                10000.0 / general.water_density, // todo: write conversion helper function
+            );
+
             dive(deco, general.into(), &bottom_segments, &deco_gases)
         }
         Algorithm::VPM => {
@@ -91,6 +114,7 @@ pub(crate) async fn dive_route(
     }
     .await;
 
+    // Update tissue if this is an execution
     if json.plan_type == PlanType::Execution {
         database
             .users
