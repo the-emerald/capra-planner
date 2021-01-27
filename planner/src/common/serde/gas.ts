@@ -2,5 +2,5 @@
 export interface Gas {
     o2: number;
     he: number;
-    mod_?: number;
+    maxOperatingDepth?: number;
 }

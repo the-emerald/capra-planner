@@ -7,12 +7,12 @@ export function displayGas(gas: Gas): string {
 }
 
 export function displayBottomSegmentElement(input: BottomSegmentElement): string {
-    return `${input.diveSegment.start_depth}m | ${prettyFromMilliseconds(input.diveSegment.time)} | ${displayGas(input.gas)}`
+    return `${input.diveSegment.startDepth}m | ${prettyFromMilliseconds(input.diveSegment.time)} | ${displayGas(input.gas)}`
 }
 
 export function displayDecoGasElement(input: DecoGasElement): string {
-    if (input.gas.mod_) { // If MOD exists
-        return `${displayGas(input.gas)} (${input.gas.mod_}m)`
+    if (input.gas.maxOperatingDepth) { // If MOD exists
+        return `${displayGas(input.gas)} (${input.gas.maxOperatingDepth}m)`
     }
     else {
         return displayGas(input.gas)

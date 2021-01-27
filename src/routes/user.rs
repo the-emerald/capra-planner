@@ -35,6 +35,7 @@ pub struct GetUserInput {
 }
 
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GetUserOutput {
     user: UserWithId,
     zhl_settings: ZHLSettings,

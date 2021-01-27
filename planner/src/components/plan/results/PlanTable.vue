@@ -20,15 +20,15 @@
     })
     export default class PlanTable extends Vue {
         @Prop() private totalSegments!: Array<[DiveSegment, Gas]>
-        fields: Array<string> = ["segment_type", "depth", "time", "runtime", "gas"]
+        fields: Array<string> = ["segmentType", "depth", "time", "runtime", "gas"]
 
         get unpackedTotalSegments() {
             return this.totalSegments
             .map((trt => (elem: [DiveSegment, Gas]) => {
                 trt += elem[0].time;
                 return {
-                    segment_type: elem[0].segment_type,
-                    depth: elem[0].start_depth == elem[0].end_depth ? elem[0].start_depth.toString() : `${elem[0].start_depth} > ${elem[0].end_depth}`,
+                    segmentType: elem[0].segmentType,
+                    depth: elem[0].startDepth == elem[0].endDepth ? elem[0].startDepth.toString() : `${elem[0].startDepth} > ${elem[0].endDepth}`,
                     time: prettyFromMilliseconds(elem[0].time),
                     runtime: prettyFromMilliseconds(trt),
                     gas: displayGas(elem[1])

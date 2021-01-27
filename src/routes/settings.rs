@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 #[derive(Copy, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateZHLSettingsInput {
     new_zhl_settings: ZHLSettings,
     id: UserID,
@@ -29,6 +30,7 @@ pub(crate) async fn update_zhl_settings(
 }
 
 #[derive(Copy, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateGeneralSettingsInput {
     new_general_settings: GeneralSettings,
     id: UserID,

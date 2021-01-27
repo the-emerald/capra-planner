@@ -9,6 +9,7 @@ use time::OffsetDateTime;
 
 // Value component of the dives tree
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct JSONDive {
     pub user: UserID,
     pub plan_type: PlanType,
@@ -40,11 +41,7 @@ impl From<Dive> for JSONDive {
                 .into_iter()
                 .map(|(d, g)| (d.into(), g.into()))
                 .collect(),
-            deco_gases: val
-                .deco_gases
-                .into_iter()
-                .map(|t| t.into())
-                .collect(),
+            deco_gases: val.deco_gases.into_iter().map(|t| t.into()).collect(),
         }
     }
 }

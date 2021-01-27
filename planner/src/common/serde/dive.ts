@@ -5,12 +5,12 @@ import {Gas} from "@/common/serde/gas";
 
 export interface Dive {
     user: number;
-    plan_type: PlanType;
+    planType: PlanType;
     // TODO: how to handle tissue?
-    surface_interval: number;
+    surfaceInterval: number;
     // TODO: how to handle datetime?
-    zhl_settings: ZHLSettings;
-    general_settings: GeneralSettings;
+    zhlSettings: ZHLSettings;
+    generalSettings: GeneralSettings;
     segments: Array<[DiveSegment, Gas]>;
-    deco_gases: Array<[Gas, number?]>;
+    decoGases: Array<Gas>;
 }

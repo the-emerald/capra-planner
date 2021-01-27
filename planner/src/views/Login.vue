@@ -101,9 +101,9 @@
             getUser(this.selectedId)
             .then(r => {
                 this.updateSelectedUser(r.data.user);
-                this.updateZHLSettings(r.data.zhl_settings);
-                this.updateVPMSettings(r.data.vpm_settings);
-                this.updateGeneralSettings(r.data.general_settings);
+                this.updateZHLSettings(r.data.zhlSettings);
+                this.updateVPMSettings(r.data.vpmSettings);
+                this.updateGeneralSettings(r.data.generalSettings);
                 this.updateTissue(r.data.tissue);
                 router.push({
                     name: "plan"

@@ -82,7 +82,7 @@
                         </b-row>
                         <b-row>
                             <b-col>
-                                <GasTable :gas-plan="planResults.gas_used"></GasTable>
+                                <GasTable :gas-plan="planResults.gasUsed"></GasTable>
                             </b-col>
                         </b-row>
                     </template>
@@ -129,7 +129,7 @@
     })
     export default class Results extends Vue {
         planResults: PlanDiveResponse = {
-            gas_used: [],
+            gasUsed: [],
             segments: []
         };
 
@@ -160,8 +160,8 @@
         }
 
         contactServerForPlan(planType: PlanType) {
-            const ascentRate = this.userGeneralSettings.ascent_rate;
-            const descentRate = this.userGeneralSettings.descent_rate;
+            const ascentRate = this.userGeneralSettings.ascentRate;
+            const descentRate = this.userGeneralSettings.descentRate;
 
             const segments = this.bottomSegments
             .filter(x => x[0]) // Filter disabled segments
@@ -170,8 +170,8 @@
                 return [z.diveSegment, z.gas]
             })
             .map(function (a): [DiveSegment, Gas] { // Add ascent rate and descent rate
-                a[0].ascent_rate = ascentRate;
-                a[0].descent_rate = descentRate;
+                a[0].ascentRate = ascentRate;
+                a[0].descentRate = descentRate;
 
                 return [a[0], a[1]];
             })

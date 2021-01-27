@@ -8,6 +8,7 @@ use time::Duration;
 // Difference(s):
 // - `time` is represented in milliseconds instead of Duration
 #[derive(Serialize, Deserialize, Copy, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct JSONDiveSegment {
     pub segment_type: SegmentType,
     pub start_depth: usize,

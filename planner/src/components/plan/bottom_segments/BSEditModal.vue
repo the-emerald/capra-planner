@@ -110,7 +110,7 @@
         @Prop() private editSegment!: BottomSegmentElement;
 
         syncFields() {
-            this.depth = this.editSegment.diveSegment.start_depth.toString();
+            this.depth = this.editSegment.diveSegment.startDepth.toString();
             const msTime = millisecondsToMinutesSeconds(this.editSegment.diveSegment.time);
             this.timeMin = msTime[0].toString();
             this.timeSec = msTime[1].toString();
@@ -130,9 +130,9 @@
 
         onSubmit() {
             const newDiveSegment: DiveSegment = {
-                start_depth: Number(this.depth),
-                end_depth: Number(this.depth),
-                segment_type: SegmentType.DiveSegment,
+                startDepth: Number(this.depth),
+                endDepth: Number(this.depth),
+                segmentType: SegmentType.DiveSegment,
                 time: minutesSecondToMilliseconds(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 

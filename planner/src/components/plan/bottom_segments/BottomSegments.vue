@@ -136,9 +136,9 @@
     export default class BottomSegments extends Vue {
         editSegment: BottomSegmentElement = {
             diveSegment: {
-                segment_type: SegmentType.DiveSegment,
-                start_depth: 0,
-                end_depth: 0,
+                segmentType: SegmentType.DiveSegment,
+                startDepth: 0,
+                endDepth: 0,
                 time: 0,
             },
             gas: {

@@ -91,7 +91,7 @@ import {segmentType} from "@/common/segment_type";
             };
 
             if (this.maxOpDepth != '') { // Try to read MOD
-                elem.gas.mod_ = Number(this.maxOpDepth);
+                elem.gas.maxOperatingDepth = Number(this.maxOpDepth);
             }
 
             this.$emit(

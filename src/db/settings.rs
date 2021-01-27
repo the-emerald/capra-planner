@@ -49,6 +49,7 @@ impl GeneralSettingsTree {
 // TODO: Check whether these integer sizes are okay
 // General settings (value)
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GeneralSettings {
     pub sac_bottom: u16,
     pub sac_deco: u16,

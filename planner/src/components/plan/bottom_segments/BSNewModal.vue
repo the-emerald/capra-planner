@@ -120,9 +120,9 @@ import {segmentType} from "@/common/segment_type";
 
         onSubmit() {
             const newDiveSegment: DiveSegment = {
-                start_depth: Number(this.depth),
-                end_depth: Number(this.depth),
-                segment_type: SegmentType.DiveSegment,
+                startDepth: Number(this.depth),
+                endDepth: Number(this.depth),
+                segmentType: SegmentType.DiveSegment,
                 time: minutesSecondToMilliseconds(Number(this.timeMin), Number(this.timeSec)) // Parse this or die trying
             };
 

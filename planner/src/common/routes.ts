@@ -35,7 +35,7 @@ export function updateZHLSettings(user: User, settings: ZHLSettings): Promise<Ax
         '/settings/update/zhl',
         {
             "id": user.id,
-            "new_zhl_settings": settings
+            "newZhlSettings": settings
         }
     )
 }
@@ -45,7 +45,7 @@ export function updateGeneralSettings(user: User, settings: GeneralSettings): Pr
         '/settings/update/general',
         {
             "id": user.id,
-            "new_general_settings": settings
+            "newGeneralSettings": settings
         }
     )
 }
@@ -57,12 +57,12 @@ export function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm
         '/dive/',
         {
             "id": user.id,
-            "plan_type": diveType,
-            "surface_interval": surfaceInterval,
+            "planType": diveType,
+            "surfaceInterval": surfaceInterval,
             "algorithm": algorithm,
             "parameters": {
                 "segments": segments,
-                "deco_gases": decoGases
+                "decoGases": decoGases
             }
         }
     )
@@ -78,5 +78,5 @@ export function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm
 
 export interface PlanDiveResponse {
     segments: Array<[DiveSegment, Gas]>;
-    gas_used: Array<[Gas, number]>;
+    gasUsed: Array<[Gas, number]>;
 }

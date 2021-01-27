@@ -221,11 +221,11 @@
             this.gfh = this.userZHLSettings.gfh.toString();
 
             // General settings
-            this.sacBottom = this.userGeneralSettings.sac_bottom.toString();
-            this.sacDeco = this.userGeneralSettings.sac_deco.toString();
-            this.ascentRate = (this.userGeneralSettings.ascent_rate * -1).toString();
-            this.descentRate = this.userGeneralSettings.descent_rate.toString();
-            this.waterDensity = this.userGeneralSettings.water_density.toString();
+            this.sacBottom = this.userGeneralSettings.sacBottom.toString();
+            this.sacDeco = this.userGeneralSettings.sacDeco.toString();
+            this.ascentRate = (this.userGeneralSettings.ascentRate * -1).toString();
+            this.descentRate = this.userGeneralSettings.descentRate.toString();
+            this.waterDensity = this.userGeneralSettings.waterDensity.toString();
         }
 
         onSubmit() {
@@ -235,11 +235,11 @@
                 gfl: Number(this.gfl)
             };
             const generalSettings: GeneralSettings = {
-                ascent_rate: Number(this.ascentRate) * -1,
-                descent_rate: Number(this.descentRate),
-                sac_bottom: Number(this.sacBottom),
-                sac_deco: Number(this.sacDeco),
-                water_density: Number(this.waterDensity)
+                ascentRate: Number(this.ascentRate) * -1,
+                descentRate: Number(this.descentRate),
+                sacBottom: Number(this.sacBottom),
+                sacDeco: Number(this.sacDeco),
+                waterDensity: Number(this.waterDensity)
             };
 
             const z = updateZHLSettings(this.user, zhlSettings);

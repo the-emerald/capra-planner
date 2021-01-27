@@ -28,9 +28,9 @@ export interface VPMSettings {
 }
 
 export interface GeneralSettings {
-    sac_bottom: number;
-    sac_deco: number;
-    ascent_rate: number;
-    descent_rate: number;
-    water_density: number;
+    sacBottom: number;
+    sacDeco: number;
+    ascentRate: number;
+    descentRate: number;
+    waterDensity: number;
 }

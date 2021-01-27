@@ -26,6 +26,7 @@ pub(crate) enum Algorithm {
 }
 
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DiveRouteInput {
     id: UserID,
     plan_type: PlanType,
@@ -35,12 +36,14 @@ pub struct DiveRouteInput {
 }
 
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DiveRouteParameters {
     segments: Vec<(JSONDiveSegment, JSONGas)>,
     deco_gases: Vec<JSONGas>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DiveRouteOutput {
     segments: Vec<(JSONDiveSegment, JSONGas)>,
     gas_used: Vec<(JSONGas, usize)>,

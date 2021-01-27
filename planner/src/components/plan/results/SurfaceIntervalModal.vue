@@ -79,11 +79,11 @@
         };
 
         onSubmit() {
-            const time_millis = (Number(this.siTimeHour) * 3600000) + (Number(this.siTimeMin) * 60000)
+            const timeMillis = (Number(this.siTimeHour) * 3600000) + (Number(this.siTimeMin) * 60000)
 
             this.$emit(
                 'submitted',
-                time_millis
+                timeMillis
             )
             this.resetForm();
             this.$bvModal.hide('surface-interval-modal')
