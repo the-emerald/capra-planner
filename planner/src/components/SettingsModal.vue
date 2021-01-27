@@ -196,8 +196,7 @@
         descentRate = '';
         waterDensity = '';
 
-        // waterDensityOptions: Array<string> = ["Fresh", "EN13319", "Salt", "Custom"];
-        // waterDensityValues: Array<number> = [997, 1020, 1024] // TODO: Are these values correct?
+        // TODO: Are these values correct?
         waterDensityOptions = [
           { value: '', text: "Choose preset", disabled: true },
           { value: 997, text: "Fresh" },

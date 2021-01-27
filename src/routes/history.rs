@@ -12,9 +12,10 @@ use time::OffsetDateTime;
 pub struct DatetimeRange(pub OffsetDateTime, pub OffsetDateTime);
 
 #[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DiveHistoryInput {
     // filter by types
-    exclude_types: Option<Vec<PlanType>>,
+    plan_types: Vec<PlanType>,
     // filter by user
     user: Option<UserID>,
     // filter by time range
@@ -27,7 +28,6 @@ pub(crate) async fn dive_history(
     database: Data<Arc<Database>>,
     json: Json<DiveHistoryInput>,
 ) -> actix_web::Result<HttpResponse> {
-    let plan_types = json.clone().exclude_types.unwrap_or_default();
     let dives = database
         .dives
         .dives_iter()
@@ -42,7 +42,7 @@ pub(crate) async fn dive_history(
         // Plan type
         .filter(|x| {
             x.as_ref()
-                .map_or(true, |y| plan_types.contains(&y.1.plan_type))
+                .map_or(true, |y| json.plan_types.contains(&y.1.plan_type))
         })
         // Time range
         .filter(|x| {

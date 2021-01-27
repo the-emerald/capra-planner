@@ -5,6 +5,7 @@ import {DiveSegment} from "@/common/serde/dive_segment";
 import {Gas} from "@/common/serde/gas";
 import {PlanType} from "@/common/serde/plan_type";
 import {Algorithm} from "@/common/serde/algorithm";
+import {Dive} from "@/common/serde/dive";
 
 export function newUser(name: string): Promise<AxiosResponse> {
     return axios.post(
@@ -64,6 +65,19 @@ export function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm
                 "segments": segments,
                 "decoGases": decoGases
             }
+        }
+    )
+}
+
+export function getHistory(user: User, planTypes: Array<PlanType>, datetimeRange?: [Date, Date]):
+    Promise<AxiosResponse<Array<[number, Dive]>>> {
+
+    return axios.post(
+        '/history/',
+        {
+            "user": user.id,
+            "planTypes": planTypes,
+            "datetimeRange": datetimeRange
         }
     )
 }
