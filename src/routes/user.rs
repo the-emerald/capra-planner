@@ -18,11 +18,11 @@ pub(crate) async fn add_user(
     json: Json<AddUserInput>,
 ) -> actix_web::Result<HttpResponse> {
     // Set up new user
-    let user_id = database.users.add_user(json.clone().name)?.ok_or(
+    let user_id = database.users.add_user(json.clone().name)?.ok_or_else(|| {
         HttpResponse::Conflict()
             .reason("user already exists")
-            .finish(),
-    )?;
+            .finish()
+    })?;
 
     // Set up settings
     database.settings.initialise_user(user_id)?;
@@ -52,7 +52,7 @@ pub(crate) async fn get_user(
     let user = database
         .users
         .get_user(&json.id)?
-        .ok_or(HttpResponse::Conflict().reason("user not found").finish())?;
+        .ok_or_else(|| HttpResponse::Conflict().reason("user not found").finish())?;
 
     Ok(HttpResponse::Ok().json(GetUserOutput {
         user: UserWithId {

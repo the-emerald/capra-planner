@@ -27,7 +27,7 @@ pub(crate) async fn dive_history(
     database: Data<Arc<Database>>,
     json: Json<DiveHistoryInput>,
 ) -> actix_web::Result<HttpResponse> {
-    let plan_types = json.clone().exclude_types.unwrap_or(vec![]);
+    let plan_types = json.clone().exclude_types.unwrap_or_default();
     let dives = database
         .dives
         .dives_iter()

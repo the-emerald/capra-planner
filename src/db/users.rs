@@ -24,10 +24,12 @@ impl UsersTree {
 
     pub fn add_user(&self, name: String) -> Result<Option<UserID>, DatabaseError> {
         // Does this user already exist?
-        if self.0.iter().try_fold(false, |a, b| {
+        let already_exists = self.0.iter().try_fold(false, |a, b| {
             let u: User = serde_json::from_slice(&*b?.1)?;
             Ok::<bool, DatabaseError>(a | (u.name == name))
-        })? {
+        })?;
+
+        if already_exists {
             return Ok(None);
         }
 

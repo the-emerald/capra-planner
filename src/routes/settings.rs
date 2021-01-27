@@ -18,7 +18,7 @@ pub(crate) async fn update_zhl_settings(
     database: Data<Arc<Database>>,
     json: Json<UpdateZHLSettingsInput>,
 ) -> actix_web::Result<HttpResponse> {
-    if !database.users.get_user(&json.id)?.is_some() {
+    if database.users.get_user(&json.id)?.is_none() {
         return Ok(HttpResponse::NotFound()
             .reason("user id does not exist")
             .finish());
@@ -41,7 +41,7 @@ pub(crate) async fn update_general_settings(
     database: Data<Arc<Database>>,
     json: Json<UpdateGeneralSettingsInput>,
 ) -> actix_web::Result<HttpResponse> {
-    if !database.users.get_user(&json.id)?.is_some() {
+    if database.users.get_user(&json.id)?.is_none() {
         return Ok(HttpResponse::NotFound()
             .reason("user id does not exist")
             .finish());

@@ -54,11 +54,11 @@ pub(crate) async fn dive_route(
     database: Data<Arc<Database>>,
     json: Json<DiveRouteInput>,
 ) -> actix_web::Result<HttpResponse> {
-    let user = database.users.get_user(&json.id)?.ok_or(
+    let user = database.users.get_user(&json.id)?.ok_or_else(|| {
         HttpResponse::NotFound()
             .reason("user id does not exist")
-            .finish(),
-    )?;
+            .finish()
+    })?;
 
     let general = database.settings.get_general_of_user(json.id)?;
 
