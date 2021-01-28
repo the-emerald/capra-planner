@@ -40,7 +40,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::user::get_all_users)
             .service(routes::settings::update_zhl_settings)
             .service(routes::settings::update_general_settings)
-            .service(routes::dive::dive_route)
+            .service(routes::dive::plan)
             .service(routes::dive::surface_interval)
             .service(routes::history::dive_history)
     })
