@@ -58,8 +58,6 @@ export function getDivePlan(user: User, diveType: PlanType, algorithm: Algorithm
         '/dive/',
         {
             "id": user.id,
-            "planType": diveType,
-            "surfaceInterval": surfaceInterval,
             "algorithm": algorithm,
             "parameters": {
                 "segments": segments,

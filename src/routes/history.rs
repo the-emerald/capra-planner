@@ -1,4 +1,4 @@
-use crate::db::dives::{DiveID, PlanType};
+use crate::db::dives::{DiveID};
 use crate::db::users::UserID;
 use crate::db::{Database, DatabaseError};
 use crate::json_repr::dive::JSONDive;
@@ -14,8 +14,6 @@ pub struct DatetimeRange(pub OffsetDateTime, pub OffsetDateTime);
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DiveHistoryInput {
-    // filter by types
-    plan_types: Vec<PlanType>,
     // filter by user
     user: Option<UserID>,
     // filter by time range
@@ -38,11 +36,6 @@ pub(crate) async fn dive_history(
                 // Otherwise, if filter was not specified, let the Ok pass.
                 // If the filter was specified then perform a check.
                 .map_or(true, |y| json.user.map_or(true, |z| y.1.user == z))
-        })
-        // Plan type
-        .filter(|x| {
-            x.as_ref()
-                .map_or(true, |y| json.plan_types.contains(&y.1.plan_type))
         })
         // Time range
         .filter(|x| {

@@ -2,7 +2,6 @@ use crate::db::settings::{GeneralSettings, ZHLSettings};
 use crate::db::users::UserID;
 use crate::db::DatabaseError;
 use capra_core::common::{DiveSegment, Gas};
-use capra_core::deco::Tissue;
 use serde::{Deserialize, Serialize};
 use sled::{Db, Tree};
 use time::OffsetDateTime;
@@ -10,21 +9,10 @@ use time::OffsetDateTime;
 #[derive(Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct DiveID(pub u64);
 
-#[derive(Copy, Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
-pub enum PlanType {
-    #[serde(alias = "PLAN")]
-    Plan,
-    #[serde(alias = "EXECUTE")]
-    Execution,
-}
-
 // Value component of the dives tree
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Dive {
     pub user: UserID,
-    pub plan_type: PlanType,
-    pub tissue_before: Tissue, // Before surface interval
-    pub surface_interval: u64,
     pub timestamp: OffsetDateTime,
 
     // Snapshot of ZHL and General settings used at that time.
